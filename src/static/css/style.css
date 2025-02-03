@@ -1,0 +1,62 @@
+/* Custom CSS */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.footer {
+    margin-top: auto;
+}
+
+/* Card styling */
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Table styling */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+
+/* Visualization container */
+.viz-container {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+/* Navigation active state */
+.navbar-nav .nav-link.active {
+    font-weight: bold;
+    color: #fff !important;
+}
+
+/* Custom button styling */
+.btn-custom {
+    background-color: #343a40;
+    color: white;
+    border: none;
+}
+
+.btn-custom:hover {
+    background-color: #23272b;
+    color: white;
+}
+
+/* Responsive images */
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}

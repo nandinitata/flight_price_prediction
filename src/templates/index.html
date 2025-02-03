@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Data Analysis - Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center bg-light p-5 rounded">
+    <h1 class="display-4">SkySaver: US Flight Price Predictor</h1>
+    <p class="lead">Exploring and Analyzing US Domestic Flight Data Patterns</p>
+    <hr class="my-4">
+    <p>This project analyzes flight data across different US cities, investigating patterns in fares, routes, and passenger behavior.</p>
+</div>
+
+
+<div class="row mt-5">
+    <div class="col-md-12 mb-5">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Introduction</h3>
+                <p class="card-text">
+                    Welcome to SkySaver, a comprehensive flight price prediction system for US domestic flights. 
+                    This platform utilizes advanced machine learning techniques to analyze historical flight data 
+                    and predict future price trends. Our analysis covers major routes between US cities, helping 
+                    travelers make informed decisions about their flight bookings.
+                </p>
+                <a href="{{ url_for('introduction') }}" class="btn btn-custom">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Data Overview</h5>
+                <p class="card-text">Analysis of flight data including routes, fares, and passenger counts across major US cities.</p>
+                <a href="{{ url_for('data_prep') }}" class="btn btn-custom">Explore Data</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Analysis Methods</h5>
+                <p class="card-text">Various analytical approaches including PCA, Clustering, and Machine Learning models.</p>
+                <a href="\" class="btn btn-custom">View Methods</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Key Findings</h5>
+                <p class="card-text">Discover insights about flight patterns, pricing strategies, and market dynamics.</p>
+                <a href="{{ url_for('conclusions') }}" class="btn btn-custom">See Conclusions</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="mt-5">
+<footer class="text-center mt-4 py-4 bg-light">
+    <hr>
+    <p class="mb-0">
+        <strong>Project by Sai Nandini Tata</strong> |
+        <a href="mailto:sai.tata@colorado.edu" class="text-decoration-none">sai.tata@colorado.edu</a> |
+        University of Colorado Boulder
+    </p>
+</footer>
+{% endblock %}

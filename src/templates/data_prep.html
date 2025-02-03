@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Data Analysis - Data Preparation & EDA{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Data Preparation & Exploratory Data Analysis</h1>
+
+    <!-- Data Collection Section -->
+<div class="card mb-4">
+    <div class="card-header bg-gradient py-3">
+        <h2 class="mb-0 text-dark">
+            <i class="fas fa-database me-2"></i>
+            Data Collection Methodology
+        </h2>
+    </div>
+    <div class="card-body">
+        <div class="data-collection-info">
+            <!-- Data Sources Card -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                    <i class="fas fa-globe text-primary"></i>
+                                </div>
+                                <h4 class="mb-0">Primary Data Source</h4>
+                            </div>
+                            <p class="text-muted mb-3">U.S. Department of Transportation - Data & Insights Division</p>
+                            <a href="https://data.transportation.gov/resource/tfrh-tu9e" 
+                               target="_blank" 
+                               class="btn btn-outline-primary">
+                                <i class="fas fa-external-link-alt me-2"></i>Access Official DOT Dataset
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                    <i class="fas fa-table text-success"></i>
+                                </div>
+                                <h4 class="mb-0">Dataset Overview</h4>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-hashtag text-muted me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Dataset ID</small>
+                                            <strong>tfrh-tu9e</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-list-ol text-muted me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Total Records</small>
+                                            <strong>249,884</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-clock text-muted me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Last Updated</small>
+                                            <strong>Jan 27, 2025</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-certificate text-muted me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">License</small>
+                                            <strong>Public Domain</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                            <i class="fas fa-code text-info"></i>
+                        </div>
+                        <h4 class="mb-0">API Documentation</h4>
+                    </div>
+                    <div class="api-details">
+                        <div class="mb-3">
+                            <label class="text-muted mb-2">Base Endpoint</label>
+                            <div class="code-block position-relative bg-light p-3 rounded">
+                                <code class="text-dark">https://data.transportation.gov/resource/tfrh-tu9e.json</code>
+                                <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2" onclick="copyToClipboard(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted mb-2">Sample Request</label>
+                            <div class="code-block position-relative bg-light p-3 rounded">
+                                <code class="text-dark">GET /resource/tfrh-tu9e.json?year=2023&quarter=1</code>
+                                <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-2" onclick="copyToClipboard(this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Collection Process -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
+                            <i class="fas fa-cogs text-warning"></i>
+                        </div>
+                        <h4 class="mb-0">Collection Process</h4>
+                    </div>
+                    <div class="process-timeline">
+                        <div class="timeline-item d-flex mb-4">
+                            <div class="timeline-marker bg-primary rounded-circle p-2 me-3"></div>
+                            <div class="timeline-content">
+                                <h5 class="mb-1">Data Extraction</h5>
+                                <p class="text-muted mb-0">Quarterly data extracted via SODA API with automated scripts</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item d-flex mb-4">
+                            <div class="timeline-marker bg-success rounded-circle p-2 me-3"></div>
+                            <div class="timeline-content">
+                                <h5 class="mb-1">Metrics Focus</h5>
+                                <p class="text-muted mb-0">Concentrated on routes, carriers, fares, and passenger counts</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item d-flex">
+                            <div class="timeline-marker bg-info rounded-circle p-2 me-3"></div>
+                            <div class="timeline-content">
+                                <h5 class="mb-1">Data Processing</h5>
+                                <p class="text-muted mb-0">Cleaned and processed using Python Pandas for analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.code-block {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 0.9rem;
+}
+
+.timeline-marker {
+    width: 12px;
+    height: 12px;
+    margin-top: 6px;
+}
+
+.timeline-item {
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 20px;
+    bottom: -20px;
+    width: 2px;
+    background-color: #e9ecef;
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
+
+.bg-gradient {
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+</style>
+
+<script>
+function copyToClipboard(button) {
+    const codeBlock = button.parentElement.querySelector('code');
+    navigator.clipboard.writeText(codeBlock.textContent);
+    
+    const originalIcon = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-check"></i>';
+    setTimeout(() => {
+        button.innerHTML = originalIcon;
+    }, 2000);
+}
+</script>
+    
+    <!-- Summary Statistics -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h2>Summary Statistics</h2>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stat-card p-3 bg-light rounded">
+                        <h6>Total Routes</h6>
+                        <h3>{{ summary.total_routes }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card p-3 bg-light rounded">
+                        <h6>Total Carriers</h6>
+                        <h3>{{ summary.total_carriers }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card p-3 bg-light rounded">
+                        <h6>Average Fare</h6>
+                        <h3>${{ "%.2f"|format(summary.avg_fare) }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card p-3 bg-light rounded">
+                        <h6>Total Passengers</h6>
+                        <h3>{{ "{:,.0f}".format(summary.total_passengers) }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Preview Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h2>Data Overview</h2>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="data-preview p-3 bg-light rounded">
+                        <h5>Raw Data Sample</h5>
+                        <div class="table-responsive">
+                            {{ raw_data_preview | safe }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="data-preview p-3 bg-light rounded">
+                        <h5>Cleaned Data Sample</h5>
+                        <div class="table-responsive">
+                            {{ clean_data_preview | safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Cleaning Steps -->
+    <!-- Data Cleaning Process -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h2>Data Cleaning Steps</h2>
+            <div class="cleaning-steps mt-4">
+                <div class="step mb-4 p-3 bg-light rounded">
+                    <h5><i class="fas fa-broom me-2"></i>Missing Values</h5>
+                    <p>Removed rows containing null values to ensure data completeness.</p>
+                </div>
+                <div class="step mb-4 p-3 bg-light rounded">
+                    <h5><i class="fas fa-copy me-2"></i>Duplicate Handling</h5>
+                    <p>Eliminated duplicate entries to maintain data integrity.</p>
+                </div>
+                <div class="step mb-4 p-3 bg-light rounded">
+                    <h5><i class="fas fa-calculator me-2"></i>Data Type Conversion</h5>
+                    <p>Converted numeric columns (nsmiles, passengers, fare, large_ms) to appropriate float types.</p>
+                </div>
+                <div class="step mb-4 p-3 bg-light rounded">
+                    <h5><i class="fas fa-filter me-2"></i>Outlier Removal</h5>
+                    <p>Applied IQR method to remove statistical outliers from numeric columns.</p>
+                </div>
+                <div class="step mb-4 p-3 bg-light rounded">
+                    <h5><i class="fas fa-font me-2"></i>Text Standardization</h5>
+                    <p>Standardized text columns (city1, city2, airport_1, airport_2) to string format.</p>
+                </div>
+                <div class="step p-3 bg-light rounded">
+                    <h5><i class="fas fa-minus-circle me-2"></i>Column Removal</h5>
+                    <p>Removed unnecessary columns (tbl, tbl1apk) from the dataset.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.viz-container {
+    min-height: 600px;
+    border: 1px solid #dee2e6;
+    background-color: #ffffff;
+}
+
+.data-preview {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.stat-card {
+    text-align: center;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.analysis-section {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 2rem;
+}
+
+.analysis-section:last-child {
+    border-bottom: none;
+}
+
+iframe {
+    border: none;
+    background-color: #ffffff;
+}
+</style>
+{% endblock %}
