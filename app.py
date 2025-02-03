@@ -1,10 +1,6 @@
 import os
 from flask import Flask, render_template
-from waitress import serve
-from dotenv import load_dotenv
 from data_prep import create_visualizations, generate_summary_stats, load_data
-
-load_dotenv()
 
 app = Flask(__name__, static_folder='static')
 
@@ -74,5 +70,5 @@ def conclusions():
     return render_template('conclusions.html')
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))
-    serve(app, host="0.0.0.0", port=port)
+    app.run()
+    
