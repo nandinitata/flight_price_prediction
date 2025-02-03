@@ -58,7 +58,7 @@ def clean_data(df):
 
     return cleaned_df
 
-def load_data(filename='src/flight_data.csv'):
+def load_data(filename='flight_data.csv'):
     """Load and perform initial data cleaning"""
     df = pd.read_csv(filename)
     
