@@ -29,6 +29,45 @@
             </div>
         </div>
     </div>
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title h3 mb-4">Acknowledgments</h2>
+                    <p class="card-text">This analysis builds upon research and data collection efforts by:</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">U.S. Department of Transportation</li>
+                        <li class="list-group-item">Bureau of Transportation Statistics</li>
+                        <li class="list-group-item">Federal Aviation Administration</li>
+                        <li class="list-group-item">Commercial Aviation Research Teams</li>
+                    </ul>
+                    <div class="mt-4">
+                        <h3 class="h5">Other Works</h3>
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <h4 class="h6 mb-2">Amadeus Flight Price Predictor</h4>
+                                <ul class="list-unstyled small mb-0">
+                                    <li>• Real-time price monitoring across multiple airlines</li>
+                                    <li>• Machine learning for demand forecasting</li>
+                                    <li>• Used by travel agencies worldwide</li>
+                                    <li>• Integration with booking systems</li>
+                                </ul>
+                            </div>
+                            <div class="list-group-item">
+                                <h4 class="h6 mb-2">Kayak Price Forecast</h4>
+                                <ul class="list-unstyled small mb-0">
+                                    <li>• Uses historical data and seasonality patterns</li>
+                                    <li>• 7-day prediction window</li>
+                                    <li>• Confidence ratings for predictions</li>
+                                    <li>• Price tracking and alerts system</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
     
@@ -115,6 +154,15 @@
                     <iframe src="{{ url_for('static', filename='plots/distance_fare.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Analysis of the relationship between flight distance and fare prices across different carriers.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Strong positive correlation between distance and fare prices</li>
+                        <li class="list-group-item">Higher price variability observed in long-haul routes (2000+ miles)</li>
+                        <li class="list-group-item">Major carriers (WN, UA, AA) demonstrate similar pricing strategies</li>
+                        <li class="list-group-item">Peak fares approximately $1000 for longest routes</li>
+                        <li class="list-group-item">Majority of fares concentrate in $200-400 range for medium distances</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Fare Distribution -->
@@ -124,6 +172,15 @@
                     <iframe src="{{ url_for('static', filename='plots/fare_dist.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Distribution of fares across different carriers and routes.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Most fares concentrate between $150-350</li>
+                        <li class="list-group-item">WN (Southwest) shows highest frequency in lower fare ranges</li>
+                        <li class="list-group-item">Peak distribution around $200-250</li>
+                        <li class="list-group-item">Long tail extending to higher fares (>$500)</li>
+                        <li class="list-group-item">Different carriers show overlapping fare ranges</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Fare Box Plot -->
@@ -133,6 +190,15 @@
                     <iframe src="{{ url_for('static', filename='plots/fare_box.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Statistical distribution of fares by carrier showing quartiles and outliers.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">AA, UA, DL demonstrate higher median fares with numerous outliers</li>
+                        <li class="list-group-item">Budget carriers (XP, MX, SY) consistently show lower median fares</li>
+                        <li class="list-group-item">G4 (Allegiant) maintains lowest median fare structure</li>
+                        <li class="list-group-item">Major carriers show significant outliers above $600</li>
+                        <li class="list-group-item">Typical fare range (IQR) falls between $150-300 across carriers</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Market Share Analysis -->
@@ -142,6 +208,15 @@
                     <iframe src="{{ url_for('static', filename='plots/market_share.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Analysis of market share distribution among different carriers.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Competitive market with balanced distribution among carriers</li>
+                        <li class="list-group-item">G4 (Allegiant) leads with 9.82% market share</li>
+                        <li class="list-group-item">WN (Southwest) second at 8.85%, followed by XP at 8.74%</li>
+                        <li class="list-group-item">Most carriers maintain 6-8% market share range</li>
+                        <li class="list-group-item">No single carrier dominates the market</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Route Categories -->
@@ -151,6 +226,15 @@
                     <iframe src="{{ url_for('static', filename='plots/route_category.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Analysis of different route categories and their characteristics.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Medium and Long routes dominate with ~1.4M passengers each</li>
+                        <li class="list-group-item">Ultra-Long routes show lowest passenger volumes</li>
+                        <li class="list-group-item">Passenger preference trends toward medium-distance flights</li>
+                        <li class="list-group-item">Suggests optimal route length is in medium range</li>
+                        <li class="list-group-item">Clear distinction between short and long-haul market segments</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Route Frequency -->
@@ -160,6 +244,15 @@
                     <iframe src="{{ url_for('static', filename='plots/route_freq.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Analysis of route frequencies and popular flight paths.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Los Angeles has highest frequency (~250 flights)</li>
+                        <li class="list-group-item">Boston and New York show high activity (~150 flights each)</li>
+                        <li class="list-group-item">Houston, Dallas, and Chicago demonstrate moderate frequency (~50 flights)</li>
+                        <li class="list-group-item">Pattern reveals major US transportation hubs</li>
+                        <li class="list-group-item">High frequency routes align with business/tourism centers</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Passenger Volume -->
@@ -169,6 +262,16 @@
                     <iframe src="{{ url_for('static', filename='plots/passenger_vol.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Distribution of passenger volumes across different routes.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Los Angeles leads with ~180K passengers</li>
+                        <li class="list-group-item">New York follows with ~140K passengers</li>
+                        <li class="list-group-item">Miami shows strong volume (~100K passengers)</li>
+                        <li class="list-group-item">Atlanta and Chicago handle ~40-50K passengers</li>
+                        <li class="list-group-item">Las Vegas has the lowest volume among top routes (~30K passengers)</li>
+                        <li class="list-group-item">Reflects population centers and tourist destinations</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Passenger Distribution -->
@@ -178,6 +281,16 @@
                     <iframe src="{{ url_for('static', filename='plots/pax_dist.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Detailed distribution analysis of passenger volumes.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Shows a right-skewed distribution</li>
+                        <li class="list-group-item">Most routes handle fewer than 1000 passengers</li>
+                        <li class="list-group-item">All carriers show similar patterns</li>
+                        <li class="list-group-item">Few routes with very high passenger volumes (>4000)</li>
+                        <li class="list-group-item">WN (Southwest) shows strong presence in high-volume routes</li>
+                        <li class="list-group-item">Major carriers (UA, AA, DL) have similar distributions</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Fare Efficiency -->
@@ -187,6 +300,16 @@
                     <iframe src="{{ url_for('static', filename='plots/fare_efficiency.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Analysis of fare efficiency (cost per mile) across different routes.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Clear inverse relationship between distance and cost per mile</li>
+                        <li class="list-group-item">Short routes (&lt;500 miles) have highest cost per mile (up to $3/mile)</li>
+                        <li class="list-group-item">Medium routes show moderate efficiency ($0.3-0.5/mile)</li>
+                        <li class="list-group-item">Long and Ultra-long routes most efficient (&lt;$0.2/mile)</li>
+                        <li class="list-group-item">Shows economies of scale in longer flights</li>
+                        <li class="list-group-item">Some outliers in short routes with very high costs</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Competition Analysis -->
@@ -196,6 +319,15 @@
                     <iframe src="{{ url_for('static', filename='plots/competition.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Analysis of competition levels in different markets.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Miami leads with highest competition (12 carriers)</li>
+                        <li class="list-group-item">Los Angeles and Boston show strong competition (~11 carriers each)</li>
+                        <li class="list-group-item">Major hubs like Houston and New York maintain competitive markets (~10 carriers)</li>
+                        <li class="list-group-item">Smaller markets like Louisville have moderate competition (~7 carriers)</li>
+                        <li class="list-group-item">Competition levels correlate with airport size and market demand</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Share vs Fare Analysis -->
@@ -205,6 +337,15 @@
                     <iframe src="{{ url_for('static', filename='plots/share_fare.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Relationship between market share and fare pricing.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Higher market share (0.8-1.0) tends to have more pricing variation</li>
+                        <li class="list-group-item">Most fares cluster between $200-400 regardless of market share</li>
+                        <li class="list-group-item">Some carriers (UA, DL) show higher fares in routes where they dominate</li>
+                        <li class="list-group-item">Low market share (0.2-0.4) shows more consistent pricing</li>
+                        <li class="list-group-item">WN (Southwest) maintains relatively consistent fares across market shares</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Seasonal Analysis -->
@@ -214,6 +355,17 @@
                     <iframe src="{{ url_for('static', filename='plots/seasonal.html') }}" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
                 <p class="mt-3">Analysis of fare variations across different seasons.</p>
+                <div class="analysis-insights mt-3">
+                    <ul class="list-group">
+                        <li class="list-group-item">Significant seasonal variation across quarters</li>
+                        <li class="list-group-item">Quarter 1 and 4 (winter months) show higher median fares</li>
+                        <li class="list-group-item">Legacy carriers (UA, AA, DL) consistently have higher fares</li>
+                        <li class="list-group-item">Budget carriers (G4, NK) maintain lower fares across quarters</li>
+                        <li class="list-group-item">Most extreme outliers appear in Q1 and Q2</li>
+                        <li class="list-group-item">All carriers show wider fare ranges in peak travel seasons</li>
+                        <li class="list-group-item">G4 (Allegiant) maintains the most consistent pricing across quarters</li>
+                    </ul>
+                </div>
             </div>
         </div>
 </div>
