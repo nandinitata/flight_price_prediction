@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Error - Flight Data Analysis{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="text-center mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Error
+                    </h2>
+                </div>
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-bug fa-4x text-muted mb-4"></i>
+                    <h3 class="mb-4">{{ error_message }}</h3>
+                    {% if error_details %}
+                    <div class="alert alert-light text-start">
+                        <p class="small text-muted mb-0"><strong>Technical Details:</strong></p>
+                        <pre class="text-danger bg-light p-3 small overflow-auto" style="max-height: 200px; text-align: left;">{{ error_details }}</pre>
+                    </div>
+                    {% endif %}
+                    <div class="mt-4">
+                        <a href="{{ url_for('home') }}" class="btn btn-primary me-2">
+                            <i class="fas fa-home me-2"></i>Return to Home
+                        </a>
+                        <button onclick="window.history.back()" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Go Back
+                        </button>
+                    </div>
+                </div>
+                <div class="card-footer bg-light text-center">
+                    <p class="text-muted mb-0 small">If this problem persists, please contact me: <a href="mailto:sai.tata@colorado.edu">sai.tata@colorado.edu</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

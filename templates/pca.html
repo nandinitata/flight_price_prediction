@@ -1,0 +1,525 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Data Analysis - Principal Component Analysis{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <i class="fas fa-chart-scatter fa-2x mb-3 text-primary"></i>
+            <h1 class="display-4 mb-3">Principal Component Analysis</h1>
+            <p class="lead text-muted">Dimensionality Reduction & Feature Analysis</p>
+            <hr>
+        </div>
+    </div>
+
+    <!-- PCA Introduction Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">What is Principal Component Analysis?</h2>
+                    <div class="card-text">
+                        <p class="text-justify">
+                            Principal Component Analysis (PCA) is a dimensionality reduction technique that transforms a dataset with potentially correlated variables into a set of linearly uncorrelated variables called principal components. Each principal component captures the maximum possible variance from the data, with the constraint that it is orthogonal to the preceding components. PCA enables us to reduce the complexity of high-dimensional data while preserving most of the important information, allowing for better visualization, reduced computational requirements, and identification of the most influential variables in our dataset.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Selection Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Dataset Selection</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="data-source-info">
+                                <h4 class="mb-3">Selected Dataset</h4>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                        <i class="fas fa-database text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">U.S. Domestic Flight Data</h5>
+                                        <p class="text-muted mb-0">Department of Transportation Dataset ID: tfrh-tu9e</p>
+                                    </div>
+                                </div>
+                                <p>
+                                    For our PCA analysis, we've selected flight data containing key metrics including distance, passenger counts, fare prices, market share, and other pricing metrics. This dataset allows us to explore relationships between these variables and understand the factors that most strongly influence flight pricing patterns.
+                                </p>
+                                <a href="https://data.transportation.gov/resource/tfrh-tu9e" class="btn btn-primary mt-2" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>View Source Data
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Sample Data</h4>
+                            <div class="data-preview p-3 bg-light rounded" style="max-height: 250px; overflow-y: auto;">
+                                {{ pca_data.sample_data | safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Preprocessing Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Data Preprocessing</h2>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Before applying PCA, we needed to preprocess our flight data to ensure it was suitable for dimensionality reduction. The following steps were taken:
+                    </p>
+                    <div class="preprocessing-steps mt-4">
+                        <div class="step mb-3 p-3 bg-light rounded">
+                            <h5><i class="fas fa-filter me-2 text-primary"></i>Feature Selection</h5>
+                            <p class="mb-0">Selected quantitative columns suitable for PCA analysis:</p>
+                            <ul class="mb-0 mt-2">
+                                {% for feature in pca_data.feature_names %}
+                                <li>{{ feature }} - {% if feature == 'nsmiles' %}Distance in miles{% elif feature == 'passengers' %}Passenger count{% elif feature == 'fare' %}Average fare price{% elif feature == 'large_ms' %}Major carrier market share{% elif feature == 'fare_lg' %}Major carrier fare{% elif feature == 'lf_ms' %}Low-fare carrier market share{% elif feature == 'fare_low' %}Low-fare carrier fare{% else %}{{ feature }}{% endif %}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="step mb-3 p-3 bg-light rounded">
+                            <h5><i class="fas fa-broom me-2 text-primary"></i>Data Cleaning</h5>
+                            <p class="mb-0">Removed rows with missing values and converted all features to appropriate numeric types.</p>
+                        </div>
+                        <div class="step mb-3 p-3 bg-light rounded">
+                            <h5><i class="fas fa-balance-scale me-2 text-primary"></i>Normalization</h5>
+                            <p class="mb-0">Applied StandardScaler to normalize the data, ensuring each feature has mean=0 and standard deviation=1. This prevents features with larger scales from dominating the analysis.</p>
+                        </div>
+                        <div class="step p-3 bg-light rounded">
+                            <h5><i class="fas fa-code me-2 text-primary"></i>Implementation</h5>
+                            <p class="mb-0">Used scikit-learn's PCA implementation to perform the dimensionality reduction with different numbers of components.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2D PCA Analysis -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">2D PCA Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <iframe src="{{ url_for('static', filename='plots/' + plot_files.pca_2d) }}" width="100%" height="550px" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="pca-insights">
+                                <h4 class="mb-3">2D Projection Insights</h4>
+                                <div class="alert alert-primary">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="fas fa-info-circle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="alert-heading">Explained Variance</h5>
+                                            <p class="mb-0">The 2D projection captures <strong>{{ "%.2f"|format(pca_data.variance_2d) }}%</strong> of the total variance in the dataset.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Key Observations</h5>
+                                        <ul class="card-text">
+                                            <li>The first two principal components explain a significant portion of the variability in the flight data.</li>
+                                            <li>The distribution of data points shows clusters corresponding to different pricing and distance patterns.</li>
+                                            <li>PC1 primarily captures the relationship between fare prices and distance.</li>
+                                            <li>PC2 appears to reflect the variation between market share and passenger volume.</li>
+                                            <li>The spread of data points indicates diverse pricing strategies across different routes and carriers.</li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D PCA Analysis -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">3D PCA Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <iframe src="{{ url_for('static', filename='plots/' + plot_files.pca_3d) }}" width="100%" height="650px" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="pca-insights">
+                                <h4 class="mb-3">3D Projection Insights</h4>
+                                <div class="alert alert-success">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="fas fa-chart-line fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="alert-heading">Improved Variance</h5>
+                                            <p class="mb-0">The 3D projection captures <strong>{{ "%.2f"|format(pca_data.variance_3d) }}%</strong> of the total variance, an improvement of <strong>{{ "%.2f"|format(pca_data.variance_3d - pca_data.variance_2d) }}%</strong> over the 2D model.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Key Observations</h5>
+                                        <ul class="card-text">
+                                            <li>The third principal component reveals additional patterns not visible in the 2D projection.</li>
+                                            <li>PC3 appears to capture variations related to the difference between major carrier and low-fare carrier pricing.</li>
+                                            <li>The 3D visualization highlights more distinct clusters of flight routes with similar characteristics.</li>
+                                            <li>The additional dimension provides better separation between different market segments.</li>
+                                            <li>Regional patterns become more evident in the 3D representation.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Feature Loadings Analysis -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Feature Loadings Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <iframe src="{{ url_for('static', filename='plots/' + plot_files.pca_loadings) }}" width="100%" height="550px" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="pca-insights">
+                                <h4 class="mb-3">Feature Importance</h4>
+                                <div class="alert alert-info">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="fas fa-weight-hanging fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="alert-heading">Loading Vectors</h5>
+                                            <p class="mb-0">The biplot shows how each original feature contributes to the principal components, with the direction and length of arrows indicating their importance and relationship.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Key Insights</h5>
+                                        <ul class="card-text">
+                                            <li>Fare and distance features have the strongest loadings, indicating they are the most influential variables in the dataset.</li>
+                                            <li>Closely aligned arrows indicate highly correlated features, such as major carrier fare and low-fare carrier pricing.</li>
+                                            <li>Market share and passenger volume features show different patterns, suggesting they capture distinct aspects of the flight data.</li>
+                                            <li>The direction of arrows reveals which features contribute positively or negatively to each principal component.</li>
+                                            <li>Features with opposite directions are inversely correlated in the context of the principal components.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Variance Analysis -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Explained Variance Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <iframe src="{{ url_for('static', filename='plots/' + plot_files.pca_variance) }}" width="100%" height="500px" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="pca-insights">
+                                <h4 class="mb-3">Variance Distribution</h4>
+                                <div class="alert alert-warning">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="fas fa-percentage fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="alert-heading">95% Variance Threshold</h5>
+                                            <p class="mb-0">To retain at least 95% of the information in our dataset, we need <strong>{{ pca_data.components_for_95 }}</strong> principal components.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Cumulative Variance</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Components</th>
+                                                        <th>Cumulative Variance (%)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for i in range(5) if i < pca_data.cumulative_variance_length %}
+                                                    <tr>
+                                                        <td>{{ i + 1 }}</td>
+                                                        <td>{{ "%.2f"|format(pca_data.cumulative_variance[i]) }}%</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Top 3 Eigenvalues</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Component</th>
+                                                        <th>Eigenvalue</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for i in range(3) %}
+                                                    <tr>
+                                                        <td>PC{{ i + 1 }}</td>
+                                                        <td>{{ "%.4f"|format(pca_data.top_eigenvalues[i]) }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Conclusions Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Conclusions and Implications</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4 class="mb-3">Key Findings from PCA Analysis</h4>
+                            <div class="conclusions p-4 bg-light rounded">
+                                <div class="conclusion-item mb-4">
+                                    <h5><i class="fas fa-chart-pie me-2 text-primary"></i>Variance Distribution</h5>
+                                    <p>Our PCA analysis reveals that {{ "%.2f"|format(pca_data.variance_2d) }}% of the total variance can be explained by just two principal components, while three components capture {{ "%.2f"|format(pca_data.variance_3d) }}% of the variance. To preserve at least 95% of the information in our dataset, we need {{ pca_data.components_for_95 }} principal components, indicating that while there is significant dimensionality reduction possible, there are still several important factors influencing flight pricing.</p>
+                                </div>
+                                <div class="conclusion-item mb-4">
+                                    <h5><i class="fas fa-project-diagram me-2 text-primary"></i>Feature Relationships</h5>
+                                    <p>The biplot reveals strong correlations between fare prices and distance, suggesting they are fundamental determinants of flight pricing. The loadings indicate that major carrier and low-fare carrier pricing strategies are closely aligned but still capture distinct market behaviors, especially when analyzed in three dimensions.</p>
+                                </div>
+                                <div class="conclusion-item mb-4">
+                                    <h5><i class="fas fa-user-tie me-2 text-primary"></i>Business Implications</h5>
+                                    <p>For airlines and pricing analysts, this analysis highlights the multifaceted nature of flight pricing. While distance and fare demonstrate the strongest relationship, other factors such as market share and competitive dynamics also play significant roles. The PCA reveals that pricing strategies could potentially be simplified to focus on the most influential factors without losing critical information.</p>
+                                </div>
+                                <div class="conclusion-item">
+                                    <h5><i class="fas fa-laptop-code me-2 text-primary"></i>Technical Benefits</h5>
+                                    <p>From a data science perspective, reducing our dataset from 7 dimensions to {{ pca_data.components_for_95 }} components while retaining 95% of the information allows for more efficient modeling, visualization, and analysis. This dimensionality reduction could be particularly valuable for subsequent machine learning applications such as clustering or predictive modeling of flight prices.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Further Analysis Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Next Steps and Further Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="next-steps p-3">
+                                <h4 class="mb-3">Potential Next Steps</h4>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="fas fa-cubes text-primary me-3"></i>
+                                        <div>
+                                            <strong>Clustering Analysis</strong>
+                                            <p class="mb-0 small">Apply K-means or hierarchical clustering to the PCA-reduced dataset to identify natural groupings of flight routes with similar characteristics.</p>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="fas fa-robot text-primary me-3"></i>
+                                        <div>
+                                            <strong>Predictive Modeling</strong>
+                                            <p class="mb-0 small">Use the principal components as input features for regression models to predict flight prices more efficiently.</p>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="fas fa-clock text-primary me-3"></i>
+                                        <div>
+                                            <strong>Temporal Analysis</strong>
+                                            <p class="mb-0 small">Apply PCA to time-series data to understand how pricing factors evolve over different time periods and seasons.</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="future-work p-3">
+                                <h4 class="mb-3">Future Enhancements</h4>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="fas fa-plane-departure text-primary me-3"></i>
+                                        <div>
+                                            <strong>Carrier-Specific Analysis</strong>
+                                            <p class="mb-0 small">Apply PCA separately to data from different carriers to compare pricing strategies and market approaches.</p>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="fas fa-globe-americas text-primary me-3"></i>
+                                        <div>
+                                            <strong>Geographic Segmentation</strong>
+                                            <p class="mb-0 small">Incorporate geographic data to understand regional variations in pricing factors and market dynamics.</p>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <i class="fas fa-route text-primary me-3"></i>
+                                        <div>
+                                            <strong>Route Type Classification</strong>
+                                            <p class="mb-0 small">Combine PCA with classification methods to categorize routes based on their pricing characteristics and competitive landscape.</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .viz-container {
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+    
+    .viz-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .step, .conclusion-item {
+        border-left: 4px solid #007bff;
+        transition: all 0.3s ease;
+    }
+    
+    .step:hover, .conclusion-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    .card {
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .alert {
+        border-left: 5px solid;
+    }
+    
+    .alert-primary {
+        border-left-color: #007bff;
+    }
+    
+    .alert-success {
+        border-left-color: #28a745;
+    }
+    
+    .alert-info {
+        border-left-color: #17a2b8;
+    }
+    
+    .alert-warning {
+        border-left-color: #ffc107;
+    }
+    
+    .list-group-item {
+        transition: all 0.2s ease;
+    }
+    
+    .list-group-item:hover {
+        transform: translateX(5px);
+        background-color: #f8f9fa;
+    }
+    
+    .data-preview {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+    
+    iframe {
+        border: none;
+        background-color: #ffffff;
+    }
+</style>
+{% endblock %}
+     

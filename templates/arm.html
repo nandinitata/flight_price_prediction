@@ -1,0 +1,458 @@
+{% extends "base.html" %}
+{% block title %}Flight Data Analysis - Association Rule Mining{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <i class="fas fa-link fa-2x mb-3 text-primary"></i>
+            <h1 class="display-4 mb-3">Association Rule Mining</h1>
+            <p class="lead text-muted">Discovering Hidden Patterns in Flight Data</p>
+            <hr>
+        </div>
+    </div>
+<!-- Overview Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h2 class="card-title mb-0">Overview</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="overview-text">
+                            <p class="lead mb-4">
+                                Association Rule Mining (ARM) is a powerful technique used to discover interesting relationships hidden in large datasets. It identifies frequent patterns, correlations, and associations among sets of items or events.
+                            </p>
+                            <p>
+                                ARM was originally developed for market basket analysis to find relationships between products that are frequently purchased together. In our flight data analysis, we apply this technique to discover patterns between routes, carriers, fares, and other flight attributes.
+                            </p>
+                            <h4 class="mt-4 mb-3">Key ARM Concepts</h4>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-primary">Support</h5>
+                                            <p class="card-text">
+                                                The frequency of an itemset in the dataset, calculated as the proportion of transactions containing the itemset.
+                                            </p>
+                                            <div class="text-center mt-3">
+                                                <code class="bg-light p-2 rounded">support(A→B) = P(A∪B)</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-primary">Confidence</h5>
+                                            <p class="card-text">
+                                                The reliability of the rule, measured as the conditional probability of finding the consequent given the antecedent.
+                                            </p>
+                                            <div class="text-center mt-3">
+                                                <code class="bg-light p-2 rounded">confidence(A→B) = P(B|A)</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-primary">Lift</h5>
+                                            <p class="card-text">
+                                                Measures how much more likely item B is purchased when item A is purchased, compared to when item A is not purchased.
+                                            </p>
+                                            <div class="text-center mt-3">
+                                                <code class="bg-light p-2 rounded">lift(A→B) = P(B|A) / P(B)</code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm mb-4">
+                            <img src="{{ url_for('static', filename='img/association_rules.png') }}" class="card-img-top" alt="Association Rules Visualization">
+                            <div class="card-body">
+                                <h5 class="card-title">Association Rules Structure</h5>
+                                <p class="card-text text-muted">
+                                    Rules take the form of "If antecedent, then consequent" (A → B) with various measures of interestingness.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="card border-0 shadow-sm">
+                            <img src="{{ url_for('static', filename='img/apriori_algorithm.png') }}" class="card-img-top" alt="Apriori Algorithm Flowchart">
+                            <div class="card-body">
+                                <h5 class="card-title">Apriori Algorithm</h5>
+                                <p class="card-text text-muted">
+                                    The Apriori algorithm efficiently finds frequent itemsets using the downward closure property.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h4 class="card-title">The Apriori Algorithm</h4>
+                                <p>
+                                    The Apriori algorithm is the most widely used approach for discovering association rules. It works through the following steps:
+                                </p>
+                                <ol>
+                                    <li>Identify all frequent itemsets in the database (items that appear together above a minimum support threshold)</li>
+                                    <li>Generate strong association rules from the frequent itemsets (rules that satisfy minimum confidence threshold)</li>
+                                    <li>Prune rules based on various interestingness measures</li>
+                                </ol>
+                                <p>
+                                    The algorithm's name comes from its use of prior knowledge about the properties of frequent itemsets—specifically that all subsets of a frequent itemset must also be frequent (the <strong>apriori property</strong>). This property allows the algorithm to efficiently reduce the search space.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Preparation Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h2 class="card-title mb-0">Data Preparation</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="mb-3">Transaction Data Format</h4>
+                        <p>
+                            Association Rule Mining requires data in a specific <strong>transaction format</strong>, where:
+                        </p>
+                        <ul>
+                            <li>Each row represents a transaction (in our case, a flight route)</li>
+                            <li>Each transaction contains a set of items (attributes of the flight)</li>
+                            <li>The data has no class labels or targets—it's purely unsupervised</li>
+                            <li>The goal is to find relationships between items across transactions</li>
+                        </ul>
+                        <p>
+                            For our flight data analysis, we transformed our dataset into transaction format by:
+                        </p>
+                        <ol>
+                            <li>Creating a unique transaction ID for each flight route</li>
+                            <li>Converting continuous variables (fare, distance) into categorical bins</li>
+                            <li>Creating items by combining attribute names with their values</li>
+                            <li>Structuring the data as a list of items for each transaction</li>
+                        </ol>
+                        <div class="mt-4">
+                            <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/arm_prep.R" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-github me-2"></i>View Data Preparation Code
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="mb-3">Sample Transaction Data</h4>
+                        <div class="data-preview p-3 bg-light rounded" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Item</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1</td><td>Origin_Albany, NY</td></tr>
+                                    <tr><td>1</td><td>Dest_Los Angeles, CA (Metropolitan Area)</td></tr>
+                                    <tr><td>1</td><td>Carrier_WN</td></tr>
+                                    <tr><td>1</td><td>Fare_Medium</td></tr>
+                                    <tr><td>1</td><td>Distance_VeryLong</td></tr>
+                                    <tr><td>1</td><td>MarketShare_HighShare</td></tr>
+                                    <tr><td>2</td><td>Origin_Albany, NY</td></tr>
+                                    <tr><td>2</td><td>Dest_Tampa, FL (Metropolitan Area)</td></tr>
+                                    <tr><td>2</td><td>Carrier_WN</td></tr>
+                                    <tr><td>2</td><td>Fare_Medium</td></tr>
+                                    <tr><td>2</td><td>Distance_Medium</td></tr>
+                                    <tr><td>2</td><td>MarketShare_MediumShare</td></tr>
+                                    <tr><td>3</td><td>Origin_Albany, NY</td></tr>
+                                    <tr><td>3</td><td>Dest_Los Angeles, CA (Metropolitan Area)</td></tr>
+                                    <tr><td>3</td><td>Carrier_WN</td></tr>
+                                    <tr><td>3</td><td>Fare_Medium</td></tr>
+                                    <tr><td>3</td><td>Distance_VeryLong</td></tr>
+                                    <tr><td>3</td><td>MarketShare_MediumShare</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-3">
+                            <h5>Item Frequency</h5>
+                            <p class="text-muted">Most frequent items in our transaction dataset:</p>
+                            <img src="{{ url_for('static', filename='arm_results/item_frequency.png') }}" class="img-fluid rounded shadow-sm" alt="Item Frequency Plot">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ARM Analysis Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h2 class="card-title mb-0">Association Rule Mining Analysis</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            We performed ARM analysis using the <strong>arules</strong> and <strong>arulesViz</strong> packages in R, employing the Apriori algorithm with various thresholds to discover different types of relationships in our flight data.
+                            <div class="mt-2">
+                                <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/arm_analysis.R" class="btn btn-sm btn-outline-primary" target="_blank">
+                                    <i class="fab fa-github me-2"></i>View ARM Analysis Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h4 class="mb-3">Discovered Association Rules</h4>
+                        
+                        <!-- Rules Tabs -->
+                        <ul class="nav nav-tabs" id="rulesTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="support-tab" data-bs-toggle="tab" data-bs-target="#support" type="button" role="tab" aria-controls="support" aria-selected="true">
+                                    Top Rules by Support
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="confidence-tab" data-bs-toggle="tab" data-bs-target="#confidence" type="button" role="tab" aria-controls="confidence" aria-selected="false">
+                                    Top Rules by Confidence
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="lift-tab" data-bs-toggle="tab" data-bs-target="#lift" type="button" role="tab" aria-controls="lift" aria-selected="false">
+                                    Top Rules by Lift
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content mt-3" id="rulesTabContent">
+                            <div class="tab-pane fade show active" id="support" role="tabpanel" aria-labelledby="support-tab">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Top 15 Rules by Support (min. support: 0.1, min. confidence: 0.6)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive rules-table" style="max-height: 500px; overflow-y: auto;">
+                                            {{ top_rules_support | safe }}
+                                        </div>
+                                        <div class="mt-4">
+                                            <h6 class="mb-3">Network Visualization of Top Rules by Support</h6>
+                                            <img src="{{ url_for('static', filename='arm_results/rules_network_support.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Network (Support)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="confidence" role="tabpanel" aria-labelledby="confidence-tab">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Top 15 Rules by Confidence (min. support: 0.05, min. confidence: 0.8)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive rules-table" style="max-height: 500px; overflow-y: auto;">
+                                            {{ top_rules_confidence | safe }}
+                                        </div>
+                                        <div class="mt-4">
+                                            <h6 class="mb-3">Network Visualization of Top Rules by Confidence</h6>
+                                            <img src="{{ url_for('static', filename='arm_results/rules_network_confidence.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Network (Confidence)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="lift" role="tabpanel" aria-labelledby="lift-tab">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Top 15 Rules by Lift (min. support: 0.02, min. confidence: 0.5)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive rules-table" style="max-height: 500px; overflow-y: auto;">
+                                            {{ top_rules_lift | safe }}
+                                        </div>
+                                        <div class="mt-4">
+                                            <h6 class="mb-3">Network Visualization of Top Rules by Lift</h6>
+                                            <img src="{{ url_for('static', filename='arm_results/rules_network_lift.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Network (Lift)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <h4 class="mb-3">Grouped Matrix Visualization</h4>
+                        <p class="text-muted">
+                            This matrix visualization groups rules based on the items they contain, revealing clusters of related rules.
+                        </p>
+                        <img src="{{ url_for('static', filename='arm_results/rules_matrix.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Grouped Matrix">
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="mb-3">Parallel Coordinates Plot</h4>
+                        <p class="text-muted">
+                            This visualization shows the flow from LHS (left-hand side) to RHS (right-hand side) of the association rules.
+                        </p>
+                        <img src="{{ url_for('static', filename='arm_results/rules_parallel.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Parallel Coordinates">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Conclusions Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h2 class="card-title mb-0">Conclusions and Insights</h2>
+            </div>
+            <div class="card-body">
+                <div class="conclusions p-4 bg-light rounded">
+                    <h4 class="mb-3">Key Findings from Association Rule Mining</h4>
+                    <div class="conclusion-item mb-4">
+                        <h5><i class="fas fa-route me-2 text-primary"></i>Route Characteristics</h5>
+                        <p>
+                            Our ARM analysis revealed strong associations between route distance and fare categories. Very long distance flights consistently associate with higher fare categories, while shorter routes show more variable pricing patterns. This confirms the expected relationship between distance and price but also reveals exceptions where short routes command premium pricing due to high demand or limited competition.
+                        </p>
+                    </div>
+                    
+                    <div class="conclusion-item mb-4">
+                        <h5><i class="fas fa-building me-2 text-primary"></i>Carrier Strategies</h5>
+                        <p>
+                            The rules highlight distinct business strategies among carriers. Low-cost carriers consistently appear in associations with medium market share and lower fares, regardless of route distance. In contrast, legacy carriers exhibit stronger associations with high market share and premium fare categories, particularly on routes to major hub cities. This confirms different market positioning strategies and helps travelers better understand what to expect from different carrier types.
+                        </p>
+                    </div>
+                    
+                    <div class="conclusion-item mb-4">
+                        <h5><i class="fas fa-map-marker-alt me-2 text-primary"></i>Geographic Patterns</h5>
+                        <p>
+                            Our analysis uncovered interesting geographic patterns in pricing and market share. Flights to popular tourist destinations show associations with seasonal fare fluctuations and higher competition. Meanwhile, routes connecting major business hubs demonstrate more stable pricing patterns and stronger market dominance by legacy carriers. These insights can help travelers optimize their booking strategies based on destination types.
+                        </p>
+                    </div>
+                    
+                    <div class="conclusion-item">
+                        <h5><i class="fas fa-chart-line me-2 text-primary"></i>Market Share Dynamics</h5>
+                        <p>
+                            The association rules reveal that market share and pricing have a complex relationship. High market share does not always lead to higher prices—in fact, on some routes, carriers with dominant market share maintain competitive pricing. However, we found strong associations between high market share and premium pricing on routes with limited competition or high business traveler demand. This suggests that market dynamics vary significantly by route type and competitive landscape.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5 class="mb-3"><i class="fas fa-lightbulb me-2 text-warning"></i>Practical Applications</h5>
+                        <p>
+                            The insights from our ARM analysis can be applied in several ways:
+                        </p>
+                        <ul>
+                            <li><strong>For travelers</strong>: Understanding these associations can help in predicting fare patterns and booking flights strategically based on route characteristics and carrier choices.</li>
+                            <li><strong>For airlines</strong>: These patterns reveal market opportunities where pricing strategies might be adjusted or where market share could be increased through targeted offerings.</li>
+                            <li><strong>For market analysts</strong>: The rules provide a foundation for deeper analysis of competition dynamics and market segmentation in the airline industry.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block styles %}
+<style>
+    .viz-container {
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+    
+    .viz-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .step, .conclusion-item {
+        border-left: 4px solid #007bff;
+        transition: all 0.3s ease;
+    }
+    
+    .step:hover, .conclusion-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    .card {
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .alert {
+        border-left: 5px solid;
+    }
+    
+    .alert-info {
+        border-left-color: #17a2b8;
+    }
+    
+    .rules-table table {
+        font-size: 0.9rem;
+    }
+    
+    .rules-table th, .rules-table td {
+        padding: 0.5rem;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #495057;
+        background-color: #f8f9fa;
+        border-color: #dee2e6 #dee2e6 #fff;
+        margin-right: 5px;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        background-color: #e9ecef;
+        transform: translateY(-3px);
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+        font-weight: 600;
+    }
+    
+    .data-preview {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    code {
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,601 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Data Analysis - Clustering{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <i class="fas fa-project-diagram fa-2x mb-3 text-primary"></i>
+            <h1 class="display-4 mb-3">Clustering Analysis</h1>
+            <p class="lead text-muted">Discovering Natural Groupings in Flight Data</p>
+            <hr>
+        </div>
+    </div>
+
+    <!-- Clustering Methods Comparison Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Clustering Methods Comparison</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                            <i class="fas fa-chart-pie text-primary"></i>
+                                        </div>
+                                        <h4 class="mb-0">K-Means Clustering</h4>
+                                    </div>
+                                    <p class="text-muted">
+                                        A partition-based algorithm that divides data into k clusters by minimizing the distance between points and their cluster centers (centroids).
+                                    </p>
+                                    <h5 class="mt-3 mb-2">Characteristics:</h5>
+                                    <ul class="mb-0">
+                                        <li>Requires number of clusters (k) to be specified</li>
+                                        <li>Sensitive to initial centroid positions</li>
+                                        <li>Assumes clusters are spherical and similar in size</li>
+                                        <li>Works best with numerical data</li>
+                                        <li>Efficient for large datasets</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                            <i class="fas fa-sitemap text-success"></i>
+                                        </div>
+                                        <h4 class="mb-0">Hierarchical Clustering</h4>
+                                    </div>
+                                    <p class="text-muted">
+                                        Creates a tree-like structure (dendrogram) of nested clusters either by merging smaller clusters (agglomerative) or splitting larger ones (divisive).
+                                    </p>
+                                    <h5 class="mt-3 mb-2">Characteristics:</h5>
+                                    <ul class="mb-0">
+                                        <li>Doesn't require prespecified number of clusters</li>
+                                        <li>Provides a hierarchical representation</li>
+                                        <li>Allows cutting the tree at different levels</li>
+                                        <li>Less efficient for very large datasets</li>
+                                        <li>Can handle various distance metrics</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                                            <i class="fas fa-cubes text-info"></i>
+                                        </div>
+                                        <h4 class="mb-0">DBSCAN Clustering</h4>
+                                    </div>
+                                    <p class="text-muted">
+                                        Density-Based Spatial Clustering of Applications with Noise groups points in high-density regions, separating them from low-density regions.
+                                    </p>
+                                    <h5 class="mt-3 mb-2">Characteristics:</h5>
+                                    <ul class="mb-0">
+                                        <li>Doesn't require prespecified number of clusters</li>
+                                        <li>Can identify noise points (outliers)</li>
+                                        <li>Can discover clusters of arbitrary shapes</li>
+                                        <li>Handles clusters of different sizes and densities</li>
+                                        <li>Requires two parameters: eps and min_samples</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Preparation Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Data Preparation</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="data-source-info">
+                                <h4 class="mb-3">Dataset Selection</h4>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                        <i class="fas fa-database text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">U.S. Domestic Flight Data</h5>
+                                        <p class="text-muted mb-0">Department of Transportation Dataset ID: tfrh-tu9e</p>
+                                    </div>
+                                </div>
+                                <p>
+                                    For our clustering analysis, we selected flight data containing key metrics including distance, passenger counts, fare prices, and market share. We used carrier codes as our labels for later comparison with the discovered clusters.
+                                </p>
+                                <a href="https://data.transportation.gov/resource/tfrh-tu9e" class="btn btn-primary mt-2" target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>View Source Data
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Original Data Sample</h4>
+                            <div class="data-preview p-3 bg-light rounded" style="max-height: 250px; overflow-y: auto;">
+                                {{ before_sample_html | safe }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preprocessing-steps mt-4">
+                        <h4 class="mb-3">Preprocessing Steps</h4>
+                        <div class="step mb-3 p-3 bg-light rounded">
+                            <h5><i class="fas fa-tag me-2 text-primary"></i>Label Extraction</h5>
+                            <p class="mb-0">Extracted carrier codes (carrier_lg) as labels and set them aside for later comparison with cluster results.</p>
+                        </div>
+                        <div class="step mb-3 p-3 bg-light rounded">
+                            <h5><i class="fas fa-filter me-2 text-primary"></i>Feature Selection</h5>
+                            <p class="mb-0">Selected only quantitative features for clustering:</p>
+                            <ul class="mb-0 mt-2">
+                                <li><strong>nsmiles</strong> - Distance in miles</li>
+                                <li><strong>passengers</strong> - Number of passengers</li>
+                                <li><strong>fare</strong> - Average fare price</li>
+                                <li><strong>large_ms</strong> - Major carrier market share</li>
+                                <li><strong>fare_lg</strong> - Major carrier fare</li>
+                                <li><strong>lf_ms</strong> - Low-fare carrier market share</li>
+                                <li><strong>fare_low</strong> - Low-fare carrier fare</li>
+                            </ul>
+                        </div>
+                        <div class="step mb-3 p-3 bg-light rounded">
+                            <h5><i class="fas fa-broom me-2 text-primary"></i>Data Cleaning</h5>
+                            <p class="mb-0">Removed rows with missing values and converted all features to numeric types.</p>
+                        </div>
+                        <div class="step mb-3 p-3 bg-light rounded">
+                            <h5><i class="fas fa-balance-scale me-2 text-primary"></i>Normalization</h5>
+                            <p class="mb-0">Applied StandardScaler to normalize the data, ensuring each feature has mean=0 and standard deviation=1.</p>
+                            <div class="mt-3">
+                                <h6 class="mb-2">Normalized Data Sample:</h6>
+                                <div class="data-preview p-3 bg-light rounded" style="max-height: 200px; overflow-y: auto;">
+                                    {{ after_sample_html | safe }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step p-3 bg-light rounded">
+                            <h5><i class="fas fa-chart-scatter me-2 text-primary"></i>Dimensionality Reduction</h5>
+                            <p class="mb-0">Applied PCA to reduce the data to 3 dimensions for better visualization while retaining {{ "%.2f"|format(variance_explained) }}% of the original variance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- K-Means Clustering Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">K-Means Clustering</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-lg-8">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <iframe src="{{ url_for('static', filename='plots/silhouette_scores.html') }}" width="100%" height="500px" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="kmeans-insights">
+                                <h4 class="mb-3">Silhouette Analysis</h4>
+                                <div class="alert alert-primary">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="fas fa-info-circle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="alert-heading">Optimal Cluster Count</h5>
+                                            <p class="mb-0">The silhouette method identified these optimal values of k: <strong>{{ optimal_k | join(', ') }}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">What is Silhouette Analysis?</h5>
+                                        <p class="card-text">
+                                            Silhouette analysis measures how well each data point fits within its assigned cluster compared to other clusters. The silhouette score ranges from -1 to 1:
+                                        </p>
+                                        <ul class="card-text">
+                                            <li>Values near 1 indicate the point is well-matched to its cluster</li>
+                                            <li>Values near 0 indicate the point is on or near the decision boundary</li>
+                                            <li>Values near -1 indicate the point may be assigned to the wrong cluster</li>
+                                        </ul>
+                                        <p class="card-text">
+                                            Higher average silhouette scores suggest better-defined clusters.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- K-Means Results Tabs -->
+                    <ul class="nav nav-tabs" id="kmeansTabs" role="tablist">
+                        {% for k in optimal_k %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link {% if loop.first %}active{% endif %}" id="k{{ k }}-tab" data-bs-toggle="tab" data-bs-target="#k{{ k }}" type="button" role="tab" aria-controls="k{{ k }}" aria-selected="{{ loop.first }}">
+                                k = {{ k }}
+                            </button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content mt-3" id="kmeansTabContent">
+                        {% for k in optimal_k %}
+                        <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="k{{ k }}" role="tabpanel" aria-labelledby="k{{ k }}-tab">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="viz-container p-3 bg-light rounded mb-3">
+                                        <iframe src="{{ url_for('static', filename='plots/kmeans_' ~ k ~ '_carrier.html') }}" width="100%" height="550px" frameborder="0"></iframe>
+                                    </div>
+                                    <div class="text-center">
+                                        <h5>Clusters Colored by Original Carrier</h5>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="viz-container p-3 bg-light rounded mb-3 <div class="col-lg-6">
+                                    <div class="viz-container p-3 bg-light rounded mb-3">
+                                        <iframe src="{{ url_for('static', filename='plots/kmeans_' ~ k ~ '_cluster.html') }}" width="100%" height="550px" frameborder="0"></iframe>
+                                    </div>
+                                    <div class="text-center">
+                                        <h5>Clusters Colored by K-means Assignment</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kmeans-analysis mt-4">
+                                <h4 class="mb-3">Analysis for k={{ k }}</h4>
+                                <div class="analysis-points p-3 bg-light rounded">
+                                    <p>When applying K-means with {{ k }} clusters to our flight data, we observe the following patterns:</p>
+                                    <ul>
+                                        {% if k == optimal_k[0] %}
+                                        <li>With the lowest k value, we see broader, more generalized clusters that group together multiple carriers.</li>
+                                        <li>The clusters primarily differentiate between short/long routes and budget/premium pricing strategies.</li>
+                                        <li>We observe overlap between carriers that follow similar pricing strategies.</li>
+                                        {% elif k == optimal_k[1] %}
+                                        <li>This middle k value provides a balanced view that captures major market segments while avoiding overfitting.</li>
+                                        <li>Clusters tend to align with carrier groups (e.g., low-cost carriers vs. legacy carriers).</li>
+                                        <li>The centroids reveal distinctive pricing and route length strategies in the market.</li>
+                                        {% else %}
+                                        <li>With more clusters, we can identify finer subgroups within the broader market segments.</li>
+                                        <li>Specific carriers with distinctive strategies get their own clusters.</li>
+                                        <li>The higher granularity helps identify niche market strategies but risks overfitting to noise in the data.</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hierarchical Clustering Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Hierarchical Clustering</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12 mb-4">
+                            <div class="viz-container p-3 bg-light rounded">
+                                <iframe src="{{ url_for('static', filename='plots/hierarchical_clustering.html') }}" width="100%" height="700px" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <iframe src="{{ url_for('static', filename='plots/hierarchical_clustering_3d.html') }}" width="100%" height="500px" frameborder="0"></iframe>
+                            </div>
+                            <div class="text-center">
+                                <h5>3D Visualization of Hierarchical Clusters</h5>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="hierarchical-insights p-4 bg-light rounded">
+                                <h4 class="mb-3">Hierarchical Clustering Insights</h4>
+                                <p>
+                                    Hierarchical clustering creates a tree-like structure (dendrogram) that shows how data points group together at different levels of similarity.
+                                </p>
+                                <h5 class="mt-4 mb-2">Key Observations:</h5>
+                                <ul>
+                                    <li>The dendrogram reveals a natural hierarchy in our flight data, showing how carriers and routes group together at different similarity thresholds.</li>
+                                    <li>Unlike K-means, hierarchical clustering doesn't force equal-sized clusters, allowing more natural groupings based on data distribution.</li>
+                                    <li>We can identify major market divisions (budget vs. premium carriers) at higher levels of the hierarchy, and more specific strategies at lower levels.</li>
+                                    <li>When compared to K-means results, hierarchical clustering reveals similar major groups but with different boundaries between them.</li>
+                                    <li>The dendrogram provides additional insight into the relationships between clusters that K-means doesn't show.</li>
+                                </ul>
+                                <h5 class="mt-4 mb-2">Implementation Details:</h5>
+                                <p>
+                                    We implemented hierarchical clustering using Ward's method, which minimizes variance within clusters. The dendrogram was created using Plotly's Figure Factory, and we cut the tree to compare with our K-means results using the same number of clusters.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DBSCAN Clustering Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">DBSCAN Clustering</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <iframe src="{{ url_for('static', filename='plots/dbscan_clustering.html') }}" width="100%" height="600px" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="dbscan-insights p-4 bg-light rounded">
+                                <h4 class="mb-3">DBSCAN Analysis</h4>
+                                <div class="alert alert-info mb-4">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="fas fa-info-circle fa-2x"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="alert-heading">Clustering Results</h5>
+                                            <p class="mb-0">DBSCAN identified <strong>{{ dbscan_clusters }}</strong> clusters and <strong>{{ dbscan_noise }}</strong> noise points (outliers).</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h5 class="mb-2">Key Observations:</h5>
+                                <ul>
+                                    <li>Unlike K-means and hierarchical clustering, DBSCAN automatically determines the number of clusters based on data density.</li>
+                                    <li>It successfully identifies outliers in the flight data, marking unusual pricing or route patterns as noise (marked as -1).</li>
+                                    <li>The algorithm excels at finding non-spherical clusters, revealing market segments that the other methods might miss.</li>
+                                    <li>DBSCAN shows natural groupings based on the density of data points, highlighting areas where similar pricing strategies concentrate.</li>
+                                    <li>The clusters found by DBSCAN often correspond to specific market niches or carrier specializations.</li>
+                                </ul>
+                                <h5 class="mt-4 mb-2">Parameter Selection:</h5>
+                                <p>
+                                    For our DBSCAN implementation, we used:
+                                </p>
+                                <ul>
+                                    <li><strong>eps = 0.5</strong> - The maximum distance between two points to be considered neighbors</li>
+                                    <li><strong>min_samples = 5</strong> - The minimum number of points required to form a dense region</li>
+                                </ul>
+                                <p>
+                                    These parameters were selected to balance between finding meaningful clusters and identifying true outliers in the flight pricing data.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparative Analysis Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Comparison of Clustering Methods</h2>
+                </div>
+                <div class="card-body">
+                    <div class="comparison-table">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th>K-Means</th>
+                                        <th>Hierarchical</th>
+                                        <th>DBSCAN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Cluster Shape</th>
+                                        <td>Spherical</td>
+                                        <td>Varies by linkage method</td>
+                                        <td>Arbitrary shapes</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Number of Clusters</th>
+                                        <td>Predefined (k)</td>
+                                        <td>Can cut dendrogram at any level</td>
+                                        <td>Automatically determined</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Outlier Handling</th>
+                                        <td>Assigns outliers to nearest cluster</td>
+                                        <td>Creates small/singleton clusters</td>
+                                        <td>Explicitly identifies outliers</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Scalability</th>
+                                        <td>Good for large datasets</td>
+                                        <td>Poor for very large datasets</td>
+                                        <td>Moderate</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Flight Data Insights</th>
+                                        <td>Clear separation of carrier strategies</td>
+                                        <td>Reveals hierarchical relationships</td>
+                                        <td>Identifies niche markets and outliers</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="method-comments mt-4 p-4 bg-light rounded">
+                        <h4 class="mb-3">Key Findings Across Methods</h4>
+                        <p>
+                            Each clustering method reveals different aspects of the flight data structure:
+                        </p>
+                        <ul>
+                            <li><strong>K-means</strong> provides clear, interpretable clusters that align with major carrier groups and pricing strategies. It works well for identifying the main market segments.</li>
+                            <li><strong>Hierarchical clustering</strong> offers insights into the nested structure of the market, showing how different carriers relate to each other and how the market segments at different levels of granularity.</li>
+                            <li><strong>DBSCAN</strong> excels at identifying outliers and unusual pricing patterns, revealing niche strategies that might be overlooked by the other methods.</li>
+                        </ul>
+                        <p>
+                            For a comprehensive understanding of the flight pricing market, a combination of these methods provides the most complete picture. K-means offers a high-level view of major segments, hierarchical clustering shows relationships between these segments, and DBSCAN identifies special cases and outliers.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conclusions Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Conclusions and Market Implications</h2>
+                </div>
+                <div class="card-body">
+                    <div class="conclusions p-4 bg-light rounded">
+                        <h4 class="mb-3">What We Learned About Flight Pricing</h4>
+                        <div class="conclusion-item mb-4">
+                            <h5><i class="fas fa-layer-group me-2 text-primary"></i>Market Segmentation</h5>
+                            <p>
+                                Our clustering analysis revealed distinct segments in the US domestic flight market. Rather than a simple low-cost vs. premium division, we found multiple tiers of pricing strategies. These clusters often transcend traditional carrier categorizations, with some carriers employing different strategies on different routes.
+                            </p>
+                        </div>
+                        <div class="conclusion-item mb-4">
+                            <h5><i class="fas fa-route me-2 text-primary"></i>Route Distance Impact</h5>
+                            <p>
+                                Distance emerged as a primary differentiator in our clusters, with carriers adopting different pricing models for short, medium, and long-haul routes. This suggests that market competition and pricing strategies vary significantly by route length, with more pricing variability in medium-distance routes.
+                            </p>
+                        </div>
+                        <div class="conclusion-item mb-4">
+                            <h5><i class="fas fa-dollar-sign me-2 text-primary"></i>Pricing Outliers</h5>
+                            <p>
+                                DBSCAN identified significant pricing outliers, representing routes with unusual pricing patterns. These outliers often correspond to routes with limited competition or specialty markets, suggesting opportunities for targeted price optimization on specific routes.
+                            </p>
+                        </div>
+                        <div class="conclusion-item">
+                            <h5><i class="fas fa-users me-2 text-primary"></i>Passenger Volume Relationship</h5>
+                            <p>
+                                The clustering revealed complex relationships between passenger volumes and fares. While some high-volume routes show competitive pricing, others maintain premium pricing despite high passenger counts, suggesting different levels of price sensitivity across market segments.
+                            </p>
+                        </div>
+                        <div class="conclusion-item mt-4">
+                            <h5><i class="fas fa-lightbulb me-2 text-primary"></i>Applications for Travelers</h5>
+                            <p>
+                                For travelers, understanding these clusters can help predict pricing patterns and find better deals. Routes that fall into certain clusters may have more predictable pricing or be more susceptible to seasonal variations. Additionally, identifying which carriers compete within the same cluster for specific routes can help travelers compare the most relevant options.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .viz-container {
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+    
+    .viz-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .step, .conclusion-item {
+        border-left: 4px solid #007bff;
+        transition: all 0.3s ease;
+    }
+    
+    .step:hover, .conclusion-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    .card {
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .alert {
+        border-left: 5px solid;
+    }
+    
+    .alert-primary {
+        border-left-color: #007bff;
+    }
+    
+    .alert-success {
+        border-left-color: #28a745;
+    }
+    
+    .alert-info {
+        border-left-color: #17a2b8;
+    }
+    
+    .alert-warning {
+        border-left-color: #ffc107;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #495057;
+        background-color: #f8f9fa;
+        border-color: #dee2e6 #dee2e6 #fff;
+        margin-right: 5px;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        background-color: #e9ecef;
+        transform: translateY(-3px);
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+        font-weight: 600;
+    }
+    
+    .data-preview {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    iframe {
+        border: none;
+        background-color: #ffffff;
+    }
+</style>
+{% endblock %}

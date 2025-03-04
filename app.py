@@ -1,10 +1,17 @@
 import os
 from flask import Flask, render_template
+import pandas as pd
 from data_prep import create_visualizations, generate_summary_stats, load_data
+from arm import run_arm_analysis
+from pca import generate_pca_visualizations
+from clustering import generate_clustering_visualizations
 
 app = Flask(__name__, static_folder='static')
 
-# Routes
+app.jinja_env.globals.update(min=min)
+app.jinja_env.globals.update(len=len)
+app.jinja_env.globals.update(enumerate=enumerate)
+
 @app.route('/')
 def home():
     """
@@ -64,11 +71,139 @@ def data_prep():
                          summary=summary,
                          plot_files=plot_files)
 
+@app.route('/pca')
+def pca_analysis():
+    """
+    Principal Component Analysis (PCA) on flight data
+    
+    Returns:
+    HTML template with PCA visualizations and analysis results
+    """
+    plots_dir = os.path.join(app.static_folder, 'plots')
+    pca_plots = ['pca_2d.html', 'pca_3d.html', 'pca_variance.html', 'pca_loadings.html']
+    
+    if not all(os.path.exists(os.path.join(plots_dir, fname)) for fname in pca_plots):
+        pca_results = generate_pca_visualizations()
+    else:
+        pca_results = {
+            'plot_files': {
+                'pca_2d': os.path.join(plots_dir, 'pca_2d.html'),
+                'pca_3d': os.path.join(plots_dir, 'pca_3d.html'),
+                'pca_variance': os.path.join(plots_dir, 'pca_variance.html'),
+                'pca_loadings': os.path.join(plots_dir, 'pca_loadings.html')
+            }
+        }
+    
+    if not pca_results:
+        pca_results = generate_pca_visualizations()
+    
+    plot_files = {
+        'pca_2d': 'pca_2d.html',
+        'pca_3d': 'pca_3d.html',
+        'pca_variance': 'pca_variance.html',
+        'pca_loadings': 'pca_loadings.html'
+    }
+    
+    full_results = generate_pca_visualizations()
+    
+    pca_data = {
+        'variance_2d': sum(full_results['pca_2d']['explained_variance']) * 100,
+        'variance_3d': sum(full_results['pca_3d']['explained_variance']) * 100,
+        'components_for_95': full_results['full_pca']['components_for_95'],
+        'top_eigenvalues': full_results['full_pca']['pca'].explained_variance_[:3].tolist(),
+        'cumulative_variance': full_results['full_pca']['cumulative_variance'] * 100,
+        'feature_names': list(full_results['pca_df'].columns),
+        'sample_data': full_results['pca_df'].head().to_html(classes='table table-striped table-hover'),
+        'cumulative_variance_length': len(full_results['full_pca']['cumulative_variance'])
+    }
+    
+    return render_template('pca.html',
+                         plot_files=plot_files,
+                         pca_data=pca_data)
+
+@app.route('/clustering')
+def clustering():
+    """
+    Clustering analysis on flight data
+    
+    Returns:
+    HTML template with clustering visualizations and analysis results
+    """
+    plots_dir = os.path.join(app.static_folder, 'plots')
+    cluster_plots = ['silhouette_scores.html', 'hierarchical_clustering.html', 'dbscan_clustering.html']
+    
+    if not all(os.path.exists(os.path.join(plots_dir, fname)) for fname in cluster_plots):
+        cluster_results = generate_clustering_visualizations()
+    else:
+        cluster_results = generate_clustering_visualizations()
+    
+    optimal_k = cluster_results['data']['optimal_k']
+    variance_explained = cluster_results['data']['variance_explained']
+    before_sample_html = cluster_results['before_sample_html']
+    after_sample_html = cluster_results['after_sample_html']
+    dbscan_clusters = cluster_results['dbscan_results']['n_clusters']
+    dbscan_noise = cluster_results['dbscan_results']['n_noise']
+    
+    return render_template('clustering.html',
+                          optimal_k=optimal_k,
+                          variance_explained=variance_explained,
+                          before_sample_html=before_sample_html,
+                          after_sample_html=after_sample_html,
+                          dbscan_clusters=dbscan_clusters,
+                          dbscan_noise=dbscan_noise)
+
+@app.route('/arm')
+def arm_analysis():
+    """
+    Association Rule Mining analysis on flight data
+    
+    Returns:
+    HTML template with ARM visualizations and analysis results
+    """
+    arm_results_dir = os.path.join(app.static_folder, 'arm_results')
+    
+    required_files = [
+        'top_rules_support.html', 
+        'top_rules_confidence.html', 
+        'top_rules_lift.html',
+        'rules_network_support.png',
+        'rules_network_confidence.png',
+        'rules_network_lift.png',
+        'rules_matrix.png',
+        'rules_parallel.png',
+        'item_frequency.png'
+    ]
+    
+    files_exist = all(os.path.exists(os.path.join(arm_results_dir, f)) for f in required_files)
+    
+    if not files_exist:
+        df = pd.read_csv('flight_data.csv')
+        
+        run_arm_analysis(df, arm_results_dir)
+    
+    try:
+        with open(os.path.join(arm_results_dir, 'top_rules_support.html'), 'r', encoding='utf-8') as f:
+            top_rules_support = f.read()
+        
+        with open(os.path.join(arm_results_dir, 'top_rules_confidence.html'), 'r', encoding='utf-8') as f:
+            top_rules_confidence = f.read()
+        
+        with open(os.path.join(arm_results_dir, 'top_rules_lift.html'), 'r', encoding='utf-8') as f:
+            top_rules_lift = f.read()
+    except Exception as e:
+        print(f"Error loading ARM results: {e}")
+        top_rules_support = "<p>Error loading rules.</p>"
+        top_rules_confidence = "<p>Error loading rules.</p>"
+        top_rules_lift = "<p>Error loading rules.</p>"
+    
+    return render_template('arm.html',
+                          top_rules_support=top_rules_support,
+                          top_rules_confidence=top_rules_confidence,
+                          top_rules_lift=top_rules_lift)
 
 @app.route('/conclusions')
 def conclusions():
     return render_template('conclusions.html')
 
 if __name__ == '__main__':
-    app.run()
-    
+    app.run(debug=True)
