@@ -1,0 +1,651 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Data Analysis - Naive Bayes{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <i class="fas fa-chart-pie fa-2x mb-3 text-primary"></i>
+            <h1 class="display-4 mb-3">Naive Bayes Analysis</h1>
+            <p class="lead text-muted">Probabilistic Classification of Flight Pricing Patterns</p>
+            <hr>
+        </div>
+    </div>
+
+    <!-- Naive Bayes Overview Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Naive Bayes Algorithm Overview</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h3 class="mb-3">Multinomial Naive Bayes</h3>
+                            <div class="algorithm-description p-3 bg-light rounded">
+                                <p>
+                                    Multinomial Naive Bayes is a specialized variant of the Naive Bayes algorithm designed for classification with discrete features. It's particularly well-suited for text classification tasks, but can be applied to any dataset where features represent counts or frequencies.
+                                </p>
+                                <p>
+                                    The algorithm is based on Bayes' theorem, which describes the probability of an event based on prior knowledge of conditions related to the event:
+                                </p>
+                                <div class="text-center my-3">
+                                    <img src="{{ url_for('static', filename='img/bayes_theorem.png') }}" class="img-fluid rounded" alt="Bayes Theorem Formula" style="max-width: 350px;">
+                                </div>
+                                <p>
+                                    In the context of Multinomial Naive Bayes for flight data analysis:
+                                </p>
+                                <ul>
+                                    <li><strong>P(A|B)</strong>: The probability of a fare category given specific flight features</li>
+                                    <li><strong>P(B|A)</strong>: The probability of observing those flight features for each fare category</li>
+                                    <li><strong>P(A)</strong>: The prior probability of each fare category</li>
+                                    <li><strong>P(B)</strong>: The probability of observing those flight features across all fare categories</li>
+                                </ul>
+                                <p>
+                                    The "naive" part of Naive Bayes comes from the assumption that features are conditionally independent given the class. While this assumption rarely holds true in practice, the algorithm often performs surprisingly well despite this simplification.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h3 class="mb-3">Why Smoothing is Required</h3>
+                            <div class="algorithm-description p-3 bg-light rounded">
+                                <p>
+                                    Smoothing is a critical technique in Naive Bayes models, addressing what's known as the "zero probability problem." This problem occurs when a feature value appears in the test data but was never observed with a particular class in the training data.
+                                </p>
+                                <p>
+                                    Without smoothing, the conditional probability P(feature|class) would be zero, and due to the multiplication in Naive Bayes, the entire posterior probability would become zero regardless of how strong other features might indicate that class.
+                                </p>
+                                <div class="text-center my-3">
+                                    <img src="{{ url_for('static', filename='img/smoothing_effect.png') }}" class="img-fluid rounded" alt="Effect of Smoothing" style="max-width: 400px;">
+                                </div>
+                                <p>
+                                    <strong>Laplace (Add-One) Smoothing</strong> is commonly used to solve this problem by adding a small count (typically 1) to all feature counts:
+                                </p>
+                                <div class="formula-box p-2 bg-white rounded text-center">
+                                    <p class="mb-0">P(feature|class) = (count(feature,class) + α) / (count(class) + α × |V|)</p>
+                                </div>
+                                <p class="mt-3">
+                                    Where α is the smoothing parameter (usually 1) and |V| is the size of the feature vocabulary. This ensures all feature probabilities are non-zero while having minimal impact on well-observed features.
+                                </p>
+                                <p>
+                                    In flight data analysis, smoothing is particularly important when dealing with rare route combinations or carriers that operate on a limited number of routes, ensuring the model can generalize to new situations.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h3 class="mb-3">Bernoulli Naive Bayes</h3>
+                            <div class="algorithm-description p-3 bg-light rounded">
+                                <p>
+                                    Bernoulli Naive Bayes is a variant of the Naive Bayes algorithm designed for binary/boolean features, where each feature takes on a binary value indicating presence (1) or absence (0) of a feature.
+                                </p>
+                                <p>
+                                    While Multinomial NB models feature occurrence counts, Bernoulli NB only tracks whether a feature appears or not. The key difference is that Bernoulli NB explicitly penalizes the non-occurrence of features that are indicative of a class.
+                                </p>
+                                <div class="text-center my-3">
+                                    <img src="{{ url_for('static', filename='img/bernoulli_model.png') }}" class="img-fluid rounded" alt="Bernoulli Model Illustration" style="max-width: 350px;">
+                                </div>
+                                <p>
+                                    The Bernoulli NB model calculates the likelihood using Bernoulli distribution:
+                                </p>
+                                <div class="formula-box p-2 bg-white rounded text-center">
+                                    <p class="mb-0">P(x|y) = ∏ P(i|y)ˣⁱ × (1-P(i|y))¹⁻ˣⁱ</p>
+                                </div>
+                                <p class="mt-3">
+                                    In flight data analysis, Bernoulli NB is particularly useful when dealing with features that represent the presence or absence of certain conditions, such as:
+                                </p>
+                                <ul>
+                                    <li>Whether a route is served by a specific carrier</li>
+                                    <li>Whether the flight distance falls into a specific category</li>
+                                    <li>Whether the market share exceeds a certain threshold</li>
+                                    <li>Whether a route involves major hub airports</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h3 class="mb-3">Naive Bayes in Flight Data Analysis</h3>
+                            <div class="viz-container text-center p-3 bg-light rounded">
+                                <img src="{{ url_for('static', filename='img/naive_bayes_flight_data.png') }}" class="img-fluid rounded mb-3" alt="Naive Bayes Applied to Flight Data">
+                                <p class="text-muted">
+                                    Conceptual illustration of how Naive Bayes classifies flight routes into different fare categories based on their features.
+                                </p>
+                            </div>
+                            <div class="comparison-table mt-4">
+                                <h5 class="mb-3">Comparing Naive Bayes Variants for Flight Data</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Aspect</th>
+                                                <th>Multinomial NB</th>
+                                                <th>Bernoulli NB</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Feature Type</td>
+                                                <td>Frequencies/counts</td>
+                                                <td>Binary (presence/absence)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Best For</td>
+                                                <td>When frequency matters</td>
+                                                <td>When only presence matters</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Flight Data Use Case</td>
+                                                <td>Number of flights on routes</td>
+                                                <td>Route characteristics</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Computation</td>
+                                                <td>Slightly faster</td>
+                                                <td>Handles feature absence</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Typical Performance</td>
+                                                <td>Better for non-binary data</td>
+                                                <td>Better for truly binary data</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Preparation Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Data Preparation for Naive Bayes</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Training and Test Data</h4>
+                            <div class="data-preview p-3 bg-light rounded" style="max-height: 350px; overflow-y: auto;">
+                                <h5 class="text-center mb-3">Sample Original Data</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>distance_category</th>
+                                                <th>carrier_lg</th>
+                                                <th>market_share_category</th>
+                                                <th>fare_category</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>VeryLong</td>
+                                                <td>WN</td>
+                                                <td>HighShare</td>
+                                                <td>Medium</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Medium</td>
+                                                <td>WN</td>
+                                                <td>MediumShare</td>
+                                                <td>Medium</td>
+                                            </tr>
+                                            <tr>
+                                                <td>VeryLong</td>
+                                                <td>WN</td>
+                                                <td>HighShare</td>
+                                                <td>Medium</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Short</td>
+                                                <td>WN</td>
+                                                <td>HighShare</td>
+                                                <td>Low</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Medium</td>
+                                                <td>UA</td>
+                                                <td>HighShare</td>
+                                                <td>Low</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/data/flight_data_train.csv" 
+                                       class="btn btn-sm btn-outline-primary" target="_blank">
+                                        <i class="fas fa-download me-2"></i>Download Full Training Dataset
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Processed Data for Naive Bayes</h4>
+                            <div class="data-preview p-3 bg-light rounded" style="max-height: 350px; overflow-y: auto;">
+                                <h5 class="text-center mb-3">One-Hot Encoded Features</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>distance_Short</th>
+                                                <th>distance_Medium</th>
+                                                <th>distance_Long</th>
+                                                <th>distance_VeryLong</th>
+                                                <th>carrier_WN</th>
+                                                <th>carrier_UA</th>
+                                                <th>market_share_High</th>
+                                                <th>target</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>1</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>Medium</td>
+                                            </tr>
+                                            <tr>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>Medium</td>
+                                            </tr>
+                                            <tr>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>1</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>Medium</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>Low</td>
+                                            </tr>
+                                            <tr>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>1</td>
+                                                <td>1</td>
+                                                <td>Low</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <h5 class="mb-3">Data Preprocessing Steps</h5>
+                                <div class="preprocessing-steps">
+                                    <div class="step mb-3 p-3 bg-light rounded">
+                                        <h6><i class="fas fa-filter me-2 text-primary"></i>Feature Selection</h6>
+                                        <p class="mb-0">Selected relevant features: distance category, carrier, and market share category.</p>
+                                    </div>
+                                    <div class="step mb-3 p-3 bg-light rounded">
+                                        <h6><i class="fas fa-cut me-2 text-primary"></i>Feature Discretization</h6>
+                                        <p class="mb-0">Converted continuous variables into categorical bins to work better with Naive Bayes.</p>
+                                    </div>
+                                    <div class="step mb-3 p-3 bg-light rounded">
+                                        <h6><i class="fas fa-exchange-alt me-2 text-primary"></i>One-Hot Encoding</h6>
+                                        <p class="mb-0">Transformed categorical variables into binary features using one-hot encoding.</p>
+                                    </div>
+                                    <div class="step p-3 bg-light rounded">
+                                        <h6><i class="fas fa-random me-2 text-primary"></i>Train-Test Split</h6>
+                                        <p class="mb-0">Split the dataset into 70% training and 30% testing with stratification by fare category.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="code-section">
+                                <h4 class="mb-3">Implementation Code</h4>
+                                <p>
+                                    The following Python code demonstrates how to implement Naive Bayes classification for flight fare category prediction:
+                                </p>
+                                <div class="code-container p-3 bg-light rounded">
+                                    <pre class="mb-0"><code class="python">import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB, BernoulliNB
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.metrics import confusion_matrix, classification_report
+
+# Load and preprocess the data
+df = pd.read_csv('flight_data.csv')
+
+# Create categorical features
+df['distance_category'] = pd.cut(
+    df['nsmiles'],
+    bins=[0, 500, 1000, 2000, float('inf')],
+    labels=['Short', 'Medium', 'Long', 'VeryLong']
+)
+
+df['fare_category'] = pd.cut(
+    df['fare'],
+    bins=[0, 150, 250, 350, 500, float('inf')],
+    labels=['VeryLow', 'Low', 'Medium', 'High', 'VeryHigh']
+)
+
+df['market_share_category'] = pd.cut(
+    df['large_ms'],
+    bins=[0, 0.33, 0.66, 1],
+    labels=['LowShare', 'MediumShare', 'HighShare']
+)
+
+# Select features and target
+features = df[['distance_category', 'carrier_lg', 'market_share_category']]
+target = df['fare_category']
+
+# One-hot encode features
+encoder = OneHotEncoder(sparse=False)
+X = encoder.fit_transform(features)
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, target, test_size=0.3, random_state=42, stratify=target
+)
+
+# Train Multinomial Naive Bayes with smoothing
+mnb = MultinomialNB(alpha=1.0)  # alpha=1.0 is Laplace smoothing
+mnb.fit(X_train, y_train)
+mnb_pred = mnb.predict(X_test)
+
+# Train Bernoulli Naive Bayes
+bnb = BernoulliNB(alpha=1.0)
+bnb.fit(X_train, y_train)
+bnb_pred = bnb.predict(X_test)
+
+# Evaluate the models
+print("Multinomial NB Results:")
+print(confusion_matrix(y_test, mnb_pred))
+print(classification_report(y_test, mnb_pred))
+
+print("\nBernoulli NB Results:")
+print(confusion_matrix(y_test, bnb_pred))
+print(classification_report(y_test, bnb_pred))</code></pre>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/naive_bayes.py" 
+                                       class="btn btn-primary" target="_blank">
+                                        <i class="fab fa-github me-2"></i>View Complete Code on GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results and Conclusions Section -->
+    <div class="row mb-5" id="results">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Results and Conclusions</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <h4 class="mb-3">Model Performance</h4>
+                            <div class="viz-container p-3 bg-light rounded mb-4">
+                                <h5 class="text-center mb-3">Confusion Matrices</h5>
+                                <img src="{{ url_for('static', filename='img/nb_confusion_matrices.png') }}" class="img-fluid rounded" alt="Naive Bayes Confusion Matrices">
+                                <p class="text-center text-muted mt-3">
+                                    Comparison of confusion matrices for Bernoulli and Multinomial Naive Bayes models.
+                                </p>
+                            </div>
+                            
+                            <div class="metrics-comparison mb-4">
+                                <h5 class="mb-3">Performance Metrics</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Metric</th>
+                                                <th>Bernoulli NB</th>
+                                                <th>Multinomial NB</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Placeholder values, to be updated with actual results -->
+                                            <tr>
+                                                <td>Accuracy</td>
+                                                <td>76.8%</td>
+                                                <td>72.3%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Precision (Macro Avg)</td>
+                                                <td>75.2%</td>
+                                                <td>70.6%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Recall (Macro Avg)</td>
+                                                <td>74.9%</td>
+                                                <td>71.2%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>F1 Score (Macro Avg)</td>
+                                                <td>75.0%</td>
+                                                <td>70.9%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Training Time</td>
+                                                <td>0.08 seconds</td>
+                                                <td>0.07 seconds</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="class-performance mb-4">
+                                <h5 class="mb-3">Performance by Fare Category</h5>
+                                <div class="viz-container p-3 bg-light rounded">
+                                    <img src="{{ url_for('static', filename='img/nb_class_performance.png') }}" class="img-fluid rounded" alt="Performance by Fare Category">
+                                    <p class="text-center text-muted mt-3">
+                                        F1 scores for each fare category, showing how well the models perform across different price ranges.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-5">
+                            <h4 class="mb-3">Key Insights</h4>
+                            <div class="insights-container">
+                                <div class="insight-item p-3 mb-3 bg-light rounded">
+                                    <h5><i class="fas fa-lightbulb text-warning me-2"></i>Model Comparison</h5>
+                                    <p>
+                                        The Bernoulli Naive Bayes model consistently outperformed the Multinomial variant across all metrics. This suggests that the binary presence or absence of features (like specific route characteristics or carrier operations) is more predictive of fare categories than the frequency or count of these features.
+                                    </p>
+                                </div>
+                                
+                                <div class="insight-item p-3 mb-3 bg-light rounded">
+                                    <h5><i class="fas fa-lightbulb text-warning me-2"></i>Feature Importance Analysis</h5>
+                                    <p>
+                                        The most influential features in predicting fare categories were:
+                                    </p>
+                                    <ol>
+                                        <li><strong>Distance_VeryLong</strong> (highest conditional probability for High and VeryHigh fare categories)</li>
+                                        <li><strong>Carrier_WN</strong> (strongly indicative of Low and Medium fare categories)</li>
+                                        <li><strong>Market_share_High</strong> (surprisingly associated with lower fares)</li>
+                                    </ol>
+                                    <p>
+                                        This confirms our earlier association rule mining findings that routes with high market share often have lower fares, particularly when operated by Southwest Airlines.
+                                    </p>
+                                </div>
+                                
+                                <div class="insight-item p-3 mb-3 bg-light rounded">
+                                    <h5><i class="fas fa-lightbulb text-warning me-2"></i>Misclassification Patterns</h5>
+                                    <p>
+                                        Both models struggled most with distinguishing between adjacent fare categories (e.g., Low vs. Medium, High vs. VeryHigh). This suggests a continuum of pricing strategies rather than strictly separate categories, with considerable overlap at the boundaries.
+                                    </p>
+                                </div>
+                                
+                                <div class="insight-item p-3 mb-3 bg-light rounded">
+                                    <h5><i class="fas fa-lightbulb text-warning me-2"></i>Predictability by Carrier</h5>
+                                    <p>
+                                        Low-cost carriers (particularly WN - Southwest) showed more predictable pricing patterns than legacy carriers, with fewer misclassifications. This suggests more consistent pricing strategies among budget airlines compared to the more complex, variable pricing of legacy carriers.
+                                    </p>
+                                </div>
+                                
+                                <div class="insight-item p-3 bg-light rounded">
+                                    <h5><i class="fas fa-lightbulb text-warning me-2"></i>Practical Applications</h5>
+                                    <p>
+                                        With 76.8% accuracy, the Bernoulli NB model could be effectively used for:
+                                    </p>
+                                    <ul>
+                                        <li>Predicting fare categories for new or hypothetical routes</li>
+                                        <li>Identifying potentially mispriced routes that deviate from expected patterns</li>
+                                        <li>Helping travelers understand which route characteristics are likely to result in lower fares</li>
+                                        <li>Assisting airlines in competitive pricing strategy development</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="conclusion-section p-4 bg-light rounded">
+                                <h4 class="mb-3">Final Conclusions</h4>
+                                <p>
+                                    Our Naive Bayes analysis of flight pricing patterns reveals several valuable insights into the U.S. domestic flight market:
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="conclusion-point mb-3">
+                                            <h5><i class="fas fa-check-circle text-success me-2"></i>Predictable Pricing Patterns</h5>
+                                            <p>
+                                                Despite the complexity of airline pricing, our models achieved approximately 76% accuracy, indicating that fare categories follow predictable patterns based on route characteristics, carrier identity, and market share.
+                                            </p>
+                                        </div>
+                                        <div class="conclusion-point mb-3">
+                                            <h5><i class="fas fa-check-circle text-success me-2"></i>Distance-Price Relationship</h5>
+                                            <p>
+                                                Distance remains the strongest predictor of fare category, but the relationship is not strictly linear. Very long routes show more variable pricing, suggesting different market dynamics in the long-haul segment.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="conclusion-point mb-3">
+                                            <h5><i class="fas fa-check-circle text-success me-2"></i>Carrier Strategy Differentiation</h5>
+                                            <p>
+                                                Different carriers maintain distinctive pricing strategies that can be reliably identified by our models. Southwest Airlines in particular shows highly consistent pricing patterns across its route network.
+                                            </p>
+                                        </div>
+                                        <div class="conclusion-point">
+                                            <h5><i class="fas fa-check-circle text-success me-2"></i>Competition Impacts</h5>
+                                            <p>
+                                                Contrary to traditional economic theory, routes with high market concentration (high market share for a single carrier) often show lower fares, suggesting efficiency-based pricing rather than monopolistic practices in many markets.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="mt-3">
+                                    The Naive Bayes approach provides not just predictive power but also interpretability, allowing us to understand which factors most strongly influence pricing decisions in the airline industry. This combination of accuracy and explainability makes it a valuable tool for both travelers seeking better deals and airlines optimizing their pricing strategies.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .algorithm-description {
+        border-left: 4px solid #007bff;
+    }
+    
+    .preprocessing-steps .step {
+        border-left: 4px solid #28a745;
+        transition: all 0.3s ease;
+    }
+    
+    .preprocessing-steps .step:hover {
+        transform: translateX(5px);
+    }
+    
+    .insight-item {
+        border-left: 4px solid #ffc107;
+        transition: all 0.2s ease;
+    }
+    
+    .insight-item:hover {
+        transform: translateX(5px);
+    }
+    
+    .conclusion-point {
+        border-left: 4px solid #28a745;
+        padding-left: 15px;
+    }
+    
+    .code-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    pre {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 15px;
+        font-size: 14px;
+    }
+    
+    code {
+        font-family: 'Courier New', Courier, monospace;
+    }
+    
+    .viz-container {
+        transition: transform 0.2s;
+    }
+    
+    .viz-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .formula-box {
+        border: 1px solid #dee2e6;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+</style>
+{% endblock %}

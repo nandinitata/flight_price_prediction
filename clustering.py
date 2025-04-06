@@ -206,9 +206,12 @@ def kmeans_clustering(data, optimal_k):
 def hierarchical_clustering(data):
     """
     Perform hierarchical clustering and create dendrogram visualization
+    with improved readability
     """
     pca_features = data['pca_features'].values
-    n_samples = min(1000, len(pca_features)) 
+    
+    # Reduce sample size for better dendrogram readability 
+    n_samples = min(500, len(pca_features))  # Reduced from 1000 to 500 samples
     
     if len(pca_features) > n_samples:
         np.random.seed(42)
@@ -221,38 +224,92 @@ def hierarchical_clustering(data):
     
     linkage_matrix = linkage(sampled_features, method='ward')
     
+    # Simplify labels to improve readability
+    simplified_labels = []
+    for label in sampled_labels:
+        if pd.isna(label):
+            simplified_labels.append('NA')
+        else:
+            simplified_labels.append(str(label)[:2])  # Take only first 2 chars of carrier code
+    
+    # Create more readable dendrogram
     fig = ff.create_dendrogram(
         sampled_features,
-        orientation='left',
-        labels=sampled_labels.values,
-        linkagefun=lambda x: linkage_matrix
+        orientation='left',  # Left orientation for better label reading
+        labels=simplified_labels,
+        linkagefun=lambda x: linkage_matrix,
+        color_threshold=0.7 * max(linkage_matrix[:, 2])  # Color threshold to highlight main clusters
     )
     
+    # Update layout for better readability
     fig.update_layout(
         title='Hierarchical Clustering Dendrogram',
+        width=900,  # Increased width
+        height=700,  # Increased height
+        margin=dict(l=120, r=50, t=50, b=50),  # Increased left margin for labels
+        font=dict(size=10),  # Smaller font for better fit
+        yaxis=dict(
+            tickfont=dict(size=8),  # Smaller tick font
+            showgrid=True,  # Add grid lines
+            gridwidth=0.5,
+            gridcolor='rgba(0,0,0,0.1)'
+        )
+    )
+    
+    # Add a more detailed dendrogram view with no labels for cluster structure visibility
+    fig2 = ff.create_dendrogram(
+        sampled_features,
+        orientation='top',  # Top orientation for better structure visualization
+        labels=None,  # No labels for cleaner view
+        linkagefun=lambda x: linkage_matrix,
+        color_threshold=0.7 * max(linkage_matrix[:, 2])
+    )
+    
+    fig2.update_layout(
+        title='Hierarchical Clustering Structure (No Labels)',
         width=800,
-        height=600
+        height=500,
+        showlegend=False
     )
     
     optimal_k = data.get('optimal_k', [3, 5, 7])
     k = optimal_k[1]
     hierarchical_labels = fcluster(linkage_matrix, k, criterion='maxclust')
     
-    fig2 = px.scatter_3d(
+    # 3D visualization of clustered data
+    fig3 = px.scatter_3d(
         pd.DataFrame(sampled_features, columns=['PC1', 'PC2', 'PC3']),
         x='PC1',
         y='PC2',
         z='PC3',
         color=hierarchical_labels.astype(str),
         title=f'Hierarchical Clustering (k={k})',
-        labels={'color': 'Cluster'}
+        labels={'color': 'Cluster'},
+        opacity=0.8
+    )
+    
+    # Add hover data for better interpretability
+    fig3.update_traces(
+        hovertemplate='<b>PC1</b>: %{x:.2f}<br><b>PC2</b>: %{y:.2f}<br><b>PC3</b>: %{z:.2f}<br><b>Cluster</b>: %{marker.color}'
+    )
+    
+    fig3.update_layout(
+        scene=dict(
+            xaxis=dict(title='PC1', backgroundcolor='rgb(255, 255, 255)'),
+            yaxis=dict(title='PC2', backgroundcolor='rgb(255, 255, 255)'),
+            zaxis=dict(title='PC3', backgroundcolor='rgb(255, 255, 255)'),
+        ),
+        width=800,
+        height=600
     )
     
     return {
         'linkage_matrix': linkage_matrix,
         'dendrogram': fig,
+        'dendrogram_structure': fig2,  # New cleaner dendrogram view
         'hierarchical_labels': hierarchical_labels,
-        'plot': fig2
+        'plot': fig3,
+        'sampled_indices': sampled_indices if len(pca_features) > n_samples else None
     }
 
 def dbscan_clustering(data):

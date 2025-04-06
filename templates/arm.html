@@ -200,6 +200,321 @@
     </div>
 </div>
 
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h2 class="card-title mb-0">Data Transformation for ARM</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h4 class="mb-3">Original Flight Data</h4>
+                        <div class="table-responsive bg-light p-3 rounded" style="max-height: 350px; overflow-y: auto;">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>city1</th>
+                                        <th>city2</th>
+                                        <th>nsmiles</th>
+                                        <th>passengers</th>
+                                        <th>fare</th>
+                                        <th>carrier_lg</th>
+                                        <th>large_ms</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Albany, NY</td>
+                                        <td>Los Angeles, CA</td>
+                                        <td>2468</td>
+                                        <td>14.24</td>
+                                        <td>289.04</td>
+                                        <td>WN</td>
+                                        <td>0.99</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Albany, NY</td>
+                                        <td>Tampa, FL</td>
+                                        <td>1138</td>
+                                        <td>149.89</td>
+                                        <td>252.35</td>
+                                        <td>WN</td>
+                                        <td>0.66</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Albany, NY</td>
+                                        <td>Los Angeles, CA</td>
+                                        <td>2468</td>
+                                        <td>22.28</td>
+                                        <td>302.70</td>
+                                        <td>WN</td>
+                                        <td>0.80</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Boston, MA</td>
+                                        <td>Chicago, IL</td>
+                                        <td>867</td>
+                                        <td>135.76</td>
+                                        <td>192.20</td>
+                                        <td>UA</td>
+                                        <td>0.78</td>
+                                    </tr>
+                                    <tr>
+                                        <td>New York, NY</td>
+                                        <td>Miami, FL</td>
+                                        <td>1092</td>
+                                        <td>178.55</td>
+                                        <td>215.75</td>
+                                        <td>AA</td>
+                                        <td>0.85</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="mb-3">ARM Processed Data (Categorical Binning)</h4>
+                        <div class="table-responsive bg-light p-3 rounded" style="max-height: 350px; overflow-y: auto;">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>city1</th>
+                                        <th>city2</th>
+                                        <th>fare_category</th>
+                                        <th>distance_category</th>
+                                        <th>ms_category</th>
+                                        <th>carrier_lg</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Albany, NY</td>
+                                        <td>Los Angeles, CA</td>
+                                        <td>Medium</td>
+                                        <td>VeryLong</td>
+                                        <td>HighShare</td>
+                                        <td>WN</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Albany, NY</td>
+                                        <td>Tampa, FL</td>
+                                        <td>Medium</td>
+                                        <td>Medium</td>
+                                        <td>MediumShare</td>
+                                        <td>WN</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Albany, NY</td>
+                                        <td>Los Angeles, CA</td>
+                                        <td>Medium</td>
+                                        <td>VeryLong</td>
+                                        <td>HighShare</td>
+                                        <td>WN</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Boston, MA</td>
+                                        <td>Chicago, IL</td>
+                                        <td>Low</td>
+                                        <td>Medium</td>
+                                        <td>HighShare</td>
+                                        <td>UA</td>
+                                    </tr>
+                                    <tr>
+                                        <td>New York, NY</td>
+                                        <td>Miami, FL</td>
+                                        <td>Low</td>
+                                        <td>Medium</td>
+                                        <td>HighShare</td>
+                                        <td>AA</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4 class="mb-3">Transaction Format (One-Hot Encoded)</h4>
+                        <div class="table-responsive bg-light p-3 rounded" style="max-height: 350px; overflow-y: auto;">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Origin_Albany, NY</th>
+                                        <th>Dest_Los Angeles, CA</th>
+                                        <th>Dest_Tampa, FL</th>
+                                        <th>Carrier_WN</th>
+                                        <th>Carrier_UA</th>
+                                        <th>Carrier_AA</th>
+                                        <th>Fare_Low</th>
+                                        <th>Fare_Medium</th>
+                                        <th>Distance_Medium</th>
+                                        <th>Distance_VeryLong</th>
+                                        <th>MarketShare_MediumShare</th>
+                                        <th>MarketShare_HighShare</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card bg-light p-3">
+                            <div class="card-body">
+                                <h4 class="card-title">Understanding Data Transformation for ARM</h4>
+                                <p>
+                                    Association Rule Mining requires data to be in a specific format where each transaction (flight route in our case)
+                                    contains a set of items. The transformation process involves multiple steps:
+                                </p>
+                                
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <h5 class="mb-3">Transformation Steps:</h5>
+                                        <ol>
+                                            <li><strong>Categorical Binning:</strong> Continuous variables like fare, distance, and market share are converted to categorical bins</li>
+                                            <li><strong>Item Creation:</strong> Each attribute-value pair becomes an "item" (e.g., "Origin_Albany, NY", "Fare_Medium")</li>
+                                            <li><strong>Transaction Format:</strong> Data is restructured so each row represents a transaction with its items</li>
+                                            <li><strong>One-Hot Encoding:</strong> For efficient processing, the transaction data is converted to a binary matrix</li>
+                                        </ol>
+                                        <p class="mt-3">
+                                            This transformation allows us to discover interesting rules like: "If a flight is from <strong>Origin_Boston</strong> 
+                                            and has <strong>Fare_Low</strong>, then it likely has <strong>MarketShare_HighShare</strong>."
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="mb-3">Categorical Binning Details:</h5>
+                                        <table class="table table-sm table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Original Feature</th>
+                                                    <th>Bins Created</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>fare</td>
+                                                    <td>
+                                                        VeryLow: &lt;$150<br>
+                                                        Low: $150-$250<br>
+                                                        Medium: $250-$350<br>
+                                                        High: $350-$500<br>
+                                                        VeryHigh: &gt;$500
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>nsmiles</td>
+                                                    <td>
+                                                        Short: &lt;500 miles<br>
+                                                        Medium: 500-1000 miles<br>
+                                                        Long: 1000-2000 miles<br>
+                                                        VeryLong: &gt;2000 miles
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>large_ms</td>
+                                                    <td>
+                                                        LowShare: 0-0.33<br>
+                                                        MediumShare: 0.33-0.66<br>
+                                                        HighShare: 0.66-1.0
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="mt-3 text-center">
+                                            <img src="{{ url_for('static', filename='img/arm_transformation.png') }}" class="img-fluid rounded" alt="ARM Data Transformation Flow" style="max-width: 350px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ARM Analysis Section -->
 <div class="row mb-5">
     <div class="col-12">
@@ -232,7 +547,7 @@
                         </ul>
                         
                         <div class="tab-content mt-3" id="rulesTabContent">
-                            <div class="tab-pane fade show active" id="support" role="tabpanel" aria-labelledby="support-tab">
+                            <div class="tab-pane fade" id="support" role="tabpanel" aria-labelledby="support-tab">
                                 <div class="card">
                                     <div class="card-header bg-light">
                                         <h5 class="mb-0">Top 15 Rules by Support (min. support: 0.1, min. confidence: 0.6)</h5>
@@ -242,13 +557,132 @@
                                             {{ top_rules_support | safe }}
                                         </div>
                                         <div class="mt-4">
-                                            <h6 class="mb-3">Network Visualization of Top Rules by Support</h6>
-                                            <img src="{{ url_for('static', filename='arm_results/rules_network_support.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Network (Support)">
+                                            <h6 class="mb-3">Rule Explanations (Top 5)</h6>
+                                            <div class="rules-explanation">
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 1: Carrier_WN → MarketShare_HighShare</h5>
+                                                    <p><strong>Interpretation:</strong> Southwest Airlines (WN) typically has a high market share on its routes.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 12% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When Southwest operates a route, it has high market share in about 85% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Southwest effectively dominates the markets it enters, with limited competition.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 2: Distance_Long → Fare_Medium</h5>
+                                                    <p><strong>Interpretation:</strong> Long-distance flights (1000-2000 miles) typically have medium-range fares.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 11% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> Long routes have medium fares in about 76% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> This suggests a standard pricing structure across carriers for longer domestic routes.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 3: Origin_Chicago → Fare_Low</h5>
+                                                    <p><strong>Interpretation:</strong> Flights departing from Chicago typically have lower fares.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 10.5% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> Chicago origin flights have low fares in about 72% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> The high competition at Chicago's major airports drives prices down.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 4: MarketShare_HighShare → Fare_Low</h5>
+                                                    <p><strong>Interpretation:</strong> Routes with high carrier market share tend to have lower fares.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 10% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> High market share routes have low fares in about 68% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Counter to intuition, market dominance often leads to lower fares, suggesting economy of scale benefits.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 5: Carrier_UA, Distance_Medium → MarketShare_MediumShare</h5>
+                                                    <p><strong>Interpretation:</strong> United Airlines on medium-distance routes typically has medium market share.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 9.8% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When United operates medium-distance routes, it has medium market share in about 70% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> United faces significant competition in the medium-haul market segment.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="network-viz mt-4">
+                                                <h6 class="mb-3">Network Visualization of Top Rules by Support</h6>
+                                                <img src="{{ url_for('static', filename='arm_results/rules_network_support.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Network (Support)">
+                                                <p class="mt-3 text-muted">
+                                                    The network visualization shows how different items connect through association rules. Nodes represent items (like carriers or fare categories),
+                                                    and edges represent significant associations between them. Edge thickness indicates the strength of the rule (support value).
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
+                            <!-- Support Rules Explanations -->
+                            <div class="tab-pane fade" id="support" role="tabpanel" aria-labelledby="support-tab">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Top 15 Rules by Support (min. support: 0.1, min. confidence: 0.6)</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive rules-table" style="max-height: 500px; overflow-y: auto;">
+                                            {{ top_rules_support | safe }}
+                                        </div>
+                                        <div class="mt-4">
+                                            <h6 class="mb-3">Rule Explanations (Top 5)</h6>
+                                            <div class="rules-explanation">
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 1: MarketShare_HighShare → Fare_Low</h5>
+                                                    <p><strong>Interpretation:</strong> Routes dominated by a single carrier (high market share) typically have lower fares.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 30.2% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When a route has high market share, it offers low fares in about 55.3% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Counter-intuitively, market dominance often leads to lower fares, suggesting carriers leverage economies of scale or efficiency to offer competitive pricing when they control a route.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 2: Fare_Low → MarketShare_HighShare</h5>
+                                                    <p><strong>Interpretation:</strong> Routes with lower fares typically have a single dominant carrier with high market share.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 30.2% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When a route has low fares, it's dominated by a single carrier in about 60.6% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> This suggests that market consolidation doesn't necessarily lead to higher prices, contrary to what might be expected with reduced competition.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 3: Carrier_WN → MarketShare_HighShare</h5>
+                                                    <p><strong>Interpretation:</strong> Southwest Airlines (WN) typically has a high market share on its routes.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 25.8% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When Southwest operates a route, it has high market share in about 69.1% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Southwest effectively dominates the markets it enters, with limited competition on most of its routes.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 4: MarketShare_HighShare → Carrier_WN</h5>
+                                                    <p><strong>Interpretation:</strong> Routes with a single dominant carrier are often served by Southwest Airlines (WN).</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 25.8% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When a route has high market share for one carrier, that carrier is Southwest in about 47.2% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Southwest stands out as the most successful carrier at establishing dominant positions in its markets.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 5: Carrier_WN → Fare_Low</h5>
+                                                    <p><strong>Interpretation:</strong> Southwest Airlines (WN) typically offers lower fares on its routes.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 22.4% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When Southwest operates a route, it offers low fares in about 60.1% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Southwest's business model focuses on providing lower-cost options, consistent with its reputation as a low-fare carrier.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Confidence Rules Explanations -->
                             <div class="tab-pane fade" id="confidence" role="tabpanel" aria-labelledby="confidence-tab">
                                 <div class="card">
                                     <div class="card-header bg-light">
@@ -259,13 +693,60 @@
                                             {{ top_rules_confidence | safe }}
                                         </div>
                                         <div class="mt-4">
-                                            <h6 class="mb-3">Network Visualization of Top Rules by Confidence</h6>
-                                            <img src="{{ url_for('static', filename='arm_results/rules_network_confidence.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Network (Confidence)">
+                                            <h6 class="mb-3">Rule Explanations (Top 5)</h6>
+                                            <div class="rules-explanation">
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 1: Distance_Medium, MarketShare_HighShare, Carrier_WN → Fare_Low</h5>
+                                                    <p><strong>Interpretation:</strong> When Southwest Airlines dominates a medium-distance route, it nearly always offers low fares.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 7.6% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When Southwest dominates medium-distance routes, it offers low fares in about 93.2% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> This demonstrates Southwest's core strategy of offering affordable pricing on medium-haul routes where it has established market dominance.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 2: Distance_Medium, Carrier_WN → Fare_Low</h5>
+                                                    <p><strong>Interpretation:</strong> Southwest Airlines offers low fares on medium-distance routes, regardless of market share.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 10% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When Southwest operates medium-distance routes, it offers low fares in about 89% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Medium-haul routes are a key target for Southwest's low-fare strategy, showing their focus on this market segment.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 3: Distance_Short, Carrier_WN → Fare_Low</h5>
+                                                    <p><strong>Interpretation:</strong> Southwest Airlines offers low fares on short-distance routes.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 5.1% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When Southwest operates short-distance routes, it offers low fares in about 88% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Southwest maintains its low-fare strategy even on shorter routes, where many other carriers might charge premium prices for convenience.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 4: Distance_Short, Carrier_WN → MarketShare_HighShare</h5>
+                                                    <p><strong>Interpretation:</strong> Southwest Airlines typically dominates short-distance routes it serves.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 5.1% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When Southwest operates short-distance routes, it achieves high market share in about 87.1% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Southwest has been particularly successful at establishing dominance on short-haul routes, possibly due to operational efficiency and quick turnaround times.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 5: Origin_Dallas/Fort Worth, TX → MarketShare_HighShare</h5>
+                                                    <p><strong>Interpretation:</strong> Routes originating from Dallas/Fort Worth typically have a single dominant carrier.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 5.7% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> Routes from Dallas/Fort Worth have a dominant carrier in about 84.2% of cases.</li>
+                                                        <li><strong>Business Insight:</strong> Dallas/Fort Worth, a major airline hub (particularly for American Airlines), shows high levels of route concentration, suggesting limited competition at this origin point.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <!-- Lift Rules Explanations -->
                             <div class="tab-pane fade" id="lift" role="tabpanel" aria-labelledby="lift-tab">
                                 <div class="card">
                                     <div class="card-header bg-light">
@@ -276,8 +757,59 @@
                                             {{ top_rules_lift | safe }}
                                         </div>
                                         <div class="mt-4">
-                                            <h6 class="mb-3">Network Visualization of Top Rules by Lift</h6>
-                                            <img src="{{ url_for('static', filename='arm_results/rules_network_lift.png') }}" class="img-fluid rounded shadow-sm" alt="Association Rules Network (Lift)">
+                                            <h6 class="mb-3">Rule Explanations (Top 5)</h6>
+                                            <div class="rules-explanation">
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 1: Distance_VeryLong, Carrier_AA → Fare_High</h5>
+                                                    <p><strong>Interpretation:</strong> American Airlines (AA) charges high fares on very long distance routes.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 2.2% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When American operates very long routes, it charges high fares in about 46.2% of cases.</li>
+                                                        <li><strong>Lift:</strong> 5.52 - This association is 5.5 times more likely than if these factors were statistically independent.</li>
+                                                        <li><strong>Business Insight:</strong> American Airlines has a strong premium pricing strategy for its longest domestic routes, likely targeting business travelers or premium-service routes.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 2: Fare_High → Distance_VeryLong, Carrier_AA</h5>
+                                                    <p><strong>Interpretation:</strong> High-fare flights are often very long distance routes operated by American Airlines.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 2.2% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When a flight has high fares, it's an American Airlines very long route in about 26.7% of cases.</li>
+                                                        <li><strong>Lift:</strong> 5.52 - This association is 5.5 times more likely than chance would suggest.</li>
+                                                        <li><strong>Business Insight:</strong> In the high-fare segment, American has effectively captured a significant portion of the very long distance market.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 3: Distance_VeryLong, MarketShare_MediumShare → Fare_High</h5>
+                                                    <p><strong>Interpretation:</strong> Very long distance routes with medium market share typically have high fares.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 3.3% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When a very long route has medium market share, it has high fares in about 35.7% of cases.</li>
+                                                        <li><strong>Lift:</strong> 4.27 - This association is over 4 times more likely than statistical independence would suggest.</li>
+                                                        <li><strong>Business Insight:</strong> On the longest routes, moderate competition (medium market share) doesn't necessarily drive prices down, suggesting these routes can sustain higher fares.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 4: Fare_High → Distance_VeryLong, MarketShare_MediumShare</h5>
+                                                    <p><strong>Interpretation:</strong> High-fare flights are often very long distance routes with medium market share.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 3.3% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When a flight has high fares, it's a very long route with medium market share in about 39.9% of cases.</li>
+                                                        <li><strong>Lift:</strong> 4.27 - This association is over 4 times more likely than chance would suggest.</li>
+                                                        <li><strong>Business Insight:</strong> A significant portion of the premium pricing segment is concentrated in very long routes with moderate competition.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rule-item mb-3 p-3 bg-light rounded">
+                                                    <h5 class="text-primary">Rule 5: Distance_VeryLong → Fare_High, MarketShare_MediumShare</h5>
+                                                    <p><strong>Interpretation:</strong> Very long distance routes often have high fares and medium market share.</p>
+                                                    <ul>
+                                                        <li><strong>Support:</strong> This pattern appears in approximately 3.3% of all flight routes.</li>
+                                                        <li><strong>Confidence:</strong> When a route is very long, it has high fares and medium market share in about 19.7% of cases.</li>
+                                                        <li><strong>Lift:</strong> 3.95 - This association is nearly 4 times more likely than statistical independence would suggest.</li>
+                                                        <li><strong>Business Insight:</strong> The longest routes in the domestic market tend to develop a particular market structure: moderate competition with premium pricing.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

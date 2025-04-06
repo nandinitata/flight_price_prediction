@@ -27,34 +27,71 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('introduction') }}">
+                    <!-- Introduction Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="introDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-info-circle me-1"></i>Introduction
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="introDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('introduction') }}">Project Overview</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('data_prep') }}">Data Preparation</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('introduction') }}#research-questions">Research Questions</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('data_prep') }}">
-                            <i class="fas fa-database me-1"></i>Data Prep/EDA
+                    
+                    <!-- Analysis Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="analysisDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chart-bar me-1"></i>Analysis
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="analysisDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('pca_analysis') }}">Principal Component Analysis</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('clustering') }}">Clustering</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('arm_analysis') }}">Association Rule Mining</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('naive_bayes') }}">Naive Bayes</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('conclusions') }}">Conclusions</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('pca_analysis') }}">
-                            <i class="fas fa-chart-scatter me-2"></i>PCA
+                    
+                    <!-- Results Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="resultsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chart-line me-1"></i>Results
                         </a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('clustering') }}">
-                            <i class="fas fa-project-diagram me-2"></i>Clustering
-                        </a>
-                    </li class="nav-item">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('arm_analysis') }}">
-                            <i class="fas fa-link me-2"></i>ARM
-                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="resultsDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('pca_analysis') }}">PCA</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('clustering') }}">Clustering</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('arm_analysis') }}#conclusions">ARM</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('naive_bayes') }}">Naive Bayes</a></li>
+                        </ul>
                     </li>
+                    
+                    <!-- Documentation Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="documentationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-code me-1"></i>Documentation
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="documentationDropdown">
+                            <li><a class="dropdown-item" href="https://github.com/nandinitata/flight_price_prediction" target="_blank">GitHub Repository</a></li>
+                            <li><a class="dropdown-item" href="https://github.com/nandinitata/flight_price_prediction/blob/main/README.md" target="_blank">Project README</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="https://github.com/nandinitata/flight_price_prediction/blob/main/requirements.txt" target="_blank">Dependencies</a></li>
+                        </ul>
                     </li>
+
+                    <!-- Conclusions -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('conclusions') }}">
-                            <i class="fas fa-flag-checkered me-1"></i>Conclusions
+                            <i class="fas fa-check-circle me-1"></i>Conclusions
+                        </a>
+                    </li>
+                    
+                    <!-- Contact -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="mailto:sai.tata@colorado.edu">
+                            <i class="fas fa-envelope me-1"></i>Contact
                         </a>
                     </li>
                 </ul>

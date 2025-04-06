@@ -188,6 +188,152 @@
         </div>
     </div>
 
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Distance Metrics in Clustering</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <p class="lead mb-4">
+                                Distance metrics are fundamental to clustering algorithms, as they determine how the similarity between data points is measured. The choice of distance metric significantly impacts the shape and structure of the resulting clusters.
+                            </p>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-header bg-light">
+                                            <h5 class="card-title mb-0">Euclidean Distance</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>The straight-line distance between two points in Euclidean space. It's the most commonly used distance metric for clustering.</p>
+                                            <div class="text-center mt-3">
+                                                <code class="bg-light p-2 rounded">d(p, q) = √(Σ(qi - pi)²)</code>
+                                            </div>
+                                            <ul class="mt-3">
+                                                <li>Used in K-means clustering by default</li>
+                                                <li>Assumes spherical clusters of similar size</li>
+                                                <li>Works well when clusters are compact and well-separated</li>
+                                                <li>Sensitive to differences in scale between dimensions</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-header bg-light">
+                                            <h5 class="card-title mb-0">Manhattan Distance</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>The sum of absolute differences between coordinates of points. Also known as city block or L1 distance.</p>
+                                            <div class="text-center mt-3">
+                                                <code class="bg-light p-2 rounded">d(p, q) = Σ|qi - pi|</code>
+                                            </div>
+                                            <ul class="mt-3">
+                                                <li>Useful when dimensions represent unrelated features</li>
+                                                <li>Less sensitive to outliers than Euclidean distance</li>
+                                                <li>Creates diamond-shaped distance contours</li>
+                                                <li>Used in taxi-cab geometry and grid-based systems</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-header bg-light">
+                                            <h5 class="card-title mb-0">Cosine Similarity</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>Measures the cosine of the angle between two vectors, focusing on orientation rather than magnitude.</p>
+                                            <div class="text-center mt-3">
+                                                <code class="bg-light p-2 rounded">cos(θ) = (p·q)/(||p||·||q||)</code>
+                                            </div>
+                                            <ul class="mt-3">
+                                                <li>Commonly used for text or high-dimensional data</li>
+                                                <li>Ignores vector magnitude, focusing on direction</li>
+                                                <li>Effective when absolute values aren't important</li>
+                                                <li>Values range from -1 (opposite) to 1 (same direction)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-header bg-light">
+                                            <h5 class="card-title mb-0">Ward's Method</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>A linkage criterion used in hierarchical clustering that minimizes the variance within clusters.</p>
+                                            <div class="text-center mt-3">
+                                                <code class="bg-light p-2 rounded">d(u,v) = √((|v|+|s|)/(|v|+|s|+|t|)·d(v,s)² - |s|/(|v|+|s|+|t|)·d(v,t)²)</code>
+                                            </div>
+                                            <ul class="mt-3">
+                                                <li>Used in our hierarchical clustering implementation</li>
+                                                <li>Tends to create clusters of similar sizes</li>
+                                                <li>Minimizes within-cluster variance</li>
+                                                <li>Often produces more interpretable clusters</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4">
+                            <div class="distance-visualizations">
+                                <div class="card mb-4 border-0 shadow-sm">
+                                    <div class="card-header bg-light">
+                                        <h5 class="card-title mb-0">Distance Metrics Comparison</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <img src="{{ url_for('static', filename='img/distance_metrics.png') }}" class="img-fluid rounded" alt="Comparison of Distance Metrics">
+                                        <p class="mt-3 text-muted">Visual comparison of Euclidean (circle), Manhattan (diamond), and other distance metrics showing how they measure distances differently in 2D space.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-light">
+                                        <h5 class="card-title mb-0">Impact on Cluster Shapes</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <img src="{{ url_for('static', filename='img/cluster_shapes.png') }}" class="img-fluid rounded" alt="Impact of Distance Metrics on Cluster Shapes">
+                                        <p class="mt-3 text-muted">Illustration of how different distance metrics influence the shape of discovered clusters. Euclidean distance tends to find spherical clusters while DBSCAN with alternative metrics can find arbitrary shapes.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h4 class="card-title">Distance Metrics in Our Analysis</h4>
+                                    <p>
+                                        For our flight data clustering analysis, we used the following distance metrics for each algorithm:
+                                    </p>
+                                    <ul>
+                                        <li><strong>K-means Clustering:</strong> Euclidean distance, as it works well with our normalized feature space and tends to create intuitive, spherical clusters of similar pricing strategies.</li>
+                                        <li><strong>Hierarchical Clustering:</strong> Ward's method, which minimizes variance within clusters and creates more balanced hierarchical structures that better represent market segments.</li>
+                                        <li><strong>DBSCAN Clustering:</strong> Euclidean distance with parameters eps=0.5 and min_samples=5, allowing us to identify density-based clusters and isolate outliers in the pricing data.</li>
+                                    </ul>
+                                    <p>
+                                        Our choice of distance metrics was guided by the nature of the flight pricing data, where we wanted to identify distinct pricing strategies while accounting for the continuous nature of variables like distance, fare, and passenger count.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- K-Means Clustering Section -->
     <div class="row mb-5">
         <div class="col-12">
@@ -259,7 +405,6 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="viz-container p-3 bg-light rounded mb-3 <div class="col-lg-6">
                                     <div class="viz-container p-3 bg-light rounded mb-3">
                                         <iframe src="{{ url_for('static', filename='plots/kmeans_' ~ k ~ '_cluster.html') }}" width="100%" height="550px" frameborder="0"></iframe>
                                     </div>
