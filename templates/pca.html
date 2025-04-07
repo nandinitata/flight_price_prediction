@@ -144,12 +144,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for i in range(10) if i < pca_data.cumulative_variance_length %}
+                                        {% for i in range(10) if i < pca_data.pca_3d.pca_df|length %}
                                         <tr>
                                             <td>{{ i }}</td>
-                                            <td>{{ "%0.4f"|format(pca_data.pca_3d.explained_variance[0]) }}</td>
-                                            <td>{{ "%0.4f"|format(pca_data.pca_3d.explained_variance[1]) }}</td>
-                                            <td>{{ "%0.4f"|format(pca_data.pca_3d.explained_variance[2]) }}</td>
+                                            <td>{{ "%0.4f"|format(pca_data.pca_3d.pca_df.iloc[i, 0]) }}</td>
+                                            <td>{{ "%0.4f"|format(pca_data.pca_3d.pca_df.iloc[i, 1]) }}</td>
+                                            <td>{{ "%0.4f"|format(pca_data.pca_3d.pca_df.iloc[i, 2]) }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -182,9 +182,9 @@
                                         <div class="col-md-6">
                                             <h5 class="mb-3">Interpretation of Principal Components:</h5>
                                             <ul>
-                                                <li><strong>PC1 ({{ "%.2f"|format(pca_data.variance_2d - pca_data.variance_3d + pca_data.variance_3d/3) }}% variance):</strong> Primarily represents fare pricing and distance relationship</li>
-                                                <li><strong>PC2 ({{ "%.2f"|format(pca_data.variance_3d/3) }}% variance):</strong> Captures market share and competition dynamics</li>
-                                                <li><strong>PC3 ({{ "%.2f"|format(pca_data.variance_3d/3) }}% variance):</strong> Represents passenger volume variations</li>
+                                                <li><strong>PC1 ({{ "%.2f"|format(pca_data.pca_3d.individual_variance_pct[0]) }}% variance):</strong> Primarily represents fare pricing and distance relationship</li>
+                                                <li><strong>PC2 ({{ "%.2f"|format(pca_data.pca_3d.individual_variance_pct[1]) }}% variance):</strong> Captures market share and competition dynamics</li>
+                                                <li><strong>PC3 ({{ "%.2f"|format(pca_data.pca_3d.individual_variance_pct[2]) }}% variance):</strong> Represents passenger volume variations</li>
                                             </ul>
                                             <p class="mt-3">
                                                 Each principal component is a linear combination of the original features, weighted by their importance in explaining variance.
@@ -636,4 +636,3 @@
     }
 </style>
 {% endblock %}
-     

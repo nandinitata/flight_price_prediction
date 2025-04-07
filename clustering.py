@@ -1,18 +1,20 @@
 
-import pandas as pd
-import numpy as np
 import os
 import pickle
-import plotly.express as px
-import plotly.graph_objects as go
-import plotly.figure_factory as ff
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans, DBSCAN
-from sklearn.metrics import silhouette_score, silhouette_samples
-from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.figure_factory as ff
+import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from scipy.cluster.hierarchy import dendrogram, fcluster, linkage
+from sklearn.cluster import DBSCAN, KMeans
+from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn.preprocessing import StandardScaler
+
 
 def load_flight_data(filename='flight_data.csv'):
     """Load flight data from CSV file"""

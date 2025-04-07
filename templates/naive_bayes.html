@@ -14,6 +14,13 @@
         </div>
     </div>
 
+    <!-- Refresh Analysis Button -->
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{{ url_for('naive_bayes', refresh=True) }}" class="btn btn-primary">
+            <i class="fas fa-sync-alt me-2"></i>Refresh Analysis
+        </a>
+    </div>
+
     <!-- Naive Bayes Overview Section -->
     <div class="row mb-5">
         <div class="col-12">
@@ -189,36 +196,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {% for i in range(5) %}
                                             <tr>
-                                                <td>VeryLong</td>
-                                                <td>WN</td>
-                                                <td>HighShare</td>
-                                                <td>Medium</td>
+                                                <td>{{ model_results.get('sample_data', {}).get('distance_category', [])[i] if model_results.get('sample_data', {}).get('distance_category', []) | length > i else 'VeryLong' }}</td>
+                                                <td>{{ model_results.get('sample_data', {}).get('carrier_lg', [])[i] if model_results.get('sample_data', {}).get('carrier_lg', []) | length > i else 'WN' }}</td>
+                                                <td>{{ model_results.get('sample_data', {}).get('market_share_category', [])[i] if model_results.get('sample_data', {}).get('market_share_category', []) | length > i else 'HighShare' }}</td>
+                                                <td>{{ model_results.get('sample_data', {}).get('fare_category', [])[i] if model_results.get('sample_data', {}).get('fare_category', []) | length > i else 'Medium' }}</td>
                                             </tr>
-                                            <tr>
-                                                <td>Medium</td>
-                                                <td>WN</td>
-                                                <td>MediumShare</td>
-                                                <td>Medium</td>
-                                            </tr>
-                                            <tr>
-                                                <td>VeryLong</td>
-                                                <td>WN</td>
-                                                <td>HighShare</td>
-                                                <td>Medium</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Short</td>
-                                                <td>WN</td>
-                                                <td>HighShare</td>
-                                                <td>Low</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Medium</td>
-                                                <td>UA</td>
-                                                <td>HighShare</td>
-                                                <td>Low</td>
-                                            </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -239,67 +224,21 @@
                                     <table class="table table-sm table-striped">
                                         <thead>
                                             <tr>
-                                                <th>distance_Short</th>
-                                                <th>distance_Medium</th>
-                                                <th>distance_Long</th>
-                                                <th>distance_VeryLong</th>
-                                                <th>carrier_WN</th>
-                                                <th>carrier_UA</th>
-                                                <th>market_share_High</th>
+                                                {% for feature in model_results.get('feature_names', ['distance_Short', 'distance_Medium', 'distance_Long', 'distance_VeryLong', 'carrier_WN', 'carrier_UA', 'market_share_High']) %}
+                                                <th>{{ feature }}</th>
+                                                {% endfor %}
                                                 <th>target</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {% for i in range(5) %}
                                             <tr>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>Medium</td>
+                                                {% for feature in model_results.get('feature_names', ['distance_Short', 'distance_Medium', 'distance_Long', 'distance_VeryLong', 'carrier_WN', 'carrier_UA', 'market_share_High']) %}
+                                                <td>{{ model_results.get('processed_data', {}).get(feature, [])[i] if model_results.get('processed_data', {}).get(feature, []) | length > i else '0' }}</td>
+                                                {% endfor %}
+                                                <td>{{ model_results.get('processed_data', {}).get('target', [])[i] if model_results.get('processed_data', {}).get('target', []) | length > i else 'Medium' }}</td>
                                             </tr>
-                                            <tr>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>Medium</td>
-                                            </tr>
-                                            <tr>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>Medium</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>Low</td>
-                                            </tr>
-                                            <tr>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>Low</td>
-                                            </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -332,73 +271,8 @@
                         <div class="col-12">
                             <div class="code-section">
                                 <h4 class="mb-3">Implementation Code</h4>
-                                <p>
-                                    The following Python code demonstrates how to implement Naive Bayes classification for flight fare category prediction:
-                                </p>
-                                <div class="code-container p-3 bg-light rounded">
-                                    <pre class="mb-0"><code class="python">import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB, BernoulliNB
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.metrics import confusion_matrix, classification_report
-
-# Load and preprocess the data
-df = pd.read_csv('flight_data.csv')
-
-# Create categorical features
-df['distance_category'] = pd.cut(
-    df['nsmiles'],
-    bins=[0, 500, 1000, 2000, float('inf')],
-    labels=['Short', 'Medium', 'Long', 'VeryLong']
-)
-
-df['fare_category'] = pd.cut(
-    df['fare'],
-    bins=[0, 150, 250, 350, 500, float('inf')],
-    labels=['VeryLow', 'Low', 'Medium', 'High', 'VeryHigh']
-)
-
-df['market_share_category'] = pd.cut(
-    df['large_ms'],
-    bins=[0, 0.33, 0.66, 1],
-    labels=['LowShare', 'MediumShare', 'HighShare']
-)
-
-# Select features and target
-features = df[['distance_category', 'carrier_lg', 'market_share_category']]
-target = df['fare_category']
-
-# One-hot encode features
-encoder = OneHotEncoder(sparse=False)
-X = encoder.fit_transform(features)
-
-# Split the data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, target, test_size=0.3, random_state=42, stratify=target
-)
-
-# Train Multinomial Naive Bayes with smoothing
-mnb = MultinomialNB(alpha=1.0)  # alpha=1.0 is Laplace smoothing
-mnb.fit(X_train, y_train)
-mnb_pred = mnb.predict(X_test)
-
-# Train Bernoulli Naive Bayes
-bnb = BernoulliNB(alpha=1.0)
-bnb.fit(X_train, y_train)
-bnb_pred = bnb.predict(X_test)
-
-# Evaluate the models
-print("Multinomial NB Results:")
-print(confusion_matrix(y_test, mnb_pred))
-print(classification_report(y_test, mnb_pred))
-
-print("\nBernoulli NB Results:")
-print(confusion_matrix(y_test, bnb_pred))
-print(classification_report(y_test, bnb_pred))</code></pre>
-                                </div>
                                 <div class="text-center mt-3">
-                                    <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/naive_bayes.py" 
+                                    <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/nb.py" 
                                        class="btn btn-primary" target="_blank">
                                         <i class="fab fa-github me-2"></i>View Complete Code on GitHub
                                     </a>
@@ -442,31 +316,30 @@ print(classification_report(y_test, bnb_pred))</code></pre>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- Placeholder values, to be updated with actual results -->
                                             <tr>
                                                 <td>Accuracy</td>
-                                                <td>76.8%</td>
-                                                <td>72.3%</td>
+                                                <td>{{ "%.1f"|format(model_results['bernoulli']['accuracy'] * 100) }}%</td>
+                                                <td>{{ "%.1f"|format(model_results['multinomial']['accuracy'] * 100) }}%</td>
                                             </tr>
                                             <tr>
                                                 <td>Precision (Macro Avg)</td>
-                                                <td>75.2%</td>
-                                                <td>70.6%</td>
+                                                <td>{{ "%.1f"|format(model_results['bernoulli']['report']['macro avg']['precision'] * 100) }}%</td>
+                                                <td>{{ "%.1f"|format(model_results['multinomial']['report']['macro avg']['precision'] * 100) }}%</td>
                                             </tr>
                                             <tr>
                                                 <td>Recall (Macro Avg)</td>
-                                                <td>74.9%</td>
-                                                <td>71.2%</td>
+                                                <td>{{ "%.1f"|format(model_results['bernoulli']['report']['macro avg']['recall'] * 100) }}%</td>
+                                                <td>{{ "%.1f"|format(model_results['multinomial']['report']['macro avg']['recall'] * 100) }}%</td>
                                             </tr>
                                             <tr>
                                                 <td>F1 Score (Macro Avg)</td>
-                                                <td>75.0%</td>
-                                                <td>70.9%</td>
+                                                <td>{{ "%.1f"|format(model_results['bernoulli']['report']['macro avg']['f1-score'] * 100) }}%</td>
+                                                <td>{{ "%.1f"|format(model_results['multinomial']['report']['macro avg']['f1-score'] * 100) }}%</td>
                                             </tr>
                                             <tr>
                                                 <td>Training Time</td>
-                                                <td>0.08 seconds</td>
-                                                <td>0.07 seconds</td>
+                                                <td>{{ "%.2f"|format(model_results['bernoulli'].get('training_time', 0.08)) }} seconds</td>
+                                                <td>{{ "%.2f"|format(model_results['multinomial'].get('training_time', 0.07)) }} seconds</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -482,6 +355,16 @@ print(classification_report(y_test, bnb_pred))</code></pre>
                                     </p>
                                 </div>
                             </div>
+
+                            <div class="feature-importance mt-4">
+                                <h5 class="mb-3">Feature Importance Analysis for Multinomial Naive Bayes</h5>
+                                <div class="viz-container p-3 bg-light rounded">
+                                     <img src="{{ url_for('static', filename='img/mnb_feature_importance.png') }}" class="img-fluid rounded" alt="Multinomial Naive Bayes Feature Importance">
+                                     <p class="text-center text-muted mt-3">
+                                         Visual representation of feature importance for the Multinomial Naive Bayes model.
+                                     </p>
+                                 </div>
+                            </div>
                         </div>
                         
                         <div class="col-lg-5">
@@ -490,7 +373,7 @@ print(classification_report(y_test, bnb_pred))</code></pre>
                                 <div class="insight-item p-3 mb-3 bg-light rounded">
                                     <h5><i class="fas fa-lightbulb text-warning me-2"></i>Model Comparison</h5>
                                     <p>
-                                        The Bernoulli Naive Bayes model consistently outperformed the Multinomial variant across all metrics. This suggests that the binary presence or absence of features (like specific route characteristics or carrier operations) is more predictive of fare categories than the frequency or count of these features.
+                                        The {{ 'Bernoulli' if model_results['bernoulli']['accuracy'] > model_results['multinomial']['accuracy'] else 'Multinomial' }} Naive Bayes model {{ 'outperformed' if abs(model_results['bernoulli']['accuracy'] - model_results['multinomial']['accuracy']) > 0.02 else 'performed similarly to' }} the {{ 'Multinomial' if model_results['bernoulli']['accuracy'] > model_results['multinomial']['accuracy'] else 'Bernoulli' }} variant across all metrics. This suggests that the {{ 'binary presence or absence' if model_results['bernoulli']['accuracy'] > model_results['multinomial']['accuracy'] else 'frequency or count' }} of features is more predictive of fare categories in our flight data.
                                     </p>
                                 </div>
                                 
@@ -500,13 +383,21 @@ print(classification_report(y_test, bnb_pred))</code></pre>
                                         The most influential features in predicting fare categories were:
                                     </p>
                                     <ol>
-                                        <li><strong>Distance_VeryLong</strong> (highest conditional probability for High and VeryHigh fare categories)</li>
-                                        <li><strong>Carrier_WN</strong> (strongly indicative of Low and Medium fare categories)</li>
-                                        <li><strong>Market_share_High</strong> (surprisingly associated with lower fares)</li>
+                                        {% for i in range(3) %}
+                                            {% if importance_results.get('bernoulli', {}) and model_results['bernoulli'].get('model', {}).classes_|length > 0 %}
+                                                {% set class_name = model_results['bernoulli']['model'].classes_[-1] %}
+                                                {% if importance_results['bernoulli'].get(class_name, {}).get('features', [])|length > i %}
+                                                    <li><strong>{{ importance_results['bernoulli'][class_name]['features'][i] }}</strong> (for {{ class_name }} fare prediction)</li>
+                                                {% else %}
+                                                    <li><strong>{{ ['Distance_VeryLong', 'Carrier_WN', 'Market_share_High'][i] }}</strong></li>
+                                                {% endif %}
+                                            {% else %}
+                                                <li><strong>{{ ['Distance_VeryLong', 'Carrier_WN', 'Market_share_High'][i] }}</strong></li>
+                                            {% endif %}
+                                        {% endfor %}
                                     </ol>
                                     <p>
-                                        This confirms our earlier association rule mining findings that routes with high market share often have lower fares, particularly when operated by Southwest Airlines.
-                                    </p>
+                                        This confirms our earlier association rule mining findings that routes with high market share often have lower fares.
                                 </div>
                                 
                                 <div class="insight-item p-3 mb-3 bg-light rounded">
@@ -519,14 +410,14 @@ print(classification_report(y_test, bnb_pred))</code></pre>
                                 <div class="insight-item p-3 mb-3 bg-light rounded">
                                     <h5><i class="fas fa-lightbulb text-warning me-2"></i>Predictability by Carrier</h5>
                                     <p>
-                                        Low-cost carriers (particularly WN - Southwest) showed more predictable pricing patterns than legacy carriers, with fewer misclassifications. This suggests more consistent pricing strategies among budget airlines compared to the more complex, variable pricing of legacy carriers.
+                                        Low-cost carriers showed more predictable pricing patterns than legacy carriers, with fewer misclassifications. This suggests more consistent pricing strategies among budget airlines compared to the more complex, variable pricing of legacy carriers.
                                     </p>
                                 </div>
                                 
                                 <div class="insight-item p-3 bg-light rounded">
                                     <h5><i class="fas fa-lightbulb text-warning me-2"></i>Practical Applications</h5>
                                     <p>
-                                        With 76.8% accuracy, the Bernoulli NB model could be effectively used for:
+                                        With {{ "%.1f"|format(max(model_results['bernoulli']['accuracy'], model_results['multinomial']['accuracy']) * 100) }}% accuracy, the {{ 'Bernoulli' if model_results['bernoulli']['accuracy'] > model_results['multinomial']['accuracy'] else 'Multinomial' }} NB model could be effectively used for:
                                     </p>
                                     <ul>
                                         <li>Predicting fare categories for new or hypothetical routes</li>
@@ -551,7 +442,7 @@ print(classification_report(y_test, bnb_pred))</code></pre>
                                         <div class="conclusion-point mb-3">
                                             <h5><i class="fas fa-check-circle text-success me-2"></i>Predictable Pricing Patterns</h5>
                                             <p>
-                                                Despite the complexity of airline pricing, our models achieved approximately 76% accuracy, indicating that fare categories follow predictable patterns based on route characteristics, carrier identity, and market share.
+                                                Despite the complexity of airline pricing, our models achieved approximately {{ "%.1f"|format(max(model_results['bernoulli']['accuracy'], model_results['multinomial']['accuracy']) * 100) }}% accuracy, indicating that fare categories follow predictable patterns based on route characteristics, carrier identity, and market share.
                                             </p>
                                         </div>
                                         <div class="conclusion-point mb-3">
@@ -587,6 +478,24 @@ print(classification_report(y_test, bnb_pred))</code></pre>
         </div>
     </div>
 </div>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay" style="display: none;">
+    <div class="spinner"></div>
+    <p class="mt-3 h5">Processing Naive Bayes analysis...</p>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show loading spinner when clicking refresh
+    document.querySelector('a[href*="refresh=True"]').addEventListener('click', function() {
+        document.getElementById('loading-overlay').style.display = 'flex';
+    });
+});
+</script>
 {% endblock %}
 
 {% block styles %}
@@ -646,6 +555,34 @@ print(classification_report(y_test, bnb_pred))</code></pre>
     .formula-box {
         border: 1px solid #dee2e6;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    #loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255,255,255,0.8);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .spinner {
+        width: 80px;
+        height: 80px;
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 </style>
 {% endblock %}

@@ -1,13 +1,16 @@
-import pandas as pd
-import numpy as np
 import os
+
 import matplotlib
+import numpy as np
+import pandas as pd
+
 matplotlib.use('Agg')
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
+import networkx as nx
 from mlxtend.frequent_patterns import apriori, association_rules
 from mlxtend.preprocessing import TransactionEncoder
-import networkx as nx
-import matplotlib.colors as mcolors
+
 
 def prepare_flight_data_for_arm(df):
     """

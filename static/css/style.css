@@ -6,14 +6,47 @@ body {
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     color: #333;
     background-color: #f8f9fa;
+    overflow-x: hidden;
 }
 
 main {
     flex: 1;
 }
 
+main.sidebar-collapsed {
+    margin-left: 0;
+    width: 100%;
+}
+
+sidebar-nav .nav-link.active {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: white;
+    border-left: 3px solid #007bff;
+}
+
+/* Add hover effects to navigation items */
+.sidebar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    transform: translateX(5px);
+}
+
 .footer {
     margin-top: auto;
+}
+
+.content-footer {
+    padding-bottom: 20px;
+}
+
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 3px;
+    background-color: #007bff;
+    top: 0;
 }
 
 /* Typography */
@@ -27,26 +60,46 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Navigation */
-.dropdown-menu {
-    border-radius: 0.25rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    border: none;
-    padding: 0.5rem 0;
+.section-header {
+    letter-spacing: 1px;
+    font-size: 0.8rem;
 }
 
-.dropdown-item {
-    padding: 0.5rem 1.5rem;
-    font-weight: 500;
-    transition: all 0.2s;
+/* Add transition effects for smoother interactions */
+.sidebar, .main-content, .content-footer {
+    transition: all 0.3s ease;
 }
 
-.dropdown-item:hover {
-    background-color: rgba(0, 123, 255, 0.1);
-    transform: translateX(5px);
+/* Style scrollbar for the sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 5px;
 }
 
-.dropdown-divider {
-    margin: 0.5rem 0;
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Add box-shadow to the sidebar for depth */
+.sidebar {
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the sidebar toggle button */
+.sidebar-toggle {
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    background-color: #007bff;
 }
 
 .navbar-nav .nav-link {
@@ -95,7 +148,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Card styling */
+
 .card {
+    position: relative;
+    z-index: 1;
     border-radius: 0.5rem;
     border: none;
     margin-bottom: 1.5rem;
@@ -306,6 +362,17 @@ iframe {
 }
 
 /* Responsive adjustments */
+@media (max-width: 992px) {
+    .main-content {
+        padding: 15px;
+    }
+    
+    /* Add spacing at the top for the toggle button */
+    .main-content {
+        padding-top: 60px;
+    }
+}
+
 @media (max-width: 768px) {
     .card-body {
         padding: 1rem;
@@ -317,21 +384,5 @@ iframe {
     
     .step, .conclusion-item {
         padding: 0.75rem;
-    }
-}
-
-@media (max-width: 992px) {
-    .dropdown-menu {
-        border: none;
-        box-shadow: none;
-        padding-left: 2rem;
-    }
-    
-    .navbar-nav .nav-link::after {
-        display: none;
-    }
-    
-    .dropdown-item:hover {
-        transform: none;
     }
 }

@@ -1,0 +1,639 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Data Analysis - Regression{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <i class="fas fa-chart-line fa-2x mb-3 text-primary"></i>
+            <h1 class="display-4 mb-3">Regression Analysis</h1>
+            <p class="lead text-muted">Linear and Logistic Regression for Predicting Flight Fares</p>
+            <hr>
+        </div>
+    </div>
+
+    <!-- Regression Overview Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Understanding Regression</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h3 class="mb-3">Linear Regression</h3>
+                            <div class="algorithm-description p-3 bg-light rounded">
+                                <p>
+                                    Linear regression is a statistical method used to model the relationship between a dependent variable and one or more independent variables by fitting a linear equation to the observed data. The simplest form of linear regression with one independent variable is represented by the equation:
+                                </p>
+                                <div class="formula-box p-2 bg-white rounded text-center">
+                                    <p class="mb-0">Y = β₀ + β₁X + ε</p>
+                                </div>
+                                <p class="mt-3">
+                                    Where:
+                                </p>
+                                <ul>
+                                    <li>Y is the dependent variable (what we're trying to predict)</li>
+                                    <li>X is the independent variable (the feature used for prediction)</li>
+                                    <li>β₀ is the y-intercept (the value of Y when X = 0)</li>
+                                    <li>β₁ is the slope of the line (the change in Y for a unit change in X)</li>
+                                    <li>ε is the error term (the difference between observed and predicted values)</li>
+                                </ul>
+                                <p>
+                                    Linear regression aims to find the best-fitting line through the data points by minimizing the sum of squared differences between observed and predicted values (known as the "least squares" method).
+                                </p>
+                                <p>
+                                    In our case, we're using linear regression to predict the fare amount based on flight distance.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h3 class="mb-3">Logistic Regression</h3>
+                            <div class="algorithm-description p-3 bg-light rounded">
+                                <p>
+                                    Logistic regression is a statistical method used for binary classification problems where the dependent variable can take only two values (0 or 1). Unlike linear regression, which predicts continuous values, logistic regression predicts the probability that an instance belongs to a particular class.
+                                </p>
+                                <p>
+                                    The logistic regression model transforms the linear regression output using the sigmoid function to constrain the predicted values between 0 and 1:
+                                </p>
+                                <div class="formula-box p-2 bg-white rounded text-center">
+                                    <p class="mb-0">P(Y=1|X) = σ(β₀ + β₁X) = 1 / (1 + e^-(β₀ + β₁X))</p>
+                                </div>
+                                <p class="mt-3">
+                                    Where:
+                                </p>
+                                <ul>
+                                    <li>P(Y=1|X) is the probability that Y=1 given X</li>
+                                    <li>σ is the sigmoid function</li>
+                                    <li>β₀ and β₁ are the model parameters</li>
+                                    <li>e is the base of natural logarithms</li>
+                                </ul>
+                                <p>
+                                    In our case, we're using logistic regression to predict whether a flight will have a high fare (binary: yes or no) based on distance.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h3 class="mb-3">Similarities and Differences</h3>
+                            <div class="algorithm-description p-3 bg-light rounded">
+                                <h5 class="text-primary">Similarities</h5>
+                                <ul>
+                                    <li>Both are supervised learning algorithms</li>
+                                    <li>Both use linear combinations of input features</li>
+                                    <li>Both aim to find the optimal values of coefficients (β values)</li>
+                                    <li>Both can be regularized to prevent overfitting</li>
+                                    <li>Both can handle multiple input features</li>
+                                </ul>
+                                
+                                <h5 class="text-primary mt-4">Differences</h5>
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Linear Regression</th>
+                                            <th>Logistic Regression</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Predicts continuous values</td>
+                                            <td>Predicts probability (0 to 1) for classification</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Uses ordinary least squares to fit the model</td>
+                                            <td>Uses maximum likelihood estimation</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Output is directly the predicted value</td>
+                                            <td>Output is transformed using the sigmoid function</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Error is measured using metrics like MSE or RMSE</td>
+                                            <td>Error is measured using log loss or cross-entropy</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Assumes linear relationship between variables</td>
+                                            <td>Assumes linear relationship with log odds (logit)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h3 class="mb-3">Sigmoid Function and Maximum Likelihood</h3>
+                            <div class="algorithm-description p-3 bg-light rounded">
+                                <h5 class="text-primary">Sigmoid Function in Logistic Regression</h5>
+                                <p>
+                                    Yes, logistic regression uses the sigmoid function (also called the logistic function). The sigmoid function transforms any input value to a value between 0 and 1, making it perfect for representing probabilities.
+                                </p>
+                                <div class="text-center my-3">
+                                    <img src="{{ url_for('static', filename='img/sigmoid_function.png') }}" class="img-fluid rounded" alt="Sigmoid Function" style="max-width: 400px;">
+                                </div>
+                                <p>
+                                    The sigmoid function is defined as:
+                                </p>
+                                <div class="formula-box p-2 bg-white rounded text-center">
+                                    <p class="mb-0">σ(z) = 1 / (1 + e^(-z))</p>
+                                </div>
+                                <p class="mt-3">
+                                    In logistic regression, we apply the sigmoid function to the linear combination of features to get the probability estimate.
+                                </p>
+                                
+                                <h5 class="text-primary mt-4">Maximum Likelihood Estimation</h5>
+                                <p>
+                                    Maximum Likelihood Estimation (MLE) is the mathematical framework used to find the optimal parameters (coefficients) in logistic regression. It works by finding the parameter values that maximize the likelihood of observing the given data.
+                                </p>
+                                <p>
+                                    For logistic regression, the likelihood function is:
+                                </p>
+                                <div class="formula-box p-2 bg-white rounded text-center">
+                                    <p class="mb-0">L(β) = ∏ P(y_i|x_i;β)^(y_i) × (1-P(y_i|x_i;β))^(1-y_i)</p>
+                                </div>
+                                <p class="mt-3">
+                                    In practice, we maximize the log-likelihood (which is mathematically equivalent but computationally easier):
+                                </p>
+                                <div class="formula-box p-2 bg-white rounded text-center">
+                                    <p class="mb-0">log L(β) = ∑ y_i log(P(y_i|x_i;β)) + (1-y_i)log(1-P(y_i|x_i;β))</p>
+                                </div>
+                                <p class="mt-3">
+                                    Unlike linear regression which has a closed-form solution, logistic regression requires iterative optimization methods like gradient descent to find the parameters that maximize the likelihood.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dataset Overview Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Dataset Overview: Airline Flight Data</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4 class="mb-3">About the Dataset</h4>
+                            <p>
+                                The dataset contains information about flights including distance, fare amounts, passenger numbers, and carrier information. We've used this data to build models for both predicting continuous fare amounts and classifying fares as high or regular.
+                            </p>
+                            <p>
+                                Flight pricing is a complex area that involves many factors, but distance is one of the primary determinants of fare cost. Our analysis helps understand this relationship and predict pricing patterns.
+                            </p>
+                            <h5 class="mt-4 mb-3">Dataset Variables</h5>
+                            <ul>
+                                <li><strong>nsmiles</strong>: Distance of the flight in miles</li>
+                                <li><strong>fare</strong>: Fare amount in dollars</li>
+                                <li><strong>passengers</strong>: Number of passengers</li>
+                                <li><strong>carrier_lg</strong>: Airline carrier code</li>
+                                <li><strong>large_ms</strong>: Market share of the carrier</li>
+                            </ul>
+                            <p>
+                                For our classification tasks, we've created a binary target variable:
+                            </p>
+                            <ul>
+                                <li><strong>high_fare</strong>: Whether a fare is considered high (1) or not (0)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Data Visualization</h4>
+                            <div class="viz-container p-3 bg-light rounded">
+                                <img src="{{ url_for('static', filename='img/distance_vs_fare.png') }}" class="img-fluid rounded" alt="Distance vs Fare">
+                                <p class="text-center text-muted mt-2">
+                                    Scatter plot showing the relationship between distance and fare by carrier
+                                </p>
+                            </div>
+                            <p class="mt-3">
+                                The plot shows a clear positive correlation: as flight distance increases, so does the fare amount. This pattern is consistent across different carriers, though there is variation in pricing strategies between airlines.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Train-Test Split Section -->
+                    <div class="train-test-section mt-4">
+                        <h4 class="mb-3">Train-Test Split</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Training Data Sample</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>nsmiles</th>
+                                                        <th>high_fare</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for row in data.train_samples.logistic %}
+                                                    <tr>
+                                                        <td>{{ row.nsmiles }}</td>
+                                                        <td>{{ row.high_fare }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Testing Data Sample</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>nsmiles</th>
+                                                        <th>high_fare</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for row in data.test_samples.logistic %}
+                                                    <tr>
+                                                        <td>{{ row.nsmiles }}</td>
+                                                        <td>{{ row.high_fare }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <h5>Importance of Train-Test Splitting</h5>
+                            <p>
+                                We split our data into training (70%) and testing (30%) sets using a random seed of 42 for reproducibility. This split allows us to:
+                            </p>
+                            <ul>
+                                <li><strong>Evaluate model performance</strong> on unseen data to estimate how well it would perform in real-world scenarios</li>
+                                <li><strong>Detect overfitting</strong> by comparing performance on training and testing sets</li>
+                                <li><strong>Make fair comparisons</strong> between different models by evaluating them on the same test data</li>
+                            </ul>
+                            <p>
+                                The split is created disjointly, meaning no data point can be in both the training and testing sets. This is crucial because if the model sees the test data during training, we cannot fairly evaluate its ability to generalize to new, unseen data.
+                            </p>
+                            <p>
+                                All models in this analysis (Linear Regression, Logistic Regression, Decision Tree, and Naive Bayes) use the same train-test split to ensure fair comparison.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linear Regression Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Linear Regression Results</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <img src="{{ url_for('static', filename='img/linear_regression_flight.png') }}" class="img-fluid rounded" alt="Linear Regression Results">
+                                <p class="text-center text-muted mt-2">
+                                    Linear Regression model showing the relationship between distance and fare
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="model-performance p-3 bg-light rounded">
+                                <h4 class="mb-3">Model Analysis</h4>
+                                <p>
+                                    The linear regression model shows a strong positive relationship between flight distance and fare amount. As distance increases, the predicted fare increases in a linear fashion.
+                                </p>
+                                <p>
+                                    The positive slope confirms that longer distances are associated with higher fares. This aligns with the business understanding of air travel: longer flights consume more fuel, require more staffing hours, and use aircraft resources for a longer time.
+                                </p>
+                                <p>
+                                    Our model achieves an R² value of approximately {{ data.linear_regression.r2|round(2) }}, indicating that {{ (data.linear_regression.r2 * 100)|round }}% of the variation in fares can be explained by distance alone. The Mean Squared Error (MSE) of {{ data.linear_regression.mse|round(2) }} shows how close our predictions are to the actual fares.
+                                </p>
+                                <p>
+                                    The equation of our model is approximately:
+                                </p>
+                                <div class="p-2 bg-white rounded text-center">
+                                    <p class="mb-0">Fare = ${{ data.linear_regression.intercept|round(2) }} + ${{ data.linear_regression.slope|round(2) }} × Distance</p>
+                                </div>
+                                <p class="mt-3">
+                                    This means there's a base fare of around ${{ data.linear_regression.intercept|round }}, and each mile adds about {{ (data.linear_regression.slope * 100)|round }} cents to the ticket price.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logistic Regression Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Logistic Regression Results</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <img src="{{ url_for('static', filename='img/logistic_regression_flight.png') }}" class="img-fluid rounded" alt="Logistic Regression Results">
+                                <p class="text-center text-muted mt-2">
+                                    Logistic Regression model showing the probability of high fare based on distance
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="model-performance p-3 bg-light rounded">
+                                <h4 class="mb-3">Model Performance</h4>
+                                <div class="metric-item mb-3">
+                                    <h6>Accuracy</h6>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" style="width: 91%" role="progressbar">
+                                            {{ data.logistic_regression.accuracy|round(1) }}%
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="confusion-matrix mt-4">
+                                    <h5 class="mb-3">Confusion Matrix</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered text-center">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Predicted: Regular</th>
+                                                    <th>Predicted: High</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th>Actual: Regular</th>
+                                                    <td class="table-success">{{ data.logistic_regression.confusion_matrix[0][0] }}</td>
+                                                    <td>{{ data.logistic_regression.confusion_matrix[0][1] }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Actual: High</th>
+                                                    <td>{{ data.logistic_regression.confusion_matrix[1][0] }}</td>
+                                                    <td class="table-success">{{ data.logistic_regression.confusion_matrix[1][1] }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="mt-4 mb-3">Analysis</h5>
+                                <p>
+                                    The logistic regression model effectively captures the probability of a flight having a high fare as a function of distance. The S-shaped curve shows that:
+                                </p>
+                                <ul>
+                                    <li>At short distances (<500 miles), the probability of a high fare is very low</li>
+                                    <li>At long distances (>1500 miles), the probability of a high fare is very high</li>
+                                    <li>There's a transition zone between 750-1250 miles where the probability changes rapidly</li>
+                                </ul>
+                                <p>
+                                    This model achieves an excellent balance of precision ({{ data.logistic_regression.precision|round(1) }}%) and recall ({{ data.logistic_regression.recall|round(1) }}%). This indicates the model is equally good at identifying both high and regular fares.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Other Models Comparison Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Model Comparison</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="viz-container p-3 bg-light rounded mb-3">
+                                <img src="{{ url_for('static', filename='img/model_comparison_flight.png') }}" class="img-fluid rounded" alt="Model Accuracy Comparison">
+                                <p class="text-center text-muted mt-2">
+                                    Comparison of model performances for predicting high fares
+                                </p>
+                            </div>
+                            
+                            <div class="viz-container p-3 bg-light rounded">
+                                <img src="{{ url_for('static', filename='img/confusion_matrices_flight.png') }}" class="img-fluid rounded" alt="Confusion Matrices">
+                                <p class="text-center text-muted mt-2">
+                                    Confusion matrices for all classification models
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="model-performance p-3 bg-light rounded">
+                                <h4 class="mb-3">Performance Comparison</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Model</th>
+                                                <th>Accuracy</th>
+                                                <th>Best For</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for i in range(data.model_comparison.names|length) %}
+                                            <tr>
+                                                <td>{{ data.model_comparison.names[i] }}</td>
+                                                <td>{{ data.model_comparison.accuracies[i]|round(1) }}%</td>
+                                                <td>
+                                                    {% if data.model_comparison.names[i] == 'Logistic Regression' %}
+                                                    Interpretable probability estimates
+                                                    {% elif data.model_comparison.names[i] == 'Decision Tree' %}
+                                                    Clear decision boundaries
+                                                    {% elif data.model_comparison.names[i] == 'Naive Bayes' %}
+                                                    Simple, fast classification
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <h5 class="mt-4 mb-3">Model Selection Analysis</h5>
+                                <p>
+                                    For this problem, logistic regression appears to be the most appropriate model because:
+                                </p>
+                                <ul>
+                                    <li>It provides probability estimates, which are more informative than binary predictions</li>
+                                    <li>It achieves the highest accuracy at {{ data.model_comparison.accuracies[0]|round(1) }}%</li>
+                                    <li>It has balanced precision and recall scores</li>
+                                    <li>It's interpretable and provides insights into the relationship between distance and fare probability</li>
+                                    <li>It aligns with the business understanding of flight pricing</li>
+                                </ul>
+                                <p>
+                                    The decision tree performs nearly as well in terms of accuracy ({{ data.model_comparison.accuracies[1]|round(1) }}%), but doesn't provide the smooth probability estimates that logistic regression does. The Naive Bayes model performs notably worse on this dataset with only {{ data.model_comparison.accuracies[2]|round(1) }}% accuracy.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conclusions Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Conclusions</h2>
+                </div>
+                <div class="card-body">
+                    <div class="conclusions p-4 bg-light rounded">
+                        <p>
+                            Our regression analysis of flight data reveals several important findings:
+                        </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="conclusion-point mb-3">
+                                    <h5><i class="fas fa-check-circle text-success me-2"></i>Distance-Fare Relationship</h5>
+                                    <p>
+                                        There is a strong positive relationship between flight distance and fare amounts. Our linear regression model shows that distance alone explains {{ (data.linear_regression.r2 * 100)|round }}% of the variation in fare prices.
+                                    </p>
+                                </div>
+                                <div class="conclusion-point mb-3">
+                                    <h5><i class="fas fa-check-circle text-success me-2"></i>Model Performance</h5>
+                                    <p>
+                                        Logistic regression provides the best combination of accuracy and interpretability for the fare classification problem. The model achieves {{ data.logistic_regression.accuracy|round(1) }}% accuracy and provides meaningful probability estimates.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="conclusion-point mb-3">
+                                    <h5><i class="fas fa-check-circle text-success me-2"></i>Critical Distance Threshold</h5>
+                                    <p>
+                                        The logistic regression model identifies a critical distance range (750-1250 miles) where the probability of high fares increases dramatically. Below 500 miles, fares are typically lower, while flights over 1500 miles almost always command higher fares.
+                                    </p>
+                                </div>
+                                <div class="conclusion-point">
+                                    <h5><i class="fas fa-check-circle text-success me-2"></i>Practical Applications</h5>
+                                    <p>
+                                        These models can help airlines optimize pricing strategies, assist travelers in budgeting for trips, and provide insights for market analysis. The fare prediction model could be integrated into booking systems to estimate costs.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-3">
+                            This analysis demonstrates the effectiveness of regression techniques in understanding and predicting airfare pricing. The linear model shows that on average, there's a base fare of about ${{ data.linear_regression.intercept|round }} with an additional ${{ data.linear_regression.slope|round(2) }} per mile flown.
+                        </p>
+                        <p>
+                            In comparing our classification models, we see that logistic regression performs best ({{ data.logistic_regression.accuracy|round(1) }}% accuracy), followed by decision trees ({{ data.model_comparison.accuracies[1]|round(1) }}%), and Naive Bayes ({{ data.model_comparison.accuracies[2]|round(1) }}%). Logistic regression provides the added benefit of smooth probability estimates, which is valuable for understanding pricing thresholds.
+                        </p>
+                        <p>
+                            Future work could include incorporating additional features such as time of booking, seasonality, competition level, and airline-specific factors to improve prediction accuracy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .algorithm-description {
+        border-left: 4px solid #007bff;
+    }
+    
+    .preprocessing-steps .step {
+        border-left: 4px solid #28a745;
+        transition: all 0.3s ease;
+    }
+    
+    .preprocessing-steps .step:hover {
+        transform: translateX(5px);
+    }
+    
+    .conclusion-point {
+        border-left: 4px solid #28a745;
+        padding-left: 15px;
+    }
+    
+    .code-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    pre {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 15px;
+        font-size: 14px;
+    }
+    
+    code {
+        font-family: 'Courier New', Courier, monospace;
+    }
+    
+    .viz-container {
+        transition: transform 0.2s;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .viz-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .formula-box {
+        border: 1px solid #dee2e6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    
+    .progress {
+        height: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .metric-item {
+        margin-bottom: 1rem;
+    }
+    
+    .progress-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    }
+    
+    .table-success {
+        background-color: rgba(40, 167, 69, 0.2) !important;
+    }
+</style>
+{% endblock %}

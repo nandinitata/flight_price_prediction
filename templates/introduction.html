@@ -26,7 +26,7 @@
                         Many elements affect airfare, from <strong>fuel prices</strong> to weather disruptions and government regulations. Airlines use advanced <strong>pricing models</strong> to maximize profits while keeping seats filled. Some flights become more expensive closer to departure, while others drop in price at the last minute. <strong>Holiday seasons</strong> and major events create spikes in ticket demand, leading to higher fares. Travelers who understand these patterns can save money by booking at the right time. Competition between airlines is fierce, with carriers adjusting fares to attract more passengers. Regional airports sometimes offer lower fares than major hubs, giving travelers alternative options. <strong>Business travel</strong> trends and remote work have also changed demand for flights. As airfare pricing becomes more dynamic, having insights into market trends can be a game-changer. Understanding these factors helps passengers make informed choices and get the best deals on domestic flights.
                     </p>
                     <p class="mb-4 text-justify">
-                        The evolution of data science and machine learning has revolutionized how we analyze and predict flight pricing patterns. By leveraging advanced analytical techniques like <strong>Principal Component Analysis</strong>, <strong>Clustering</strong>, <strong>Association Rule Mining</strong>, and <strong>Naive Bayes Classification</strong>, we can uncover hidden patterns in seemingly complex pricing data. These techniques allow us to reduce dimensionality, identify natural groupings, discover interesting relationships, and build predictive models based on historical data. Our comprehensive approach examines diverse aspects of flight data, from route characteristics to carrier strategies, market share dynamics, and seasonal variations. Through systematic analysis, we can develop a deeper understanding of the driving forces behind airfare fluctuations and build models that help predict future pricing trends. This data-driven methodology transforms raw flight information into actionable intelligence for travelers, airlines, and market analysts alike.
+                        The evolution of data science and machine learning has revolutionized how we analyze and predict flight pricing patterns. By leveraging advanced analytical techniques like <strong>Principal Component Analysis</strong>, <strong>Clustering</strong>, <strong>Association Rule Mining</strong>, <strong>Naive Bayes Classification</strong>, <strong>Decision Trees</strong>, and <strong>Regression</strong> can uncover hidden patterns in seemingly complex pricing data. These techniques allow us to reduce dimensionality, identify natural groupings, discover interesting relationships, and build predictive models based on historical data. Our comprehensive approach examines diverse aspects of flight data, from route characteristics to carrier strategies, market share dynamics, and seasonal variations. Through systematic analysis, we can develop a deeper understanding of the driving forces behind airfare fluctuations and build models that help predict future pricing trends. This data-driven methodology transforms raw flight information into actionable intelligence for travelers, airlines, and market analysts alike.
                     </p>
                     <p class="mb-4 text-justify">
                         This comprehensive analysis delves deep into the intricate dynamics of the U.S. domestic flight market, exploring multifaceted aspects of airfare pricing and market behavior. By examining diverse city pairs and carrier data across different regions, the research uncovers valuable insights into how various factors like distance, competition, and market share influence ticket prices. The extensive dataset encompasses multiple airlines, from major carriers to budget operators, providing a thorough perspective of the current market landscape and its evolving patterns. Through sophisticated data analysis techniques, we investigate the complex relationships between route distances and fare structures, revealing how geographical factors impact pricing decisions. The research specifically focuses on understanding competitive dynamics in different market segments, from busy metropolitan routes to regional connections. Seasonal variations in pricing patterns are carefully analyzed to identify cyclical trends and help travelers make informed decisions. Market share analysis reveals how different carriers position themselves and influence pricing in various routes. The study examines passenger volume patterns to understand demand fluctuations and their correlation with fare adjustments. By incorporating historical data and current market conditions, this analysis provides actionable insights for both industry professionals and consumers. The findings aim to enhance understanding of pricing strategies while offering practical guidance for optimizing travel planning and airline operations in the dynamic U.S. aviation market.
@@ -79,51 +79,53 @@
     
 
     <!-- Research Questions Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h2 class="card-title h3 mb-4">Key Research Questions</h2>
-                    <div class="list-group">
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">1</span>
-                            How does the distance between cities affect airfare pricing?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">2</span>
-                            What is the relationship between passenger volume and fare prices?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">3</span>
-                            How does market competition influence pricing strategies?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">4</span>
-                            Are there significant differences in pricing between major carriers?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">5</span>
-                            What role does market share play in route pricing?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">6</span>
-                            How do seasonal variations affect flight patterns?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">7</span>
-                            Which routes show the highest passenger demand?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">8</span>
-                            Is there a correlation between route distance and market competition?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">9</span>
-                            How do low-cost carriers influence market dynamics?
-                        </div>
-                        <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
-                            <span class="badge bg-primary rounded-pill">10</span>
-                            What patterns emerge in hub-to-hub versus point-to-point routes?
+     <div id="research_questions">
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title h3 mb-4">Key Research Questions</h2>
+                        <div class="list-group">
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">1</span>
+                                How does the distance between cities affect airfare pricing?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">2</span>
+                                What is the relationship between passenger volume and fare prices?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">3</span>
+                                How does market competition influence pricing strategies?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">4</span>
+                                Are there significant differences in pricing between major carriers?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">5</span>
+                                What role does market share play in route pricing?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">6</span>
+                                How do seasonal variations affect flight patterns?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">7</span>
+                                Which routes show the highest passenger demand?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">8</span>
+                                Is there a correlation between route distance and market competition?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">9</span>
+                                How do low-cost carriers influence market dynamics?
+                            </div>
+                            <div class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <span class="badge bg-primary rounded-pill">10</span>
+                                What patterns emerge in hub-to-hub versus point-to-point routes?
+                            </div>
                         </div>
                     </div>
                 </div>

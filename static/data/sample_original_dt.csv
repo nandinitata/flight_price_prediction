@@ -1,0 +1,11 @@
+distance_category,carrier_lg,market_share_category,fare_category
+VeryLong,WN,HighShare,Medium
+Long,WN,HighShare,Medium
+VeryLong,WN,HighShare,Medium
+VeryLong,WN,MediumShare,High
+Short,WN,HighShare,Low
+Short,UA,HighShare,Low
+Medium,WN,HighShare,Low
+VeryLong,AA,LowShare,High
+Medium,UA,HighShare,Low
+Long,AA,MediumShare,Medium

@@ -1,11 +1,13 @@
-import pandas as pd
+import os
+
 import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-import os
+from sklearn.preprocessing import StandardScaler
+
 
 def create_distribution_comparison_viz(original_data, pca_result):
     """Create visualization comparing data distribution before and after PCA"""
@@ -342,11 +344,22 @@ def perform_pca_analysis(df, n_components=None):
     
     loadings = pca.components_.T * np.sqrt(pca.explained_variance_)
     
+    # Create a DataFrame of the transformed data for better display
+    pca_df = pd.DataFrame(
+        data=pca_result[:, :n_components],
+        columns=[f'PC{i+1}' for i in range(n_components)]
+    )
+    
+    # Individual variance percentages for each component
+    individual_variance_pct = explained_variance * 100
+    
     return {
         'pca': pca,
         'pca_result': pca_result,
+        'pca_df': pca_df,  # DataFrame version of transformed data
         'explained_variance': explained_variance,
         'cumulative_variance': cumulative_variance,
+        'individual_variance_pct': individual_variance_pct,  # Individual percentages
         'components_for_95': components_for_95,
         'loadings': loadings,
         'feature_names': df.columns,
@@ -651,3 +664,7 @@ if __name__ == "__main__":
         print(f"3D variance explained: {np.sum(results['pca_3d']['explained_variance']) * 100:.2f}%")
         print(f"Components needed for 95% variance: {results['full_pca']['components_for_95']}")
         print(f"Top 3 eigenvalues: {results['full_pca']['pca'].explained_variance_[:3]}")
+        
+        # Print individual variance percentages for each component
+        for i, pct in enumerate(results['pca_3d']['individual_variance_pct']):
+            print(f"PC{i+1} explains {pct:.2f}% of variance")
