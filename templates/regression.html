@@ -299,6 +299,20 @@
                             </p>
                         </div>
                     </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="code-section">
+                                <h4 class="mb-3">Implementation Code</h4>
+                                <div class="text-center mt-3">
+                                    <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/regression.py" 
+                                       class="btn btn-primary" target="_blank">
+                                        <i class="fab fa-github me-2"></i>View Complete Code on GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -494,7 +508,7 @@
                                     <li>It aligns with the business understanding of flight pricing</li>
                                 </ul>
                                 <p>
-                                    The decision tree performs nearly as well in terms of accuracy ({{ data.model_comparison.accuracies[1]|round(1) }}%), but doesn't provide the smooth probability estimates that logistic regression does. The Naive Bayes model performs notably worse on this dataset with only {{ data.model_comparison.accuracies[2]|round(1) }}% accuracy.
+                                    The decision tree performs nearly as well in terms of accuracy ({{ data.model_comparison.accuracies[1]|round(1) }}%), but doesn't provide the smooth probability estimates that logistic regression does. The Naive Bayes model performs equally on this dataset with {{ data.model_comparison.accuracies[2]|round(1) }}% accuracy.
                                 </p>
                             </div>
                         </div>
