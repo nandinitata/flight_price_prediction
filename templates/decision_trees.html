@@ -281,40 +281,32 @@
                                     <div class="metric-item mb-3">
                                         <h6>Accuracy</h6>
                                         <div class="progress">
-                                            {% set accuracy = 0.68 * 100 %}
-                                            <div class="progress-bar bg-success w-{{ (accuracy/10)|round|int * 10 }}" 
-                                                    role="progressbar">
-                                                {{ accuracy|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 68%" role="progressbar">
+                                                {{ results["Default Parameters"].accuracy|round(2) }}%
                                             </div>
                                         </div>
                                     </div>
                                     <div class="metric-item mb-3">
                                         <h6>Precision (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set precision = results['Default Parameters'].get('precision', 0.831) * 100 %}
-                                            <div class="progress-bar bg-primary w-{{ (precision/10)|round|int * 10 }}" 
-                                                    role="progressbar">
-                                                {{ precision|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 68.3%" role="progressbar">
+                                                {{ results["Default Parameters"].precision|round(2) }}%
                                             </div>
                                         </div>
                                     </div>
                                     <div class="metric-item mb-3">
                                         <h6>Recall (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set recall = results['Default Parameters'].get('recall', 0.831) * 100 %}
-                                            <div class="progress-bar bg-info w-{{ (recall/10)|round|int * 10 }}" 
-                                                    role="progressbar">
-                                                {{ recall|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 69%" role="progressbar">
+                                                {{ results["Default Parameters"].recall|round(2) }}%
                                             </div>
-                                        </div> 
+                                        </div>
                                     </div>
                                     <div class="metric-item">
                                         <h6>F1-Score (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set f1_score = results['Default Parameters'].get('f1_score', 0.831) * 100 %}
-                                            <div class="progress-bar bg-warning w-{{ (f1_score/10)|round|int * 10 }}" 
-                                                    role="progressbar">
-                                                {{ f1_score|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 67.5%" role="progressbar">
+                                                {{ results["Default Parameters"].f1_score|round(2) }}%
                                             </div>
                                         </div>
                                     </div>
@@ -375,39 +367,32 @@
                                     <div class="metric-item mb-3">
                                         <h6>Accuracy</h6>
                                         <div class="progress">
-                                            <div class="progress-bar bg-success" role="progressbar" 
-                                                 style="width: 100%">
-                                                {{ "%.1f"|format(results['Max Depth=3']['accuracy'] * 100) }}%
+                                            <div class="progress-bar bg-success" style="width: 61.4%" role="progressbar">
+                                                {{ results["Max Depth=3"].accuracy|round(3) }}%
                                             </div>
                                         </div>
                                     </div>
                                     <div class="metric-item mb-3">
                                         <h6>Precision (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set precision = results['Max Depth=3'].get('precision', 0.831) * 100 %}
-                                            <div class="progress-bar bg-success w-{{ (precision/10)|round|int * 10 }}" 
-                                                role="progressbar">
-                                                {{ precision|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 57.6%" role="progressbar">
+                                                {{ results["Max Depth=3"].precision|round(3) }}%
                                             </div>
                                         </div>
                                     </div>
                                     <div class="metric-item mb-3">
                                         <h6>Recall (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set recall = results['Max Depth=3'].get('recall', 0.831) * 100 %}
-                                            <div class="progress-bar bg-success w-{{ (recall/10)|round|int * 10 }}" 
-                                                role="progressbar">
-                                                {{ recall|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 61.2%" role="progressbar">
+                                                {{ results["Max Depth=3"].recall|round(3) }}%
                                             </div>
                                         </div>
                                     </div>
                                     <div class="metric-item">
                                         <h6>F1-Score (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set f1_score = results['Max Depth=3'].get('f1_score', 0.831) * 100 %}
-                                            <div class="progress-bar bg-success w-{{ (f1_score/10)|round|int * 10 }}" 
-                                                role="progressbar">
-                                                {{ f1_score|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 57.5%" role="progressbar">
+                                                {{ results["Max Depth=3"].f1_score|round(3) }}%
                                             </div>
                                         </div>
                                     </div>
@@ -468,40 +453,32 @@
                                     <div class="metric-item mb-3">
                                         <h6>Accuracy</h6>
                                         <div class="progress">
-                                            {% set accuracy = results['Entropy Criterion'].get('accuracy', 0.831) * 100 %}
-                                            <div class="progress-bar bg-success w-{{ (accuracy/10)|round|int * 10 }}" 
-                                                 role="progressbar">
-                                                {{ accuracy|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 68.6%" role="progressbar">
+                                                {{ results["Entropy Criterion"].accuracy|round(3) }}%
                                             </div>
                                         </div>
                                     </div>
                                     <div class="metric-item mb-3">
                                         <h6>Precision (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set accuracy = results['Entropy Criterion'].get('precision', 0.831) * 100 %}
-                                            <div class="progress-bar bg-success w-{{ (accuracy/10)|round|int * 10 }}" 
-                                                 role="progressbar">
-                                                {{ accuracy|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 68.3%" role="progressbar">
+                                                {{ results["Entropy Criterion"].precision|round(3) }}%
                                             </div>
                                         </div>
                                     </div>
                                     <div class="metric-item mb-3">
                                         <h6>Recall (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set accuracy = results['Entropy Criterion'].get('recall', 0.831) * 100 %}
-                                            <div class="progress-bar bg-success w-{{ (accuracy/10)|round|int * 10 }}" 
-                                                 role="progressbar">
-                                                {{ accuracy|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 69%" role="progressbar">
+                                                {{ results["Entropy Criterion"].recall|round(2) * 100}}%
                                             </div>
                                         </div>
                                     </div>
                                     <div class="metric-item">
                                         <h6>F1-Score (Weighted Avg)</h6>
                                         <div class="progress">
-                                            {% set accuracy = results['Entropy Criterion'].get('f1_score', 0.831) * 100 %}
-                                            <div class="progress-bar bg-success w-{{ (accuracy/10)|round|int * 10 }}" 
-                                                 role="progressbar">
-                                                {{ accuracy|round(1) }}%
+                                            <div class="progress-bar bg-success" style="width: 67.5%" role="progressbar">
+                                                {{ results["Entropy Criterion"].f1_score|round(3) * 100 }}%
                                             </div>
                                         </div>
                                     </div>
