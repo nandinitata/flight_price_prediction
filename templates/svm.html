@@ -164,6 +164,151 @@
         </div>
     </div>
 
+    <!-- Data Transformation Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h2 class="card-title mb-0">Data Transformation Process</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <h4 class="mb-3">Data Preprocessing and Transformation</h4>
+                        <p>
+                            Before applying SVM to our flight data, we performed several preprocessing and transformation steps to prepare the data for optimal analysis:
+                        </p>
+                        <ol class="mb-4">
+                            <li><strong>Fare Categorization:</strong> We categorized flights into "high fare" and "regular fare" based on the 75th percentile threshold.</li>
+                            <li><strong>Feature Engineering:</strong> We created derived features such as fare per mile and passenger density for better separation.</li>
+                            <li><strong>Standardization:</strong> We applied StandardScaler to normalize all features to have zero mean and unit variance, which is essential for SVM analysis.</li>
+                            <li><strong>Dimensionality Reduction:</strong> For visualization purposes, we used PCA to project high-dimensional data into 2D space.</li>
+                        </ol>
+                        <div class="alert alert-info">
+                            <strong>Note:</strong> Data standardization is critical for SVM performance. Without standardization, features with larger numeric ranges would dominate the calculation of distances, potentially obscuring patterns in features with smaller ranges.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Before Transformation Data -->
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Original Data (Before Transformation)</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Distance (miles)</th>
+                                        <th>Market Share</th>
+                                        <th>Passengers</th>
+                                        <th>Fare ($)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if train_sample is not none %}
+                                        {% for index, row in train_sample.iterrows() %}
+                                            {% if index < 5 %}
+                                            <tr>
+                                                <td>{{ row['Distance (miles)']|round(0)|int }}</td>
+                                                <td>{{ row['Market Share']|round(2) }}</td>
+                                                <td>{{ row.get('Passengers', 0)|round(2) }}</td>
+                                                <td>{{ row.get('Fare', 0)|round(2) }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr><td colspan="4">No original data available</td></tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- After Transformation Data -->
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Transformed Data (After Standardization)</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Distance (Scaled)</th>
+                                        <th>Market Share (Scaled)</th>
+                                        <th>Target (High Fare)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if train_sample is not none %}
+                                        {% for index, row in train_sample.iterrows() %}
+                                            {% if index < 5 %}
+                                            <tr>
+                                                <!-- These are placeholder calculations to show scaled values -->
+                                                <!-- In reality, the standardization is done in the Python code -->
+                                                <td>{{ ((row['Distance (miles)'] - train_sample['Distance (miles)'].mean()) / train_sample['Distance (miles)'].std())|round(2) }}</td>
+                                                <td>{{ ((row['Market Share'] - train_sample['Market Share'].mean()) / train_sample['Market Share'].std())|round(2) }}</td>
+                                                <td>{{ row['target']|int }}</td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr><td colspan="3">No transformed data available</td></tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="small text-muted">After standardization, all variables have similar scale (mean=0, std=1) and the target is binary.</p>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5 class="mb-3">Transformation Impact on Model Performance</h5>
+                        <p>
+                            The standardization and transformation process significantly improves SVM performance for several reasons:
+                        </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-light p-3 h-100">
+                                    <h6><i class="fas fa-arrows-alt-h text-primary me-2"></i>Equal Feature Influence</h6>
+                                    <p class="mb-0">
+                                        Standardization ensures that all features contribute equally to the distance calculations, regardless of their original scale. Without this, distance-related features (in miles) would dominate market share features (0-1 scale).
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light p-3 h-100">
+                                    <h6><i class="fas fa-tachometer-alt text-primary me-2"></i>Improved Convergence</h6>
+                                    <p class="mb-0">
+                                        Standardized features help the SVM optimization process converge faster and more reliably, as the algorithm doesn't have to compensate for different scales during parameter optimization.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="card bg-light p-3 h-100">
+                                    <h6><i class="fas fa-balance-scale text-primary me-2"></i>Better Regularization</h6>
+                                    <p class="mb-0">
+                                        The C parameter in SVM controls regularization uniformly across all features when they're standardized. Without standardization, regularization would affect features differently based on their scale.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light p-3 h-100">
+                                    <h6><i class="fas fa-layer-group text-primary me-2"></i>Enhanced Kernel Function Performance</h6>
+                                    <p class="mb-0">
+                                        Kernel functions like RBF, which rely on distance measures, work most effectively when all features contribute equally to those distances, making pattern discovery more accurate.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- Data Preparation Section -->
     <div class="row mb-5">
         <div class="col-12">
@@ -229,31 +374,19 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>2468</td>
-                                                        <td>0.99</td>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>1138</td>
-                                                        <td>0.66</td>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2468</td>
-                                                        <td>0.80</td>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>867</td>
-                                                        <td>0.78</td>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>1092</td>
-                                                        <td>0.85</td>
-                                                        <td>0</td>
-                                                    </tr>
+                                                    {% if train_sample is not none %}
+                                                        {% for index, row in train_sample.iterrows() %}
+                                                            {% if index < 5 %}
+                                                            <tr>
+                                                                <td>{{ row['Distance (miles)']|round(0)|int }}</td>
+                                                                <td>{{ row['Market Share']|round(2) }}</td>
+                                                                <td>{{ row['target']|int }}</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <tr><td colspan="3">No training data available</td></tr>
+                                                    {% endif %}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -272,31 +405,19 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>1823</td>
-                                                        <td>0.93</td>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>954</td>
-                                                        <td>0.71</td>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>2109</td>
-                                                        <td>0.88</td>
-                                                        <td>1</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>743</td>
-                                                        <td>0.82</td>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>1287</td>
-                                                        <td>0.91</td>
-                                                        <td>1</td>
-                                                    </tr>
+                                                    {% if test_sample is not none %}
+                                                        {% for index, row in test_sample.iterrows() %}
+                                                            {% if index < 5 %}
+                                                            <tr>
+                                                                <td>{{ row['Distance (miles)']|round(0)|int }}</td>
+                                                                <td>{{ row['Market Share']|round(2) }}</td>
+                                                                <td>{{ row['target']|int }}</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <tr><td colspan="3">No testing data available</td></tr>
+                                                    {% endif %}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -377,10 +498,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 85.2%</li>
-                                            <li><strong>Precision:</strong> 82.4%</li>
-                                            <li><strong>Recall:</strong> 79.6%</li>
-                                            <li><strong>F1 Score:</strong> 81.0%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.linear[0.1].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.linear[0.1].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.linear[0.1].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.linear[0.1].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -403,10 +524,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 87.3%</li>
-                                            <li><strong>Precision:</strong> 84.1%</li>
-                                            <li><strong>Recall:</strong> 82.7%</li>
-                                            <li><strong>F1 Score:</strong> 83.4%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.linear[1.0].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.linear[1.0].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.linear[1.0].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.linear[1.0].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -429,10 +550,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 88.1%</li>
-                                            <li><strong>Precision:</strong> 85.3%</li>
-                                            <li><strong>Recall:</strong> 84.2%</li>
-                                            <li><strong>F1 Score:</strong> 84.7%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.linear[10.0].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.linear[10.0].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.linear[10.0].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.linear[10.0].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -460,10 +581,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 86.9%</li>
-                                            <li><strong>Precision:</strong> 83.5%</li>
-                                            <li><strong>Recall:</strong> 82.1%</li>
-                                            <li><strong>F1 Score:</strong> 82.8%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.poly[0.1].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.poly[0.1].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.poly[0.1].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.poly[0.1].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -486,10 +607,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 89.5%</li>
-                                            <li><strong>Precision:</strong> 86.8%</li>
-                                            <li><strong>Recall:</strong> 85.3%</li>
-                                            <li><strong>F1 Score:</strong> 86.0%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.poly[1.0].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.poly[1.0].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.poly[1.0].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.poly[1.0].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -512,10 +633,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 90.2%</li>
-                                            <li><strong>Precision:</strong> 87.9%</li>
-                                            <li><strong>Recall:</strong> 86.4%</li>
-                                            <li><strong>F1 Score:</strong> 87.1%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.poly[10.0].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.poly[10.0].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.poly[10.0].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.poly[10.0].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -543,10 +664,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 88.7%</li>
-                                            <li><strong>Precision:</strong> 85.9%</li>
-                                            <li><strong>Recall:</strong> 84.3%</li>
-                                            <li><strong>F1 Score:</strong> 85.1%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.rbf[0.1].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.rbf[0.1].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.rbf[0.1].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.rbf[0.1].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -569,10 +690,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 91.8%</li>
-                                            <li><strong>Precision:</strong> 89.2%</li>
-                                            <li><strong>Recall:</strong> 88.7%</li>
-                                            <li><strong>F1 Score:</strong> 89.0%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.rbf[1.0].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.rbf[1.0].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.rbf[1.0].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.rbf[1.0].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -595,10 +716,10 @@
                                     <div class="model-metrics">
                                         <h6>Performance Metrics:</h6>
                                         <ul class="list-unstyled">
-                                            <li><strong>Accuracy:</strong> 92.5%</li>
-                                            <li><strong>Precision:</strong> 90.1%</li>
-                                            <li><strong>Recall:</strong> 89.6%</li>
-                                            <li><strong>F1 Score:</strong> 89.8%</li>
+                                            <li><strong>Accuracy:</strong> {{ (results.rbf[10.0].accuracy * 100)|round(1) }}%</li>
+                                            <li><strong>Precision:</strong> {{ (results.rbf[10.0].report['weighted avg']['precision'] * 100)|round(1) }}%</li>
+                                            <li><strong>Recall:</strong> {{ (results.rbf[10.0].report['weighted avg']['recall'] * 100)|round(1) }}%</li>
+                                            <li><strong>F1 Score:</strong> {{ (results.rbf[10.0].report['weighted avg']['f1-score'] * 100)|round(1) }}%</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -695,9 +816,9 @@
                                 </p>
                                 <h5 class="mt-4 mb-3">Kernel Performance Comparison</h5>
                                 <ul>
-                                    <li><strong>Linear Kernel:</strong> Achieved up to 88.1% accuracy (with C=10.0). The linear kernel performs reasonably well, suggesting that there is a somewhat linear relationship between our features and fare categories. However, its straight-line decision boundary misses some of the more complex patterns in the data.</li>
-                                    <li><strong>Polynomial Kernel:</strong> Reached 90.2% accuracy (with C=10.0). The polynomial kernel improves upon the linear kernel by capturing non-linear relationships, particularly in regions where distance and market share interact to influence pricing in ways that aren't strictly linear.</li>
-                                    <li><strong>RBF Kernel:</strong> Achieved the highest accuracy at 92.5% (with C=10.0). This kernel excels at capturing highly complex, localized patterns in the data, suggesting that flight pricing involves intricate relationships that can't be fully captured by simpler models.</li>
+                                    <li><strong>Linear Kernel:</strong> Achieved up to {{ (results.linear[10.0].accuracy * 100)|round(1) }}% accuracy (with C=10.0). The linear kernel performs reasonably well, suggesting that there is a somewhat linear relationship between our features and fare categories. However, its straight-line decision boundary misses some of the more complex patterns in the data.</li>
+                                    <li><strong>Polynomial Kernel:</strong> Reached {{ (results.poly[10.0].accuracy * 100)|round(1) }}% accuracy (with C=10.0). The polynomial kernel improves upon the linear kernel by capturing non-linear relationships, particularly in regions where distance and market share interact to influence pricing in ways that aren't strictly linear.</li>
+                                    <li><strong>RBF Kernel:</strong> Achieved the highest accuracy at {{ (results.rbf[10.0].accuracy * 100)|round(1) }}% (with C=10.0). This kernel excels at capturing highly complex, localized patterns in the data, suggesting that flight pricing involves intricate relationships that can't be fully captured by simpler models.</li>
                                 </ul>
                                 
                                 <h5 class="mt-4 mb-3">Effect of Regularization (C Parameter)</h5>
@@ -705,9 +826,9 @@
                                     Across all kernels, we observed a clear trend: increasing the C value consistently improved model performance:
                                 </p>
                                 <ul>
-                                    <li><strong>Low C (0.1):</strong> Prioritizes a simpler decision boundary but may miss important patterns, resulting in lower accuracy (85.2-88.7%).</li>
-                                    <li><strong>Medium C (1.0):</strong> Provides a good balance between boundary simplicity and classification accuracy (87.3-91.8%).</li>
-                                    <li><strong>High C (10.0):</strong> Allows for more complex decision boundaries that better fit the training data, yielding the highest accuracy for all kernel types (88.1-92.5%).</li>
+                                    <li><strong>Low C (0.1):</strong> Prioritizes a simpler decision boundary but may miss important patterns, resulting in lower accuracy ({{ (results.linear[0.1].accuracy * 100)|round(1) }}-{{ (results.rbf[0.1].accuracy * 100)|round(1) }}%).</li>
+                                    <li><strong>Medium C (1.0):</strong> Provides a good balance between boundary simplicity and classification accuracy ({{ (results.linear[1.0].accuracy * 100)|round(1) }}-{{ (results.rbf[1.0].accuracy * 100)|round(1) }}%).</li>
+                                    <li><strong>High C (10.0):</strong> Allows for more complex decision boundaries that better fit the training data, yielding the highest accuracy for all kernel types ({{ (results.linear[10.0].accuracy * 100)|round(1) }}-{{ (results.rbf[10.0].accuracy * 100)|round(1) }}%).</li>
                                 </ul>
                                 
                                 <p>
@@ -797,7 +918,7 @@
                                 </p>
                                 
                                 <p>
-                                    The superior performance of non-linear kernels, particularly the RBF kernel with a high C value (achieving 92.5% accuracy), demonstrates that flight pricing follows complex patterns that cannot be captured by simple linear models. This complexity likely reflects the multifaceted nature of airline pricing strategies, which must account for numerous factors beyond just distance and market share, such as competition, demand elasticity, operational costs, and seasonal variations.
+                                    The superior performance of non-linear kernels, particularly the RBF kernel with a high C value (achieving {{ (best_model.accuracy * 100)|round(1) }}% accuracy), demonstrates that flight pricing follows complex patterns that cannot be captured by simple linear models.
                                 </p>
                                 
                                 <p>
@@ -823,14 +944,14 @@
                             <div class="text-center">
                                 <img src="{{ url_for('static', filename='img/svm/db_rbf_c10.0.png') }}" class="img-fluid rounded shadow-sm" alt="Best Model Decision Boundary">
                                 <p class="text-muted mt-2 small">
-                                    The RBF kernel with C=10.0 provides the most accurate classification of flight fares, capturing the complex relationship between distance and market share.
+                                    The {{ best_model.kernel|capitalize }} kernel with C={{ best_model.C }} provides the most accurate classification of flight fares, capturing the complex relationship between distance and market share.
                                 </p>
                             </div>
                             <div class="card mt-4 bg-light p-3">
                                 <h5 class="mb-3">Key Takeaways</h5>
                                 <ul class="mb-0">
                                     <li>Non-linear models significantly outperform linear models for flight fare prediction</li>
-                                    <li>RBF kernel with C=10.0 achieves the highest accuracy (92.5%)</li>
+                                    <li>{{ best_model.kernel|capitalize }} kernel with C={{ best_model.C }} achieves the highest accuracy ({{ (best_model.accuracy * 100)|round(1) }}%)</li>
                                     <li>Distance and market share together are strong predictors of fare categories</li>
                                     <li>The relationship between market share and pricing is more complex than simple economic models would suggest</li>
                                     <li>Flight pricing follows structured patterns that can be captured by sophisticated machine learning models</li>
