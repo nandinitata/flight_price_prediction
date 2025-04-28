@@ -9,6 +9,7 @@ from sklearn.metrics import classification_report
 from arm import run_arm_analysis
 from clustering import generate_clustering_visualizations
 from data_prep import create_visualizations, generate_summary_stats, load_data
+from ensemble import run_ensemble_analysis
 from nb import run_naive_bayes_analysis
 from pca import generate_pca_visualizations
 from regression import perform_regression_analysis
@@ -186,6 +187,7 @@ def pca_analysis():
             generate_additional_pca_visualizations(full_results, img_dir)
         except:
             import matplotlib.pyplot as plt
+
             # Create fallback visualizations if the function fails
             plt.figure(figsize=(8, 5))
             plt.bar(full_results['pca_df'].columns, 
@@ -453,6 +455,111 @@ def regression_analysis():
     
     return render_template('regression.html', data=template_data)
 
+@app.route('/svm')
+def svm_analysis():
+    """
+    Support Vector Machine analysis on flight data
+    
+    Returns:
+    HTML template with SVM visualizations and analysis results
+    """
+    try:
+        # Check if SVM results already exist
+        results_path = 'static/data/svm/svm_results.pkl'
+        best_model_path = 'static/data/svm/best_model.pkl'
+        
+        if os.path.exists(results_path) and os.path.exists(best_model_path):
+            # Load existing results
+            with open(results_path, 'rb') as f:
+                results = pickle.load(f)
+            with open(best_model_path, 'rb') as f:
+                best_model_info = pickle.load(f)
+        else:
+            # Run SVM analysis if results don't exist
+            from svm import perform_svm_analysis
+            analysis_results = perform_svm_analysis()
+            
+            if analysis_results is None:
+                return render_template('error.html', 
+                                     error_message="Error running SVM analysis",
+                                     error_details="Failed to load flight data")
+            
+            results = analysis_results['results']
+            best_model_info = {
+                'kernel': analysis_results['best_config'][0],
+                'C': analysis_results['best_config'][1],
+                'accuracy': analysis_results['best_accuracy']
+            }
+        
+        # Load training and testing data samples
+        train_sample_path = 'static/data/svm/train_sample_svm.csv'
+        test_sample_path = 'static/data/svm/test_sample_svm.csv'
+        
+        train_sample = None
+        test_sample = None
+        
+        if os.path.exists(train_sample_path):
+            train_sample = pd.read_csv(train_sample_path)
+        
+        if os.path.exists(test_sample_path):
+            test_sample = pd.read_csv(test_sample_path)
+        
+        return render_template('svm.html',
+                             results=results,
+                             best_model=best_model_info,
+                             train_sample=train_sample,
+                             test_sample=test_sample)
+    
+    except Exception as e:
+        import traceback
+        return render_template('error.html', 
+                             error_message="Error running SVM analysis",
+                             error_details=str(e) + "\n\n" + traceback.format_exc())
+    
+@app.route('/ensemble')
+def ensemble_analysis():
+    """
+    Ensemble Learning analysis on flight data
+    
+    Returns:
+    HTML template with ensemble visualizations and analysis results
+    """
+    try:
+        # Check if ensemble results already exist
+        results_path = 'static/data/ensemble_results.pkl'
+        
+        if os.path.exists(results_path):
+            # Load existing results
+            with open(results_path, 'rb') as f:
+                results = pickle.load(f)
+        else:
+            # Run ensemble analysis if results don't exist
+            results = run_ensemble_analysis()
+            
+            # Save results for future use
+            os.makedirs('static/data', exist_ok=True)
+            with open(results_path, 'wb') as f:
+                pickle.dump(results, f)
+        
+        # Extract model results excluding meta data
+        model_results = {}
+        for key, value in results.items():
+            if key not in ['sample_data', 'processed_data', 'feature_names']:
+                model_results[key] = value
+        
+        # Add meta data for template
+        model_results['sample_data'] = results['sample_data']
+        model_results['processed_data'] = results['processed_data']
+        model_results['feature_names'] = results['feature_names']
+        
+        return render_template('ensemble.html', model_results=model_results)
+    
+    except Exception as e:
+        import traceback
+        return render_template('error.html', 
+                             error_message="Error running Ensemble analysis",
+                             error_details=str(e) + "\n\n" + traceback.format_exc())
+    
 @app.route('/conclusions')
 def conclusions():
     return render_template('conclusions.html')

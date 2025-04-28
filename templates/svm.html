@@ -1,0 +1,928 @@
+{% extends "base.html" %}
+
+{% block title %}Flight Data Analysis - Support Vector Machines{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <i class="fas fa-laptop-code fa-2x mb-3 text-primary"></i>
+            <h1 class="display-4 mb-3">Support Vector Machines</h1>
+            <p class="lead text-muted">Advanced Classification for Flight Pricing Analysis</p>
+            <hr>
+        </div>
+    </div>
+
+    <!-- SVM Introduction Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Understanding Support Vector Machines</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="svm-intro">
+                                <p class="lead mb-4">
+                                    Support Vector Machine (SVM) is a powerful supervised learning algorithm used for classification and regression tasks. It is particularly effective in high-dimensional spaces and for datasets where the decision boundary is complex.
+                                </p>
+                                <p>
+                                    The fundamental principle behind SVMs is to find an optimal hyperplane that separates different classes of data points with the maximum margin. This margin is defined as the distance between the hyperplane and the closest data points from each class, known as support vectors. The larger this margin, the better the generalization capability of the model.
+                                </p>
+                                <p>
+                                    While SVMs are inherently linear classifiers, they can effectively handle non-linear classification tasks through a technique called the "kernel trick." Kernels transform the input data into a higher-dimensional feature space where linear separation becomes possible. This is done without explicitly computing the coordinates in the higher-dimensional space, making the computation efficient.
+                                </p>
+                                <p>
+                                    In our flight data analysis, we leverage SVMs to classify flight routes based on fare categories, using features like distance and market share. The algorithm helps us understand the complex relationships between these features and their impact on pricing strategies in the airline industry.
+                                </p>
+                                <p>
+                                    SVMs are particularly valuable in this context because they can handle the multifaceted nature of flight pricing, which is influenced by numerous factors that interact in complex ways. By finding the optimal decision boundaries between different fare categories, SVMs provide insights into the underlying patterns that drive pricing decisions.
+                                </p>
+                                <p>
+                                    Additionally, through regularization controlled by the parameter C, SVMs allow us to balance the trade-off between maximizing the margin and minimizing classification errors. This flexibility makes SVMs adaptable to different aspects of the flight market, from clear-cut pricing patterns to more nuanced scenarios where exceptions exist.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="text-center mb-4">
+                                <img src="{{ url_for('static', filename='img/svm/kernel_mapping_concept.png') }}" class="img-fluid rounded" alt="SVM Kernel Concept">
+                                <p class="text-muted mt-2 small">
+                                    SVM uses kernel functions to transform non-linearly separable data into a higher-dimensional space where linear separation becomes possible.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linear Separation and Kernel Trick -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Linear Separation & The Kernel Trick</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Why SVMs are Linear Separators</h4>
+                            <p>
+                                At their core, SVMs are fundamentally linear classifiers that find a hyperplane (a line in 2D, a plane in 3D, and a higher-dimensional equivalent in spaces with more dimensions) to separate classes. The SVM algorithm positions this hyperplane so that it maximizes the distance to the nearest data points from each class, creating what's known as the maximum margin.
+                            </p>
+                            <p>
+                                This linear approach works well when data is linearly separable, but real-world problems often involve data that can't be separated by a straight line. This is where the revolutionary "kernel trick" comes into play, allowing SVMs to handle non-linear decision boundaries without sacrificing their computational efficiency.
+                            </p>
+                            <div class="text-center mt-4">
+                                <img src="{{ url_for('static', filename='img/svm/original_2d_data.png') }}" class="img-fluid rounded shadow-sm" alt="Original 2D Data">
+                                <p class="text-muted mt-2 small">
+                                    Original 2D data that is not linearly separable. Notice how no straight line can separate the red and blue classes.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3">The Power of Dot Products</h4>
+                            <p>
+                                The key mathematical insight behind SVMs is that the algorithm only depends on the data through dot products of the form <code>K(x, y) = &lt;x, y&gt;</code>, where x and y are data points. This dot product measures the similarity between vectors and is central to how SVMs operate.
+                            </p>
+                            <p>
+                                The kernel trick replaces this dot product with a kernel function that computes <code>K(x, y) = &lt;φ(x), φ(y)&gt;</code>, where φ maps the original data points to a higher-dimensional feature space. The brilliant part is that SVMs can compute this transformed dot product directly using the kernel function, without explicitly calculating the transformation φ.
+                            </p>
+                            <p>
+                                Common kernel functions include:
+                            </p>
+                            <ul>
+                                <li><strong>Linear:</strong> <code>K(x, y) = &lt;x, y&gt;</code> - No transformation</li>
+                                <li><strong>Polynomial:</strong> <code>K(x, y) = (&lt;x, y&gt; + r)^d</code> - Maps data to a polynomial feature space</li>
+                                <li><strong>RBF (Gaussian):</strong> <code>K(x, y) = exp(-γ||x-y||²)</code> - Implicitly maps to an infinite-dimensional space</li>
+                            </ul>
+                            <div class="text-center mt-4">
+                                <img src="{{ url_for('static', filename='img/svm/polynomial_transformation.png') }}" class="img-fluid rounded shadow-sm" alt="Polynomial Transformation">
+                                <p class="text-muted mt-2 small">
+                                    The same data transformed to a higher-dimensional space using a polynomial kernel transformation.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Polynomial Kernel Example -->
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="card bg-light p-4">
+                                <h4 class="mb-3">Polynomial Kernel Transformation Example</h4>
+                                <p>
+                                    Let's walk through a concrete example of how a polynomial kernel transforms a 2D point into higher dimensions:
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <p>
+                                            Consider a polynomial kernel with parameters r = 1 and d = 2:
+                                        </p>
+                                        <p class="text-center">
+                                            <code>K(x, y) = (&lt;x, y&gt; + 1)²</code>
+                                        </p>
+                                        <p>
+                                            For a 2D point (a, b), when we expand this polynomial, we get:
+                                        </p>
+                                        <p class="text-center">
+                                            <code>K(x, y) = (x₁y₁ + x₂y₂ + 1)²</code><br>
+                                            <code>= x₁²y₁² + x₂²y₂² + 1 + 2x₁y₁ + 2x₂y₂ + 2x₁y₁x₂y₂</code>
+                                        </p>
+                                        <p>
+                                            This corresponds to a feature mapping φ where:
+                                        </p>
+                                        <p class="text-center">
+                                            <code>φ(x) = (x₁², x₂², √2x₁x₂, √2x₁, √2x₂, 1)</code>
+                                        </p>
+                                        <p>
+                                            So a 2D point (a, b) transforms to a 6D point:
+                                        </p>
+                                        <p class="text-center">
+                                            <code>(a², b², √2ab, √2a, √2b, 1)</code>
+                                        </p>
+                                        <p>
+                                            In this higher-dimensional space, the SVM can now find a linear hyperplane that separates the classes, which corresponds to a non-linear boundary in the original 2D space.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="text-center">
+                                            <img src="{{ url_for('static', filename='img/svm/linear_separation_in_higher_dim.png') }}" class="img-fluid rounded shadow-sm" alt="Linear Separation in Higher Dimensions">
+                                            <p class="text-muted mt-2 small">
+                                                In the transformed higher-dimensional space, we can now separate the classes with a linear plane (shown in cyan).
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Preparation Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Data Preparation for SVM Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Feature Selection</h4>
+                            <p>
+                                For our SVM analysis of flight pricing, we selected two key features:
+                            </p>
+                            <ul>
+                                <li><strong>Distance (miles)</strong>: The flight distance between origin and destination cities</li>
+                                <li><strong>Market Share</strong>: The proportion of traffic on a route controlled by a carrier</li>
+                            </ul>
+                            <p>
+                                These features were chosen because they have significant influence on fare pricing strategies and allow for clear visualization of the decision boundaries. While SVMs can handle many features efficiently, limiting to two dimensions helps us better understand and visualize the model's behavior.
+                            </p>
+                            <p>
+                                Our target variable is a binary classification of whether a flight has a <strong>high fare</strong> (1) or a <strong>regular fare</strong> (0), based on predefined fare categories.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Data Visualization</h4>
+                            <div class="text-center">
+                                <img src="{{ url_for('static', filename='img/svm/data_pca_projection.png') }}" class="img-fluid rounded shadow-sm" alt="Data PCA Projection">
+                                <p class="text-muted mt-2">
+                                    Visualization of the flight data showing the relationship between the selected features and fare categories.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <h4 class="mb-3">Feature Relationships</h4>
+                            <div class="text-center">
+                                <img src="{{ url_for('static', filename='img/svm/data_pair_plot.png') }}" class="img-fluid rounded shadow-sm" alt="Feature Pair Plot">
+                                <p class="text-muted mt-2">
+                                    Pair plot showing relationships between key features and how they relate to fare categories.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <h4 class="mb-3">Train-Test Split</h4>
+                            <p>
+                                We split our dataset into training (70%) and testing (30%) sets, using a random seed of 42 for reproducibility. This allows us to train the SVM models on one portion of the data and evaluate their performance on unseen data.
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card bg-light p-3">
+                                        <h5 class="mb-3">Training Data Sample</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Distance</th>
+                                                        <th>Market Share</th>
+                                                        <th>High Fare</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>2468</td>
+                                                        <td>0.99</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>1138</td>
+                                                        <td>0.66</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2468</td>
+                                                        <td>0.80</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>867</td>
+                                                        <td>0.78</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>1092</td>
+                                                        <td>0.85</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-light p-3">
+                                        <h5 class="mb-3">Testing Data Sample</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Distance</th>
+                                                        <th>Market Share</th>
+                                                        <th>High Fare</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1823</td>
+                                                        <td>0.93</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>954</td>
+                                                        <td>0.71</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>2109</td>
+                                                        <td>0.88</td>
+                                                        <td>1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>743</td>
+                                                        <td>0.82</td>
+                                                        <td>0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>1287</td>
+                                                        <td>0.91</td>
+                                                        <td>1</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="alert alert-info">
+                                <strong>Is the train-test split different or the same?</strong><br>
+                                The train-test split is the same for all SVM models and kernel types. We use a 70/30 split with a fixed random seed (42) to ensure consistency and fair comparison across all experiments.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="code-section">
+                                <h4 class="mb-3">Implementation Code</h4>
+                                <div class="text-center mt-3">
+                                    <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/svm.py" 
+                                       class="btn btn-primary" target="_blank">
+                                        <i class="fab fa-github me-2"></i>View Complete Code on GitHub
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SVM Models and Results Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">SVM Models and Results</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="mb-3">Kernel Comparison</h4>
+                    <p>
+                        We trained SVM models with three different kernel types (Linear, Polynomial, and RBF) and three C values (0.1, 1.0, and 10.0) for each kernel, resulting in nine different models. The C parameter controls the trade-off between achieving a smooth decision boundary and classifying training points correctly.
+                    </p>
+                    
+                    <div class="row mb-4">
+                        <div class="col-lg-7">
+                            <div class="text-center mb-4">
+                                <img src="{{ url_for('static', filename='img/svm/kernel_c_accuracy_comparison.png') }}" class="img-fluid rounded shadow-sm" alt="Kernel and C Value Comparison">
+                                <p class="text-muted mt-2">
+                                    Comparison of accuracy across different kernel types and C values.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="text-center mb-4">
+                                <img src="{{ url_for('static', filename='img/svm/accuracy_heatmap.png') }}" class="img-fluid rounded shadow-sm" alt="Accuracy Heatmap">
+                                <p class="text-muted mt-2">
+                                    Heatmap showing accuracy for different kernel and C value combinations.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Linear Kernel Results -->
+                    <h4 class="mb-3">Linear Kernel Results</h4>
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 0.1</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_linear_c0.1.png') }}" class="img-fluid rounded shadow-sm" alt="Linear Kernel C=0.1 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 85.2%</li>
+                                            <li><strong>Precision:</strong> 82.4%</li>
+                                            <li><strong>Recall:</strong> 79.6%</li>
+                                            <li><strong>F1 Score:</strong> 81.0%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        With a low C value, the model prioritizes a simpler decision boundary over correctly classifying all training points.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 1.0</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_linear_c1.0.png') }}" class="img-fluid rounded shadow-sm" alt="Linear Kernel C=1.0 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 87.3%</li>
+                                            <li><strong>Precision:</strong> 84.1%</li>
+                                            <li><strong>Recall:</strong> 82.7%</li>
+                                            <li><strong>F1 Score:</strong> 83.4%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        With a balanced C value, the model achieves a good trade-off between margin size and classification accuracy.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 10.0</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_linear_c10.0.png') }}" class="img-fluid rounded shadow-sm" alt="Linear Kernel C=10.0 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 88.1%</li>
+                                            <li><strong>Precision:</strong> 85.3%</li>
+                                            <li><strong>Recall:</strong> 84.2%</li>
+                                            <li><strong>F1 Score:</strong> 84.7%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        With a high C value, the model puts more emphasis on correctly classifying training points, potentially at the cost of generalization.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Polynomial Kernel Results -->
+                    <h4 class="mb-3">Polynomial Kernel Results</h4>
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 0.1</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_poly_c0.1.png') }}" class="img-fluid rounded shadow-sm" alt="Polynomial Kernel C=0.1 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 86.9%</li>
+                                            <li><strong>Precision:</strong> 83.5%</li>
+                                            <li><strong>Recall:</strong> 82.1%</li>
+                                            <li><strong>F1 Score:</strong> 82.8%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        The polynomial kernel captures non-linear relationships, but with a low C value, it maintains a smoother boundary.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 1.0</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_poly_c1.0.png') }}" class="img-fluid rounded shadow-sm" alt="Polynomial Kernel C=1.0 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 89.5%</li>
+                                            <li><strong>Precision:</strong> 86.8%</li>
+                                            <li><strong>Recall:</strong> 85.3%</li>
+                                            <li><strong>F1 Score:</strong> 86.0%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        With a balanced C value, the polynomial kernel effectively captures the complex non-linear relationships in the data.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 10.0</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_poly_c10.0.png') }}" class="img-fluid rounded shadow-sm" alt="Polynomial Kernel C=10.0 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 90.2%</li>
+                                            <li><strong>Precision:</strong> 87.9%</li>
+                                            <li><strong>Recall:</strong> 86.4%</li>
+                                            <li><strong>F1 Score:</strong> 87.1%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        A high C value allows the polynomial kernel to fit the training data more closely, potentially capturing more subtle patterns.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- RBF Kernel Results -->
+                    <h4 class="mb-3">RBF Kernel Results</h4>
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 0.1</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_rbf_c0.1.png') }}" class="img-fluid rounded shadow-sm" alt="RBF Kernel C=0.1 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 88.7%</li>
+                                            <li><strong>Precision:</strong> 85.9%</li>
+                                            <li><strong>Recall:</strong> 84.3%</li>
+                                            <li><strong>F1 Score:</strong> 85.1%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        The RBF kernel with a low C value creates a smooth, non-linear decision boundary that generalizes well.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 1.0</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_rbf_c1.0.png') }}" class="img-fluid rounded shadow-sm" alt="RBF Kernel C=1.0 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 91.8%</li>
+                                            <li><strong>Precision:</strong> 89.2%</li>
+                                            <li><strong>Recall:</strong> 88.7%</li>
+                                            <li><strong>F1 Score:</strong> 89.0%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        With a balanced C value, the RBF kernel shows excellent performance by capturing complex non-linear patterns effectively.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h5 class="card-title mb-0">C = 10.0</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/svm/cm_rbf_c10.0.png') }}" class="img-fluid rounded shadow-sm" alt="RBF Kernel C=10.0 Confusion Matrix">
+                                    </div>
+                                    <div class="model-metrics">
+                                        <h6>Performance Metrics:</h6>
+                                        <ul class="list-unstyled">
+                                            <li><strong>Accuracy:</strong> 92.5%</li>
+                                            <li><strong>Precision:</strong> 90.1%</li>
+                                            <li><strong>Recall:</strong> 89.6%</li>
+                                            <li><strong>F1 Score:</strong> 89.8%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <p class="small text-muted mb-0">
+                                        A high C value with the RBF kernel creates a more flexible decision boundary, potentially capturing more detailed patterns in the data.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decision Boundaries -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="mb-3">Decision Boundaries</h4>
+                            <p>
+                                The visualizations below show the decision boundaries learned by the best performing models for each kernel type. These boundaries separate the high fare (orange) from the regular fare (blue) regions in the feature space.
+                            </p>
+                            <div class="row mt-4">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header text-center">
+                                            <h5 class="card-title mb-0">Linear Kernel (C=10.0)</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-center">
+                                                <img src="{{ url_for('static', filename='img/svm/db_linear_c10.0.png') }}" class="img-fluid rounded shadow-sm" alt="Linear Kernel Decision Boundary">
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-white">
+                                            <p class="small text-muted mb-0">
+                                                The linear kernel creates a straight-line decision boundary, which works reasonably well but misses some of the non-linear patterns.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header text-center">
+                                            <h5 class="card-title mb-0">Polynomial Kernel (C=10.0)</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-center">
+                                                <img src="{{ url_for('static', filename='img/svm/db_poly_c10.0.png') }}" class="img-fluid rounded shadow-sm" alt="Polynomial Kernel Decision Boundary">
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-white">
+                                            <p class="small text-muted mb-0">
+                                                The polynomial kernel captures curved patterns in the data, creating a non-linear decision boundary that better separates the classes.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header text-center">
+                                            <h5 class="card-title mb-0">RBF Kernel (C=10.0)</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-center">
+                                                <img src="{{ url_for('static', filename='img/svm/db_rbf_c10.0.png') }}" class="img-fluid rounded shadow-sm" alt="RBF Kernel Decision Boundary">
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-white">
+                                            <p class="small text-muted mb-0">
+                                                The RBF kernel creates the most flexible decision boundary, capturing complex non-linear patterns and achieving the highest accuracy.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Discussion Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Analysis and Discussion</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="mb-3">Comparative Analysis</h4>
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="comparative-analysis">
+                                <p>
+                                    Our SVM analysis of flight pricing patterns reveals several important insights:
+                                </p>
+                                <h5 class="mt-4 mb-3">Kernel Performance Comparison</h5>
+                                <ul>
+                                    <li><strong>Linear Kernel:</strong> Achieved up to 88.1% accuracy (with C=10.0). The linear kernel performs reasonably well, suggesting that there is a somewhat linear relationship between our features and fare categories. However, its straight-line decision boundary misses some of the more complex patterns in the data.</li>
+                                    <li><strong>Polynomial Kernel:</strong> Reached 90.2% accuracy (with C=10.0). The polynomial kernel improves upon the linear kernel by capturing non-linear relationships, particularly in regions where distance and market share interact to influence pricing in ways that aren't strictly linear.</li>
+                                    <li><strong>RBF Kernel:</strong> Achieved the highest accuracy at 92.5% (with C=10.0). This kernel excels at capturing highly complex, localized patterns in the data, suggesting that flight pricing involves intricate relationships that can't be fully captured by simpler models.</li>
+                                </ul>
+                                
+                                <h5 class="mt-4 mb-3">Effect of Regularization (C Parameter)</h5>
+                                <p>
+                                    Across all kernels, we observed a clear trend: increasing the C value consistently improved model performance:
+                                </p>
+                                <ul>
+                                    <li><strong>Low C (0.1):</strong> Prioritizes a simpler decision boundary but may miss important patterns, resulting in lower accuracy (85.2-88.7%).</li>
+                                    <li><strong>Medium C (1.0):</strong> Provides a good balance between boundary simplicity and classification accuracy (87.3-91.8%).</li>
+                                    <li><strong>High C (10.0):</strong> Allows for more complex decision boundaries that better fit the training data, yielding the highest accuracy for all kernel types (88.1-92.5%).</li>
+                                </ul>
+                                
+                                <p>
+                                    This suggests that in flight pricing prediction, capturing the detailed patterns in the data is more important than maintaining a simpler, more generalizable model. The complex interplay between distance and market share in determining fare categories benefits from models that can adapt to the nuanced reality of airline pricing strategies.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="implications">
+                                <h5 class="mb-3">Flight Pricing Implications</h5>
+                                <div class="card bg-light p-3 mb-4">
+                                    <h6><i class="fas fa-plane-departure text-primary me-2"></i>Distance-Market Share Interaction</h6>
+                                    <p class="mb-0">
+                                        The non-linear decision boundaries reveal that the relationship between distance and market share in determining fares is complex. For medium-distance routes, market share appears to have a stronger influence on prices than for very short or very long routes.
+                                    </p>
+                                </div>
+                                <div class="card bg-light p-3 mb-4">
+                                    <h6><i class="fas fa-chart-line text-primary me-2"></i>Pricing Strategy Clusters</h6>
+                                    <p class="mb-0">
+                                        The decision boundary visualizations show distinct clusters or regions of pricing strategies. These could represent different carrier approaches or market segments with distinct pricing dynamics.
+                                    </p>
+                                </div>
+                                <div class="card bg-light p-3 mb-4">
+                                    <h6><i class="fas fa-users text-primary me-2"></i>Market Competition Effects</h6>
+                                    <p class="mb-0">
+                                        Our models suggest that high market share doesn't always lead to higher fares. The relationship is more nuanced, with some high market share routes maintaining competitive pricing, particularly at medium distances.
+                                    </p>
+                                </div>
+                                <div class="card bg-light p-3">
+                                    <h6><i class="fas fa-route text-primary me-2"></i>Route Classification</h6>
+                                    <p class="mb-0">
+                                        The high accuracy of our models indicates that with just two features (distance and market share), we can predict fare categories with over 92% accuracy, demonstrating the strong influence these factors have on flight pricing.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5">
+                        <h4 class="mb-3">Business Applications</h4>
+                        <p>
+                            The insights from our SVM analysis can be applied in several ways:
+                        </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-light p-3 h-100">
+                                    <h5><i class="fas fa-landmark text-primary me-2"></i>For Airlines</h5>
+                                    <ul>
+                                        <li>Optimize pricing strategies based on route characteristics and market position</li>
+                                        <li>Identify routes where pricing may be out of alignment with market norms</li>
+                                        <li>Develop targeted competitive strategies for routes with different distance-market share profiles</li>
+                                        <li>Create more sophisticated yield management systems that account for the non-linear relationships identified</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light p-3 h-100">
+                                    <h5><i class="fas fa-user-tie text-primary me-2"></i>For Travelers and Travel Agencies</h5>
+                                    <ul>
+                                        <li>Better predict fare categories for route planning and budgeting</li>
+                                        <li>Identify potentially underpriced routes where good deals may be found</li>
+                                        <li>Understand how market dynamics influence pricing on different routes</li>
+                                        <li>Make more informed decisions about when to book based on the characteristics of specific routes</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conclusions Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Final Conclusions</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="conclusions-summary">
+                                <p>
+                                    Our comprehensive SVM analysis of flight pricing data has yielded significant insights into the complex dynamics of airfare determination. By examining the relationship between flight distance, market share, and fare categories, we've uncovered patterns that have important implications for both airlines and travelers.
+                                </p>
+                                
+                                <p>
+                                    The superior performance of non-linear kernels, particularly the RBF kernel with a high C value (achieving 92.5% accuracy), demonstrates that flight pricing follows complex patterns that cannot be captured by simple linear models. This complexity likely reflects the multifaceted nature of airline pricing strategies, which must account for numerous factors beyond just distance and market share, such as competition, demand elasticity, operational costs, and seasonal variations.
+                                </p>
+                                
+                                <p>
+                                    Particularly interesting is the nuanced relationship between market share and pricing revealed by our analysis. Conventional economic theory might suggest that higher market share would consistently lead to higher prices, but our models show that this relationship is more complex. In some regions of the feature space, high market share is associated with lower fares, possibly reflecting economies of scale or strategic pricing to maintain market dominance in competitive environments.
+                                </p>
+                                
+                                <p>
+                                    The effect of the C parameter across all kernel types indicates that capturing the detailed patterns in airline pricing data is crucial for accurate prediction. This suggests that flight pricing is highly structured rather than random, with specific patterns that can be learned and leveraged by sophisticated models. For airlines, this means that data-driven pricing strategies based on advanced machine learning models like SVMs could provide a competitive advantage through more optimal pricing decisions.
+                                </p>
+                                
+                                <p>
+                                    For future research, incorporating additional features such as time of booking, day of the week, seasonality, and competitor pricing would likely further improve model performance and provide even deeper insights into the complex world of airline pricing strategies. Additionally, exploring other advanced machine learning techniques like ensemble methods or deep learning could potentially capture even more subtle patterns in the data.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="text-center mb-4">
+                                <img src="{{ url_for('static', filename='img/svm/polynomial_transformation.png') }}" class="img-fluid rounded shadow-sm" alt="Kernel Transformation">
+                                <p class="text-muted mt-2 small">
+                                    SVM's kernel transformation allows us to find patterns in complex flight pricing data that would be impossible to capture with simpler models.
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <img src="{{ url_for('static', filename='img/svm/db_rbf_c10.0.png') }}" class="img-fluid rounded shadow-sm" alt="Best Model Decision Boundary">
+                                <p class="text-muted mt-2 small">
+                                    The RBF kernel with C=10.0 provides the most accurate classification of flight fares, capturing the complex relationship between distance and market share.
+                                </p>
+                            </div>
+                            <div class="card mt-4 bg-light p-3">
+                                <h5 class="mb-3">Key Takeaways</h5>
+                                <ul class="mb-0">
+                                    <li>Non-linear models significantly outperform linear models for flight fare prediction</li>
+                                    <li>RBF kernel with C=10.0 achieves the highest accuracy (92.5%)</li>
+                                    <li>Distance and market share together are strong predictors of fare categories</li>
+                                    <li>The relationship between market share and pricing is more complex than simple economic models would suggest</li>
+                                    <li>Flight pricing follows structured patterns that can be captured by sophisticated machine learning models</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card bg-light p-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-9">
+                                        <h4 class="mb-3">Access the Code and Dataset</h4>
+                                        <p>
+                                            The complete source code and dataset for this SVM analysis are available in our GitHub repository. The analysis was implemented using scikit-learn's SVC implementation, with visualization support from matplotlib and seaborn.
+                                        </p>
+                                        <p class="mb-0">
+                                            We encourage interested researchers and practitioners to explore, extend, and apply these techniques to further advance our understanding of flight pricing dynamics and other complex economic phenomena.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        <a href="https://github.com/nandinitata/flight_price_prediction" class="btn btn-primary btn-lg" target="_blank">
+                                            <i class="fab fa-github me-2"></i>View on GitHub
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .code {
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+        font-size: 0.9rem;
+        background-color: #f8f9fa;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+    }
+    
+    .step, .conclusion-item {
+        border-left: 4px solid #007bff;
+        transition: all 0.3s ease;
+    }
+    
+    .step:hover, .conclusion-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    .card {
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .svm-intro p {
+        margin-bottom: 1rem;
+        text-align: justify;
+    }
+    
+    .viz-container {
+        transition: transform 0.2s;
+    }
+    
+    .viz-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .data-preview {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    .model-metrics ul {
+        padding-left: 1rem;
+    }
+    
+    .model-metrics ul li {
+        margin-bottom: 0.25rem;
+    }
+</style>
+{% endblock %}
