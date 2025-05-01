@@ -515,7 +515,7 @@ def svm_analysis():
         return render_template('error.html', 
                              error_message="Error running SVM analysis",
                              error_details=str(e) + "\n\n" + traceback.format_exc())
-    
+
 @app.route('/ensemble')
 def ensemble_analysis():
     """

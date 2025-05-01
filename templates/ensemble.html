@@ -1,59 +1,206 @@
 {% extends "base.html" %}
 
-{% block title %}Ensemble Learning - Flight Data Analysis{% endblock %}
+{% block title %}Flight Data Analysis - Ensemble Learning{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <!-- Hero Section -->
-    <div class="row mb-5">
+    <div class="row mb-4">
         <div class="col-12 text-center">
             <i class="fas fa-layer-group fa-2x mb-3 text-primary"></i>
-            <h1 class="display-4 mb-4">Ensemble Learning</h1>
-            <p class="lead text-muted">Combining Multiple Models for Improved Predictions</p>
+            <h1 class="display-4 mb-3">Ensemble Learning</h1>
+            <p class="lead text-muted">Combining Multiple Models for Improved Flight Price Prediction</p>
+            <hr>
         </div>
     </div>
 
-    <!-- Introduction Section -->
+    <!-- Ensemble Introduction Section -->
     <div class="row mb-5">
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h2 class="card-title mb-0">What is Ensemble Learning?</h2>
+                    <h2 class="card-title mb-0">Understanding Ensemble Learning</h2>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="ensemble-concept">
-                                <p class="lead">
-                                    Ensemble learning is a powerful machine learning technique that combines multiple models to create a stronger, more robust predictive system than any individual model could provide.
+                        <div class="col-lg-7">
+                            <div class="ensemble-intro">
+                                <p class="lead mb-4">
+                                    Ensemble learning is a powerful machine learning paradigm that combines multiple models to obtain better predictive performance than could be achieved by any of the constituent models alone.
                                 </p>
                                 <p>
-                                    The key principle behind ensemble methods is that a group of "weak learners" can come together to form a "strong learner." By leveraging the collective intelligence of multiple models, ensemble methods can:
+                                    The fundamental principle behind ensemble methods is that a group of "weak learners" can come together to form a "strong learner." By combining multiple models, ensembles reduce the risk of selecting a poor model and often reduce overall variance and bias compared to single models.
+                                </p>
+                                <p>
+                                    In this project, we explore three powerful machine learning techniques and compare their performance:
                                 </p>
                                 <ul>
-                                    <li>Reduce overfitting by averaging out biases</li>
-                                    <li>Improve prediction accuracy</li>
-                                    <li>Provide more stable and reliable results</li>
-                                    <li>Handle complex relationships in data more effectively</li>
+                                    <li><strong>Decision Trees</strong>: Simple, interpretable models that make decisions based on a series of questions</li>
+                                    <li><strong>Random Forest</strong>: An ensemble method that builds multiple decision trees and combines their predictions</li>
+                                    <li><strong>Support Vector Machines (SVM)</strong>: Models that find the optimal hyperplane to separate different classes</li>
                                 </ul>
                                 <p>
-                                    Common ensemble methods include:
+                                    By comparing these approaches, we can identify which techniques are most effective for predicting flight fare categories based on route characteristics, carrier information, and market dynamics.
                                 </p>
-                                <ul>
-                                    <li><strong>Random Forest:</strong> Builds multiple decision trees and merges their predictions</li>
-                                    <li><strong>Gradient Boosting:</strong> Builds trees sequentially, with each tree correcting errors of the previous ones</li>
-                                    <li><strong>AdaBoost:</strong> Focuses on difficult-to-classify instances by adjusting weights</li>
-                                    <li><strong>Voting Classifier:</strong> Combines predictions from multiple different algorithms</li>
-                                </ul>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="text-center">
-                                <img src="{{ url_for('static', filename='img/ensemble/ensemble_concept.png') }}" 
-                                     class="img-fluid rounded shadow-sm" alt="Ensemble Learning Concept">
-                                <p class="text-muted mt-3">
-                                    Ensemble learning combines multiple models to create stronger predictions
+                        <div class="col-lg-5">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <svg width="100%" height="320" viewBox="0 0 600 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="max-width: 500px;">
+                                    <!-- Decision Tree -->
+                                    <g>
+                                        <rect x="30" y="40" width="120" height="60" rx="12" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+                                        <text x="90" y="75" text-anchor="middle" font-size="18" fill="#1565c0" font-weight="bold">Decision Tree</text>
+                                        <!-- Tree icon -->
+                                        <circle cx="60" cy="90" r="8" fill="#81c784"/>
+                                        <rect x="57" y="98" width="6" height="14" fill="#8d6e63"/>
+                                        <circle cx="120" cy="90" r="8" fill="#81c784"/>
+                                        <rect x="117" y="98" width="6" height="14" fill="#8d6e63"/>
+                                        <line x1="90" y1="100" x2="60" y2="90" stroke="#2196f3" stroke-width="2"/>
+                                        <line x1="90" y1="100" x2="120" y2="90" stroke="#2196f3" stroke-width="2"/>
+                                    </g>
+                                    <!-- Random Forest -->
+                                    <g>
+                                        <rect x="240" y="40" width="120" height="60" rx="12" fill="#e8f5e9" stroke="#43a047" stroke-width="2"/>
+                                        <text x="300" y="75" text-anchor="middle" font-size="18" fill="#2e7d32" font-weight="bold">Random Forest</text>
+                                        <!-- Forest icon: 3 trees -->
+                                        <circle cx="265" cy="90" r="8" fill="#66bb6a"/>
+                                        <rect x="262" y="98" width="6" height="14" fill="#8d6e63"/>
+                                        <circle cx="300" cy="90" r="10" fill="#388e3c"/>
+                                        <rect x="297" y="98" width="6" height="18" fill="#8d6e63"/>
+                                        <circle cx="335" cy="90" r="8" fill="#66bb6a"/>
+                                        <rect x="332" y="98" width="6" height="14" fill="#8d6e63"/>
+                                        <line x1="300" y1="100" x2="265" y2="90" stroke="#43a047" stroke-width="2"/>
+                                        <line x1="300" y1="100" x2="335" y2="90" stroke="#43a047" stroke-width="2"/>
+                                    </g>
+                                    <!-- SVM -->
+                                    <g>
+                                        <rect x="450" y="40" width="120" height="60" rx="12" fill="#e3f2fd" stroke="#0288d1" stroke-width="2"/>
+                                        <text x="510" y="75" text-anchor="middle" font-size="18" fill="#0277bd" font-weight="bold">SVM</text>
+                                        <!-- SVM icon: separating line and points -->
+                                        <line x1="470" y1="100" x2="570" y2="60" stroke="#0288d1" stroke-width="3"/>
+                                        <circle cx="480" cy="110" r="7" fill="#ffb300" stroke="#fff" stroke-width="2"/>
+                                        <circle cx="495" cy="105" r="7" fill="#ffb300" stroke="#fff" stroke-width="2"/>
+                                        <circle cx="560" cy="65" r="7" fill="#7e57c2" stroke="#fff" stroke-width="2"/>
+                                        <circle cx="545" cy="70" r="7" fill="#7e57c2" stroke="#fff" stroke-width="2"/>
+                                    </g>
+                                    <!-- Arrows to Ensemble -->
+                                    <g>
+                                        <defs>
+                                            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                                                <polygon points="0 0, 8 4, 0 8" fill="#616161"/>
+                                            </marker>
+                                        </defs>
+                                        <line x1="90" y1="100" x2="180" y2="180" stroke="#616161" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+                                        <line x1="300" y1="100" x2="300" y2="180" stroke="#616161" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+                                        <line x1="510" y1="100" x2="420" y2="180" stroke="#616161" stroke-width="2.5" marker-end="url(#arrowhead)"/>
+                                    </g>
+                                    <!-- Ensemble Box -->
+                                    <g>
+                                        <rect x="180" y="180" width="240" height="60" rx="16" fill="#fffde7" stroke="#fbc02d" stroke-width="3"/>
+                                        <text x="300" y="215" text-anchor="middle" font-size="22" fill="#fbc02d" font-weight="bold">Ensemble Output</text>
+                                        <!-- Output arrow -->
+                                        <line x1="300" y1="240" x2="300" y2="290" stroke="#fbc02d" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                        <ellipse cx="300" cy="305" rx="40" ry="15" fill="#fffde7" stroke="#fbc02d" stroke-width="2"/>
+                                        <text x="300" y="310" text-anchor="middle" font-size="16" fill="#fbc02d" font-weight="bold">Prediction</text>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ensemble Methods Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Machine Learning Models in This Project</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h4 class="mb-0">Decision Tree</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/ensemble/decision_tree.png') }}" class="img-fluid rounded shadow-sm" alt="Decision Tree Illustration">
+                                    </div>
+                                    <p>
+                                        A flowchart-like model that makes decisions based on asking a series of questions about the features.
+                                    </p>
+                                    <ul class="small">
+                                        <li>Highly interpretable classification rules</li>
+                                        <li>Can handle both categorical and numerical data</li>
+                                        <li>Naturally handles multi-class problems</li>
+                                        <li>Requires minimal data preprocessing</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h4 class="mb-0">Random Forest</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/ensemble/random_forest.png') }}" class="img-fluid rounded shadow-sm" alt="Random Forest Illustration">
+                                    </div>
+                                    <p>
+                                        A collection of decision trees where each tree is trained on a random subset of the data and features. The final prediction is made by aggregating results from all trees.
+                                    </p>
+                                    <ul class="small">
+                                        <li>Reduces overfitting common in decision trees</li>
+                                        <li>Handles high-dimensional data well</li>
+                                        <li>Provides feature importance measurements</li>
+                                        <li>Robust against outliers and noise</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-header text-center">
+                                    <h4 class="mb-0">Support Vector Machine</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ url_for('static', filename='img/ensemble/svm.png') }}" class="img-fluid rounded shadow-sm" alt="SVM Illustration">
+                                    </div>
+                                    <p>
+                                        A powerful classifier that finds the optimal hyperplane to separate different classes with the maximum margin.
+                                    </p>
+                                    <ul class="small">
+                                        <li>Effective in high dimensional spaces</li>
+                                        <li>Memory efficient as it uses only a subset of points</li>
+                                        <li>Versatile through different kernel functions</li>
+                                        <li>Works well with clear margin of separation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="code-section">
+                                <h4 class="mb-3">Implementation Overview</h4>
+                                <p>
+                                    Our implementation combines multiple classifiers to predict flight fare categories. Features like distance, market share, and carrier type are used to classify flights into different fare brackets.
                                 </p>
+                                <div class="text-center mt-3">
+                                    <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/ensemble.py" 
+                                       class="btn btn-primary" target="_blank">
+                                        <i class="fab fa-github me-2"></i>View Complete Code on GitHub
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -62,57 +209,75 @@
         </div>
     </div>
 
-    <!-- Data Transformation Section -->
+    <!-- Data Preparation Section -->
     <div class="row mb-5">
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h2 class="card-title mb-0">Data Transformation for Ensemble Learning</h2>
+                    <h2 class="card-title mb-0">Data Preparation for Analysis</h2>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row mb-4">
                         <div class="col-md-6">
-                            <h4>Original Data Structure</h4>
-                            <p>The original flight data contains features such as:</p>
+                            <h4 class="mb-3">Feature Engineering</h4>
+                            <p>
+                                For our models, we transform the flight data into meaningful features:
+                            </p>
                             <ul>
-                                <li>Distance category (Short, Medium, Long, VeryLong)</li>
-                                <li>Carrier (airline company codes)</li>
-                                <li>Market share category (Low, Medium, High)</li>
-                                <li>Target: Fare category (VeryLow, Low, Medium, High, VeryHigh)</li>
+                                <li><strong>Flight Distance Categories</strong>: Short, Medium, Long, and Very Long routes</li>
+                                <li><strong>Carrier Information</strong>: One-hot encoded carrier identifiers</li>
+                                <li><strong>Market Share Categories</strong>: Low, Medium, and High market share segments</li>
                             </ul>
-                            <div class="table-responsive mt-3">
-                                <h5>Original Data Sample</h5>
-                                <table class="table table-striped table-hover">
-                                    <thead>
+                            <p>
+                                Our target variable is the fare category, classified into different price ranges based on market analysis.
+                            </p>
+                            
+                            <div class="text-center mt-4">
+                                <img src="{{ url_for('static', filename='img/ensemble/feature_importance.png') }}" class="img-fluid rounded shadow-sm" alt="Feature Importance">
+                                <p class="text-muted mt-2">
+                                    Feature importance from Random Forest model showing the most influential factors in fare prediction.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Data Transformation</h4>
+                            <div class="text-center mb-4">
+                                <img src="{{ url_for('static', filename='img/ensemble/data_transformation.png') }}" class="img-fluid rounded shadow-sm" alt="Data Transformation">
+                                <p class="text-muted mt-2">
+                                    Visualization of the data before and after preprocessing, showing the effect of our feature engineering.
+                                </p>
+                            </div>
+                            
+                            <h5 class="mt-4">Original Data Sample</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th>Distance Category</th>
+                                            <th>Distance</th>
                                             <th>Carrier</th>
                                             <th>Market Share</th>
-                                            <th>Fare Category</th>
+                                            <th>Fare</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for i in range(5) %}
                                         <tr>
-                                            <td>{{ model_results['sample_data']['distance_category'][i] }}</td>
-                                            <td>{{ model_results['sample_data']['carrier_lg'][i] }}</td>
-                                            <td>{{ model_results['sample_data']['market_share_category'][i] }}</td>
-                                            <td>{{ model_results['sample_data']['fare_category'][i] }}</td>
+                                            <td>{{ model_results.sample_data.distance_category[i] }}</td>
+                                            <td>{{ model_results.sample_data.carrier_lg[i] }}</td>
+                                            <td>{{ model_results.sample_data.market_share_category[i] }}</td>
+                                            <td>{{ model_results.sample_data.fare_category[i] }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h4>Transformed Data (One-Hot Encoded)</h4>
-                            <p>For ensemble learning, categorical features are converted to binary features:</p>
+                            
+                            <h5 class="mt-4">Transformed Data Sample</h5>
                             <div class="table-responsive mt-3">
-                                <h5>Transformed Data Sample</h5>
-                                <table class="table table-striped table-hover">
-                                    <thead>
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-light">
                                         <tr>
-                                            {% for feature in model_results['feature_names'][:6] %}
+                                            {% for feature in model_results.feature_names[:3] %}
                                             <th>{{ feature }}</th>
                                             {% endfor %}
                                             <th>Target</th>
@@ -121,10 +286,10 @@
                                     <tbody>
                                         {% for i in range(5) %}
                                         <tr>
-                                            {% for feature in model_results['feature_names'][:6] %}
-                                            <td>{{ model_results['processed_data'][feature][i] }}</td>
+                                            {% for feature in model_results.feature_names[:3] %}
+                                            <td>{{ model_results.processed_data[feature][i] }}</td>
                                             {% endfor %}
-                                            <td>{{ model_results['processed_data']['target'][i] }}</td>
+                                            <td>{{ model_results.processed_data.target[i] }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -142,76 +307,124 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h2 class="card-title mb-0">Model Performance Comparison</h2>
+                    <h2 class="card-title mb-0">Model Performance</h2>
                 </div>
                 <div class="card-body">
-                    <div class="text-center mb-4">
-                        <img src="{{ url_for('static', filename='img/ensemble/model_comparison.png') }}" 
-                             class="img-fluid rounded shadow-sm" alt="Model Performance Comparison">
-                    </div>
-                    <div class="row mt-4">
-                        {% for model_name, model_data in model_results.items() %}
-                        {% if model_name not in ['sample_data', 'processed_data', 'feature_names'] %}
-                        <div class="col-md-6 col-lg-3 mb-4">
-                            <div class="card h-100">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">{{ model_name }}</h5>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-unstyled">
-                                        <li><strong>Accuracy:</strong> {{ "%.2f"|format(model_data.accuracy * 100) }}%</li>
-                                        <li><strong>Training Time:</strong> {{ "%.3f"|format(model_data.training_time) }}s</li>
-                                    </ul>
-                                </div>
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <h4 class="mb-3">Performance Comparison</h4>
+                            <div class="text-center mb-4">
+                                <img src="{{ url_for('static', filename='img/ensemble/model_comparison.png') }}" class="img-fluid rounded shadow-sm" alt="Model Performance Comparison">
+                                <p class="text-muted mt-2">
+                                    Comparison of model performance showing accuracy, precision, recall, and F1 scores.
+                                </p>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>Model</th>
+                                            <th>Accuracy</th>
+                                            <th>Precision</th>
+                                            <th>Recall</th>
+                                            <th>F1 Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for model, data in model_results.items() %}
+                                            {% if model not in ['sample_data', 'processed_data', 'feature_names'] %}
+                                            <tr>
+                                                <td>{{ model.replace('_', ' ').title() }}</td>
+                                                <td>{{ "%.2f"|format(data.accuracy * 100) }}%</td>
+                                                <td>{{ "%.2f"|format(data.precision * 100) }}%</td>
+                                                <td>{{ "%.2f"|format(data.recall * 100) }}%</td>
+                                                <td>{{ "%.2f"|format(data.f1_score * 100) }}%</td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        {% endif %}
-                        {% endfor %}
+                        <div class="col-lg-6">
+                            <h4 class="mb-3">Confusion Matrices</h4>
+                            <div class="accordion" id="confusionMatrices">
+                                {% for model, data in model_results.items() %}
+                                    {% if model not in ['sample_data', 'processed_data', 'feature_names'] %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading{{ loop.index }}">
+                                            <button class="accordion-button {{ 'collapsed' if loop.index > 1 else '' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="{{ 'true' if loop.index == 1 else 'false' }}" aria-controls="collapse{{ loop.index }}">
+                                                {{ model.replace('_', ' ').title() }} Confusion Matrix
+                                            </button>
+                                        </h2>
+                                        <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {{ 'show' if loop.index == 1 else '' }}" aria-labelledby="heading{{ loop.index }}" data-bs-parent="#confusionMatrices">
+                                            <div class="accordion-body">
+                                                <div class="text-center">
+                                                    <img src="{{ url_for('static', filename='img/ensemble/cm_' ~ model ~ '.png') }}" class="img-fluid rounded shadow-sm" alt="{{ model.replace('_', ' ').title() }} Confusion Matrix">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confusion Matrices Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h2 class="card-title mb-0">Confusion Matrices</h2>
-                </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <img src="{{ url_for('static', filename='img/ensemble/confusion_matrices.png') }}" 
-                             class="img-fluid rounded shadow-sm" alt="Confusion Matrices">
+                    
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <h4 class="mb-3">Classification Reports</h4>
+                            <div class="accordion" id="classificationReports">
+                                {% for model, data in model_results.items() %}
+                                    {% if model not in ['sample_data', 'processed_data', 'feature_names'] %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="reportHeading{{ loop.index }}">
+                                            <button class="accordion-button {{ 'collapsed' if loop.index > 1 else '' }}" type="button" data-bs-toggle="collapse" data-bs-target="#reportCollapse{{ loop.index }}" aria-expanded="{{ 'true' if loop.index == 1 else 'false' }}" aria-controls="reportCollapse{{ loop.index }}">
+                                                {{ model.replace('_', ' ').title() }} Classification Report
+                                            </button>
+                                        </h2>
+                                        <div id="reportCollapse{{ loop.index }}" class="accordion-collapse collapse {{ 'show' if loop.index == 1 else '' }}" aria-labelledby="reportHeading{{ loop.index }}" data-bs-parent="#classificationReports">
+                                            <div class="accordion-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-striped">
+                                                        <thead class="table-primary">
+                                                            <tr>
+                                                                <th>Class</th>
+                                                                <th>Precision</th>
+                                                                <th>Recall</th>
+                                                                <th>F1-Score</th>
+                                                                <th>Support</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for class_name, metrics in data.class_metrics.items() %}
+                                                            <tr>
+                                                                <td>{{ class_name }}</td>
+                                                                <td>{{ "%.2f"|format(metrics.precision * 100) }}%</td>
+                                                                <td>{{ "%.2f"|format(metrics.recall * 100) }}%</td>
+                                                                <td>{{ "%.2f"|format(metrics.f1_score * 100) }}%</td>
+                                                                <td>{{ metrics.support if metrics.support is defined else 'N/A' }}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                            <tr class="table-secondary">
+                                                                <td><strong>Average</strong></td>
+                                                                <td><strong>{{ "%.2f"|format(data.precision * 100) }}%</strong></td>
+                                                                <td><strong>{{ "%.2f"|format(data.recall * 100) }}%</strong></td>
+                                                                <td><strong>{{ "%.2f"|format(data.f1_score * 100) }}%</strong></td>
+                                                                <td><strong>{{ data.support if data.support is defined else 'N/A' }}</strong></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
-                    <p class="mt-3">
-                        The confusion matrices show how well each model performs in classifying different fare categories. 
-                        Each row represents the actual category, while each column represents the predicted category. 
-                        The diagonal elements show correct predictions.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Feature Importance Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h2 class="card-title mb-0">Feature Importance Analysis</h2>
-                </div>
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        <img src="{{ url_for('static', filename='img/ensemble/feature_importance.png') }}" 
-                             class="img-fluid rounded shadow-sm" alt="Feature Importance">
-                    </div>
-                    <p>
-                        The feature importance chart shows which variables have the most influence on predicting fare categories. 
-                        This analysis from the Random Forest model helps us understand which factors most significantly impact 
-                        flight pricing.
-                    </p>
                 </div>
             </div>
         </div>
@@ -222,39 +435,75 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h2 class="card-title mb-0">Results Interpretation for Non-Technical Audience</h2>
+                    <h2 class="card-title mb-0">Results Interpretation</h2>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-6">
-                            <h4>What the Results Mean</h4>
-                            <ul>
-                                <li><strong>Accuracy:</strong> Percentage of correct predictions. Higher is better.</li>
-                                <li><strong>Training Time:</strong> How long it takes to train the model. Shorter is generally better for practical applications.</li>
-                                <li><strong>Feature Importance:</strong> Which factors most influence flight prices (distance, carrier, market share).</li>
-                            </ul>
-                            <h4 class="mt-4">Key Findings</h4>
-                            <ul>
-                                <li>Ensemble methods (especially Random Forest and Gradient Boosting) generally outperform single models</li>
-                                <li>Distance category is typically one of the most important features for predicting fare</li>
-                                <li>Market share and carrier type also significantly influence pricing</li>
-                                <li>The models can predict fare categories with high accuracy, helping travelers understand pricing patterns</li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-6">
-                            <h4>Practical Applications</h4>
-                            <ul>
-                                <li><strong>For Travelers:</strong> Better understanding of when to expect higher or lower fares based on route characteristics</li>
-                                <li><strong>For Airlines:</strong> Insights into how their pricing compares to market patterns</li>
-                                <li><strong>For Travel Agencies:</strong> Tools to help customers find the best deals</li>
-                            </ul>
-                            <div class="alert alert-info mt-4">
-                                <h5 class="alert-heading"><i class="fas fa-info-circle"></i> Key Takeaway</h5>
+                        <div class="col-lg-8">
+                            <h4 class="mb-3">Model Comparison Analysis</h4>
+                            <p>
+                                Our comparison of Decision Trees, Random Forest, and SVM models reveals important insights about flight pricing prediction:
+                            </p>
+                            
+                            <div class="card bg-light p-3 mb-4">
+                                <h5><i class="fas fa-tree text-success me-2"></i>Decision Tree Insights</h5>
                                 <p class="mb-0">
-                                    Ensemble learning methods consistently provide more accurate predictions than single models, 
-                                    demonstrating the power of combining multiple algorithms to solve complex problems like 
-                                    flight fare prediction.
+                                    The Decision Tree model provides clear classification rules that are easy to interpret, making it valuable for understanding the key decision factors in flight pricing. With an accuracy of {{ "%.2f"|format(model_results.decision_tree.accuracy * 100) }}%, it demonstrates that even a relatively simple model can capture meaningful patterns in flight pricing data.
                                 </p>
+                            </div>
+                            
+                            <div class="card bg-light p-3 mb-4">
+                                <h5><i class="fas fa-forest text-primary me-2"></i>Random Forest Performance</h5>
+                                <p class="mb-0">
+                                    The Random Forest model achieves the highest accuracy at {{ "%.2f"|format(model_results.random_forest.accuracy * 100) }}%, demonstrating the power of ensemble techniques. By combining multiple decision trees, it captures more complex relationships between features and fare categories, providing robust predictions across different route types and market conditions.
+                                </p>
+                            </div>
+                            
+                            <div class="card bg-light p-3 mb-4">
+                                <h5><i class="fas fa-chart-line text-info me-2"></i>SVM Characteristics</h5>
+                                <p class="mb-0">
+                                    The Support Vector Machine model achieves {{ "%.2f"|format(model_results.svm.accuracy * 100) }}% accuracy and excels at establishing clear decision boundaries between fare categories. It's particularly effective at identifying high-fare routes, demonstrating the highest precision for these categories among all models.
+                                </p>
+                            </div>
+                            
+                            <div class="card bg-light p-3">
+                                <h5><i class="fas fa-lightbulb text-warning me-2"></i>Key Findings</h5>
+                                <p class="mb-0">
+                                    Our analysis reveals that distance categories and market share are consistently the most important predictors across all models. Routes with high market share tend to have more predictable pricing, while medium-distance routes show the most variability in fare categories. The ensemble approach of Random Forest provides the optimal balance between accuracy and interpretability for flight fare prediction.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <h4 class="mb-3">Key Takeaways</h4>
+                            <div class="text-center mb-4">
+                                <img src="{{ url_for('static', filename='img/ensemble/ensemble_results.png') }}" class="img-fluid rounded shadow-sm" alt="Model Results Summary">
+                                <p class="text-muted mt-2">
+                                    Visual summary of key findings from our model comparison analysis.
+                                </p>
+                            </div>
+                            
+                            <div class="card border-primary mb-3">
+                                <div class="card-header bg-primary text-white">For Airlines</div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li>More accurate fare category predictions</li>
+                                        <li>Improved understanding of pricing factors</li>
+                                        <li>Better competitive positioning insights</li>
+                                        <li>Enhanced yield management opportunities</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="card border-success mb-3">
+                                <div class="card-header bg-success text-white">For Travelers</div>
+                                <div class="card-body">
+                                    <ul class="mb-0">
+                                        <li>More reliable fare predictions</li>
+                                        <li>Better route value identification</li>
+                                        <li>Insights on carrier choice effects</li>
+                                        <li>Improved fare range anticipation</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -263,30 +512,48 @@
         </div>
     </div>
 
-    <!-- Code and Technical Details Section -->
-    <div class="row mb-5">
+    <!-- Conclusions Section -->
+    <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h2 class="card-title mb-0">Technical Implementation</h2>
+                    <h2 class="card-title mb-0">Conclusions and Future Work</h2>
                 </div>
                 <div class="card-body">
-                    <p>
-                        Our ensemble learning implementation uses several popular algorithms from scikit-learn:
-                    </p>
-                    <ul>
-                        <li><strong>Random Forest:</strong> Creates multiple decision trees and averages their predictions</li>
-                        <li><strong>Gradient Boosting:</strong> Builds trees sequentially to correct previous errors</li>
-                        <li><strong>AdaBoost:</strong> Adapts to difficult instances by adjusting weights</li>
-                        <li><strong>Voting Classifier:</strong> Combines predictions from multiple different models</li>
-                    </ul>
-                    <p class="mt-3">
-                        The complete implementation includes data preprocessing, model training, evaluation, and visualization.
-                    </p>
-                    <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/ensemble.py" 
-                       class="btn btn-primary" target="_blank">
-                        <i class="fab fa-github"></i> View Complete Code on GitHub
-                    </a>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p>
+                                Our comparative analysis of Decision Trees, Random Forest, and SVM models demonstrates the strengths of each approach for flight fare prediction. The Random Forest model emerged as the top performer with {{ "%.2f"|format(model_results.random_forest.accuracy * 100) }}% accuracy, effectively capturing the complex patterns in flight pricing data.
+                            </p>
+                            
+                            <p>
+                                Decision Trees provide valuable interpretability, making the classification rules transparent and easy to understand. SVM offers strong performance with clear decision boundaries between fare categories. However, the ensemble approach of Random Forest achieves the optimal balance between accuracy and practical utility.
+                            </p>
+                            
+                            <p>
+                                Our analysis confirms that distance, market share, and carrier identity are the most influential factors in determining fare categories. The comparison of these different modeling approaches provides deeper insights into flight pricing dynamics than any single model could achieve alone.
+                            </p>
+                            
+                            <h5 class="mt-4">Future Directions</h5>
+                            <ul>
+                                <li><strong>Neural Network Integration</strong>: Explore deep learning approaches for even higher prediction accuracy</li>
+                                <li><strong>Temporal Analysis</strong>: Incorporate time-based features to capture seasonal pricing patterns</li>
+                                <li><strong>Hyperparameter Optimization</strong>: Fine-tune model parameters using grid search or Bayesian optimization</li>
+                                <li><strong>Feature Engineering</strong>: Develop more sophisticated derived features for improved model performance</li>
+                                <li><strong>True Ensemble Implementation</strong>: Combine predictions from multiple models using stacking or blending techniques</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">                            
+                            <div class="text-center">
+                                <a href="https://github.com/nandinitata/flight_price_prediction/blob/main/ensemble.py" class="btn btn-primary btn-lg mb-3" target="_blank">
+                                    <i class="fab fa-github me-2"></i>View Full Code
+                                </a>
+                                <p class="text-muted">
+                                    Our complete implementation is available on GitHub, including data preprocessing, model training, and evaluation code.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -296,11 +563,8 @@
 
 {% block styles %}
 <style>
-    .ensemble-concept p, .ensemble-concept li {
-        text-align: justify;
-    }
-    
     .card {
+        overflow: hidden;
         transition: all 0.3s ease;
     }
     
@@ -309,13 +573,37 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
     
-    .table th {
-        white-space: nowrap;
+    .ensemble-intro p {
+        margin-bottom: 1rem;
+        text-align: justify;
     }
     
-    .alert-heading {
-        font-size: 1.2rem;
-        margin-bottom: 0.5rem;
+    .progress {
+        border-radius: 10px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .progress-bar {
+        border-radius: 10px;
+        transition: width 1.5s ease;
+    }
+    
+    .viz-container {
+        transition: transform 0.2s;
+    }
+    
+    .viz-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .accordion-button:not(.collapsed) {
+        background-color: rgba(0, 123, 255, 0.1);
+        color: #007bff;
+    }
+    
+    .table th {
+        background-color: #f8f9fa;
     }
 </style>
 {% endblock %}

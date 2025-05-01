@@ -1,52 +1,257 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conclusions - Coming Soon</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        .container {
-            text-align: center;
-            padding: 2rem;
-        }
-        h1 {
-            color: #333;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        p {
-            color: #666;
-            font-size: 1.2rem;
-        }
-        .back-button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .back-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Conclusions</h1>
-        <p>Coming Soon...</p>
-        <a href="/" class="back-button">Back to HomePage</a>
+{% extends "base.html" %}
+
+{% block title %}Flight Data Analysis - Conclusions{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <i class="fas fa-check-circle fa-2x mb-3 text-primary"></i>
+            <h1 class="display-4 mb-3">Project Conclusions</h1>
+            <p class="lead text-muted">Key Findings and Insights from Flight Price Analysis</p>
+            <hr>
+        </div>
     </div>
-</body>
-</html>
+
+    <!-- Project Overview Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Project Overview</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <p class="lead">
+                                The SkySaver project has comprehensively analyzed US domestic flight data using multiple analytical approaches to understand and predict fare pricing patterns.
+                            </p>
+                            <p>
+                                This project employed a diverse set of analytical methodologies including Principal Component Analysis (PCA), Clustering, Association Rule Mining (ARM), Naive Bayes Classification, Decision Trees, Regression Analysis, Support Vector Machines (SVM), and Ensemble Learning. Each method provided unique insights into the complex dynamics of flight pricing, creating a multi-dimensional understanding of factors that influence airfares in the US domestic market.
+                            </p>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card bg-light p-3">
+                                <h4 class="h5 mb-3">Analysis Methods</h4>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item bg-light">Principal Component Analysis</li>
+                                    <li class="list-group-item bg-light">Clustering Algorithms</li>
+                                    <li class="list-group-item bg-light">Association Rule Mining</li>
+                                    <li class="list-group-item bg-light">Naive Bayes Classification</li>
+                                    <li class="list-group-item bg-light">Decision Trees & Random Forest</li>
+                                    <li class="list-group-item bg-light">Regression Analysis</li>
+                                    <li class="list-group-item bg-light">Support Vector Machines</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Findings Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Key Findings</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-lg-12">
+                            <!-- Paragraph 1: Consistent Patterns Across Methods -->
+                            <h4 class="mb-3"><i class="fas fa-chart-line text-primary me-2"></i>Consistent Patterns Across Methods</h4>
+                            <p>
+                                Our comprehensive analysis revealed several consistent patterns across all analytical methods. Distance emerged as the most significant factor influencing fare pricing, with PCA showing that 71.5% of data variance could be explained by just two principal components heavily weighted by distance metrics. The relationship between distance and fare is not strictly linear, however, as confirmed by both our SVM and regression analyses, which identified critical threshold points where pricing patterns change significantly. Clustering revealed distinct market segments beyond simple low-cost versus premium divisions, while Association Rule Mining uncovered strong relationships between route characteristics and fare categories. The machine learning models (Decision Trees, Naive Bayes, Random Forest, and SVM) all consistently achieved accuracy rates between 65-95%, demonstrating that flight pricing, despite its apparent complexity, follows predictable patterns that can be modeled effectively.
+                            </p>
+
+                            <!-- Paragraph 2: Feature Importance and Relationships -->
+                            <h4 class="mb-3 mt-4"><i class="fas fa-balance-scale text-success me-2"></i>Feature Importance and Relationships</h4>
+                            <p>
+                                Across all analytical approaches, three factors consistently emerged as the most influential in determining flight prices: distance, market share, and carrier identity. Random Forest analysis quantified the relative importance of these features, with distance accounting for approximately 40% of predictive power, market share contributing 30%, and carrier identity approximately 20%. The relationship between market share and pricing revealed surprising complexity - contrary to conventional economic theory, high market share did not always correspond to higher prices. SVM analysis with non-linear kernels (achieving 92.5% accuracy) demonstrated that in some market conditions, dominant carriers maintained lower fares, possibly reflecting economies of scale or strategic competitive positioning. Principal Component Analysis further revealed that while major carrier and low-fare carrier pricing strategies were closely aligned along the first principal component (primarily capturing distance effects), they diverged significantly along the third component, suggesting distinct approaches to market segmentation despite similar distance-based pricing foundations.
+                            </p>
+                            
+                            <!-- Visualization: Model Performance Comparison -->
+                            <div class="text-center my-5">
+                                <img src="{{ url_for('static', filename='img/conclusions/model_comparison_conclusion.png') }}" class="img-fluid rounded shadow-sm" alt="Model Performance Comparison">
+                                <p class="text-muted mt-2">
+                                    Performance comparison across different machine learning models showing accuracy, precision, recall, and F1 scores for flight fare prediction.
+                                </p>
+                            </div>
+
+                            <!-- Paragraph 3: Market Segmentation -->
+                            <h4 class="mb-3"><i class="fas fa-object-group text-info me-2"></i>Market Segmentation and Route Characteristics</h4>
+                            <p>
+                                Our clustering analysis uncovered distinct market segments within the US domestic flight market, revealing nuanced pricing strategies that transcend traditional carrier categorizations. Rather than a simple division between low-cost and premium carriers, we identified multiple pricing tiers that are often route-specific. DBSCAN clustering identified significant outliers representing routes with unusual pricing patterns, often corresponding to markets with limited competition or specialty service requirements. Association Rule Mining further illuminated these patterns, showing that very long-distance flights consistently associate with higher fare categories, while shorter routes display more variable pricing. Geographic patterns also emerged, with flights to popular tourist destinations showing stronger associations with seasonal fare fluctuations and higher competition, while routes connecting major business hubs demonstrated more stable pricing patterns and stronger market dominance by legacy carriers. These insights suggest that airlines employ sophisticated, route-specific pricing strategies rather than uniform approaches across their networks.
+                            </p>
+
+                            <!-- Visualization: Feature Importance -->
+                            <div class="text-center my-5">
+                                <img src="{{ url_for('static', filename='img/conclusions/feature_importance_conclusion.png') }}" class="img-fluid rounded shadow-sm" alt="Feature Importance Visualization">
+                                <p class="text-muted mt-2">
+                                    Relative importance of different features in predicting flight fares across various models, showing distance, market share, and carrier as key factors.
+                                </p>
+                            </div>
+
+                            <!-- Paragraph 4: Model Performance and Applications -->
+                            <h4 class="mb-3"><i class="fas fa-laptop-code text-warning me-2"></i>Model Performance and Applications</h4>
+                            <p>
+                                Our comparative analysis of predictive models revealed that ensemble methods and non-linear approaches generally outperformed simpler models for flight fare prediction. The Random Forest model achieved the highest overall accuracy at 68.3%, balancing predictive power with robust performance across different fare categories. Support Vector Machines with RBF kernels showed exceptional performance at establishing clear decision boundaries between fare categories (92.5% accuracy), particularly excelling at identifying high-fare routes. Decision Trees provided valuable interpretability with clear classification rules, achieving 66.8% accuracy, while linear regression models explained 33% of fare variance using distance alone. These models have immediate practical applications: for airlines, they can inform dynamic pricing strategies and route optimization; for travelers, they provide insights for better booking decisions; and for market analysts, they offer a foundation for deeper competitive analysis. The combination of accuracy and explainability makes these models particularly valuable for both strategic planning and operational decision-making in the airline industry.
+                            </p>
+
+                            <!-- Paragraph 5: Conclusions and Future Directions -->
+                            <h4 class="mb-3"><i class="fas fa-road text-danger me-2"></i>Conclusions and Future Directions</h4>
+                            <p>
+                                This comprehensive analysis has demonstrated that despite the apparent complexity of airline pricing, fare categories follow predictable patterns that can be effectively modeled through various machine learning approaches. The multifaceted nature of flight pricing requires sophisticated analytical techniques, with ensemble methods and non-linear models providing the best balance of accuracy and utility. Distance remains the primary driver of pricing, but market dynamics and carrier strategies introduce significant variability that must be captured through advanced modeling techniques. Future research directions include incorporating temporal factors to analyze seasonal variations and booking time influences, developing more sophisticated derived features capturing market dynamics, exploring deep learning approaches for even higher prediction accuracy, and enhancing model interpretability for better strategic insights. Additionally, creating true ensemble implementations that combine predictions from multiple model types could further improve performance while maintaining the interpretability necessary for practical business applications. This project has laid a solid foundation for understanding flight pricing dynamics, offering valuable insights for both travelers seeking better deals and airlines optimizing their pricing strategies.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Practical Applications</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <h4 class="mb-0">For Airlines</h4>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="fa-ul">
+                                        <li><span class="fa-li"><i class="fas fa-plane"></i></span>Dynamic pricing optimization based on route characteristics</li>
+                                        <li><span class="fa-li"><i class="fas fa-route"></i></span>Route network planning informed by market segmentation</li>
+                                        <li><span class="fa-li"><i class="fas fa-users"></i></span>Competitor analysis and strategic positioning</li>
+                                        <li><span class="fa-li"><i class="fas fa-chart-bar"></i></span>Revenue management with predictive fare modeling</li>
+                                        <li><span class="fa-li"><i class="fas fa-search-dollar"></i></span>Identification of underpriced or overpriced routes</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header bg-success text-white">
+                                    <h4 class="mb-0">For Travelers</h4>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="fa-ul">
+                                        <li><span class="fa-li"><i class="fas fa-calendar-alt"></i></span>Better timing of flight bookings based on predictive models</li>
+                                        <li><span class="fa-li"><i class="fas fa-exchange-alt"></i></span>Alternative route identification for cost savings</li>
+                                        <li><span class="fa-li"><i class="fas fa-tags"></i></span>Understanding fare categories and their determinants</li>
+                                        <li><span class="fa-li"><i class="fas fa-plane-departure"></i></span>Carrier selection based on route-specific pricing patterns</li>
+                                        <li><span class="fa-li"><i class="fas fa-luggage-cart"></i></span>Budget planning with more reliable fare predictions</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Future Work Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h2 class="card-title mb-0">Future Research Directions</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <p>
+                                While this project has provided significant insights into flight pricing dynamics, several promising directions for future research could further enhance our understanding:
+                            </p>
+                            <ul class="list-group list-group-flush mb-4">
+                                <li class="list-group-item">
+                                    <strong><i class="fas fa-calendar-day text-primary me-2"></i>Temporal Analysis:</strong> 
+                                    Incorporate booking time, day of week, and seasonal factors to capture time-based variations in pricing
+                                </li>
+                                <li class="list-group-item">
+                                    <strong><i class="fas fa-brain text-primary me-2"></i>Deep Learning Approaches:</strong> 
+                                    Explore neural network architectures for capturing more complex patterns in pricing data
+                                </li>
+                                <li class="list-group-item">
+                                    <strong><i class="fas fa-sitemap text-primary me-2"></i>Network Effects:</strong> 
+                                    Analyze how hub-and-spoke network structures influence pricing across carrier networks
+                                </li>
+                                <li class="list-group-item">
+                                    <strong><i class="fas fa-layer-group text-primary me-2"></i>True Ensemble Implementation:</strong> 
+                                    Combine multiple model types using stacking or blending techniques
+                                </li>
+                                <li class="list-group-item">
+                                    <strong><i class="fas fa-search-plus text-primary me-2"></i>Competition Metrics:</strong> 
+                                    Develop more sophisticated measures of competition intensity for each route
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="text-center">
+                                <a href="https://github.com/nandinitata/flight_price_prediction" class="btn btn-primary btn-lg mb-3" target="_blank">
+                                    <i class="fab fa-github me-2"></i>Access Full Project on GitHub
+                                </a>
+                                <p class="text-muted">
+                                    The complete code, datasets, and detailed documentation for this project are available on GitHub. Contributions and extensions are welcome.
+                                </p>
+                                
+                                <div class="card mt-4 bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Contact Information</h5>
+                                        <p class="card-text">For questions, collaboration opportunities, or further discussion about this research:</p>
+                                        <p class="mb-1"><strong>Project Lead:</strong> Sai Nandini Tata</p>
+                                        <p class="mb-1"><strong>Email:</strong> sai.tata@colorado.edu</p>
+                                        <p class="mb-0"><strong>Institution:</strong> University of Colorado Boulder</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .card {
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .fa-ul {
+        margin-left: 1.5em;
+    }
+    
+    .list-group-item {
+        transition: all 0.2s ease;
+    }
+    
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    h4 {
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 8px;
+    }
+</style>
+{% endblock %}
